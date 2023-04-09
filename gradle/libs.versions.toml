@@ -1,0 +1,27 @@
+[versions]
+# Plugin versions
+androidPlugin = "7.4.2"
+kotlinAndroid = "1.8.0"
+## Compose versions
+compose-bom = "2023.03.00"
+compose_nav = "2.5.3"
+
+[libraries]
+## Compose
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-toolingpreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-icons = { module = "androidx.compose.material:material-icons-extended" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose_nav" }
+compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
+compose-activity = { module = "androidx.activity:activity-compose" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-uitest = { module = "androidx.compose.ui:ui-test" }
+compose-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+compose-windowsize = { module = "androidx.compose.material3:material3-window-size-class" }
+
+[bundles]
+compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",
+    "compose-viewmodel", "compose-activity", "compose-material3", "compose-uitest",
+    "compose-manifest", "compose-windowsize"]
