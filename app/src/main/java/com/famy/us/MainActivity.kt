@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
             FamyUsTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     Greeting("CHARAMMM")
                 }

@@ -16,7 +16,7 @@ def detektTask = tasks.register("detekt", JavaExec) {
 }
 
 dependencies {
-    detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.23.0-RC1'
+    detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.22.0'
 }
 
 // Remove this line if you don't want to run detekt on every build

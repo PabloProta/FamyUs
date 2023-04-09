@@ -1,1 +1,2 @@
 apply from: "$rootDir/config/quality/detekt/detekt.gradle"
+apply from: "$rootDir/config/quality/ktlint/ktlint.gradle"
