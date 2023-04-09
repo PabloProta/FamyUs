@@ -1,0 +1,23 @@
+
+configurations {
+    detekt
+}
+
+def detektTask = tasks.register("detekt", JavaExec) {
+    main = "io.gitlab.arturbosch.detekt.cli.Main"
+    classpath = configurations.detekt
+
+    def input = "$projectDir"
+    def config = "${project.rootDir}/config/quality/detekt/detekt-ruleset.yml"
+    def exclude = ".*/build/.*,.*/resources/.*"
+    def params = [ '-i', input, '-c', config, '-ex', exclude]
+
+    args(params)
+}
+
+dependencies {
+    detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.23.0-RC1'
+}
+
+// Remove this line if you don't want to run detekt on every build
+check.dependsOn detektTask

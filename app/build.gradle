@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
 }
+apply from: "$rootDir/config/quality/quality.gradle"
 
 android {
     namespace 'com.famy.us'
