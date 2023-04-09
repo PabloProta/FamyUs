@@ -1,5 +1,7 @@
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.dagger.hilt.android'
 
 android {
     defaultConfig {
@@ -20,4 +22,13 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
 }

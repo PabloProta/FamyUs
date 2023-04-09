@@ -6,6 +6,9 @@ kotlinAndroid = "1.8.0"
 compose-bom = "2023.03.00"
 compose_nav = "2.5.3"
 
+## Hilt
+hilt = "2.44"
+
 [libraries]
 ## Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -20,6 +23,10 @@ compose-uitest = { module = "androidx.compose.ui:ui-test" }
 compose-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 compose-windowsize = { module = "androidx.compose.material3:material3-window-size-class" }
+
+## Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",
