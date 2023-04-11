@@ -1,7 +1,18 @@
 package com.famy.us
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import injection.dataRepositoryModule
+import injection.domainModule
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
-class FamyUsApplication : Application()
+/**
+ * Application class to init our dependencies injections using koin.
+ */
+class FamyUsApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            modules(dataRepositoryModule, domainModule)
+        }
+    }
+}

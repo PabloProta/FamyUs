@@ -1,7 +1,5 @@
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
-apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.dagger.hilt.android'
 apply from: "$project.rootDir/config/quality/quality.gradle"
 
 android {
@@ -25,11 +23,7 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes true
-}
-
 dependencies {
-    implementation libs.hilt.android
-    kapt libs.hilt.compiler
+    api libs.koin.core
+    implementation libs.koin.android
 }
