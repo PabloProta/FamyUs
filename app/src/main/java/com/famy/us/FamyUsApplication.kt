@@ -1,8 +1,9 @@
 package com.famy.us
 
 import android.app.Application
-import injection.dataRepositoryModule
-import injection.domainModule
+import com.famy.us.domain.domainModule
+import com.famy.us.injection.homeModule
+import com.famy.us.repository.dataRepositoryModule
 import org.koin.core.context.startKoin
 
 /**
@@ -12,7 +13,11 @@ class FamyUsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            modules(dataRepositoryModule, domainModule)
+            modules(
+                dataRepositoryModule,
+                domainModule,
+                homeModule,
+            )
         }
     }
 }

@@ -4,3 +4,7 @@ android {
     compileSdk Versions.COMPILE_SDK
     namespace 'com.famy.us.data.repository'
 }
+
+dependencies {
+    implementation project(':domain')
+}

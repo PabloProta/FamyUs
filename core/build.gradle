@@ -2,7 +2,8 @@ apply from: "/${rootDir}/config/conventions/android-common.gradle"
 
 android {
     compileSdk Versions.COMPILE_SDK
-    namespace 'com.famy.us.home'
+    namespace 'com.famy.us.core'
+
 
     buildFeatures {
         compose true
@@ -14,7 +15,7 @@ android {
 }
 
 dependencies {
-    implementation project(":core")
+    compileOnly libs.koin.core
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui.kit
     implementation libs.bundles.koin.compose

@@ -1,13 +1,11 @@
-plugins {
-    id 'java'
-}
-apply from: "$rootDir/config/quality/quality.gradle"
+apply from: "/${rootDir}/config/conventions/android-common.gradle"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+android {
+    compileSdk Versions.COMPILE_SDK
+    namespace 'com.famy.us.domain'
 }
 
 dependencies {
+    implementation project(':core')
     compileOnly libs.koin.core
 }
