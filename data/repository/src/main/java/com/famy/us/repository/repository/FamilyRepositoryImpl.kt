@@ -6,6 +6,8 @@ import com.famy.us.repository.datasource.FamilyMemberDataSource
 import com.famy.us.repository.mapper.FamilyMemberMapper
 import com.famy.us.repository.model.AdminMember
 import com.famy.us.repository.model.NonAdminMember
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import com.famy.us.domain.model.AdminMember as DomainAdminMember
 import com.famy.us.domain.model.NonAdminMember as DomainNonAdminMember
 
@@ -21,46 +23,49 @@ internal class FamilyRepositoryImpl(
     private val familyMemberMapper: FamilyMemberMapper,
 ) : FamilyRepository {
 
-    override fun getAllMembers(): List<FamilyMember> = dataSource.getAllMembers().map { member ->
-        if (member is AdminMember) {
-            familyMemberMapper.toDomain(member)
-        } else {
-            familyMemberMapper.toDomain(member as NonAdminMember)
-        }
-    }
+    override suspend fun getAllMembers(): Flow<List<FamilyMember>> =
+        dataSource.getAllMembers()
+            .map { memberList ->
+                memberList.map {
+                    if (it is AdminMember) {
+                        familyMemberMapper.toDomain(it)
+                    } else {
+                        it as NonAdminMember
+                        familyMemberMapper.toDomain(it)
+                    }
+                }
+            }
 
-    override fun getMemberById(id: Int): FamilyMember {
-        val member = dataSource.getMemberById(id)
-        return if (member is AdminMember) {
-            familyMemberMapper.toDomain(member)
-        } else {
-            familyMemberMapper.toDomain(member as NonAdminMember)
-        }
-    }
+    override suspend fun getMemberById(id: Int): Flow<FamilyMember> =
+        dataSource.getMemberById(id)
+            .map {
+                if (it is AdminMember) {
+                    familyMemberMapper.toDomain(it)
+                } else {
+                    it as NonAdminMember
+                    familyMemberMapper.toDomain(it)
+                }
+            }
 
-    override fun saveMember(familyMember: FamilyMember) {
+    override suspend fun saveMember(familyMember: FamilyMember) {
         if (familyMember is DomainAdminMember) {
             dataSource.saveMember(familyMemberMapper.toRepository(familyMember))
         } else {
-            dataSource.saveMember(
-                familyMemberMapper.toRepository(
-                    familyMember as DomainNonAdminMember,
-                ),
-            )
+            familyMember as DomainNonAdminMember
+            dataSource.saveMember(familyMemberMapper.toRepository(familyMember))
         }
     }
 
-    override fun updateMember(familyMember: FamilyMember) {
+    override suspend fun updateMember(familyMember: FamilyMember) {
         if (familyMember is DomainAdminMember) {
             dataSource.updateMember(familyMemberMapper.toRepository(familyMember))
         } else {
-            dataSource.updateMember(
-                familyMemberMapper.toRepository(
-                    familyMember as DomainNonAdminMember,
-                ),
-            )
+            familyMember as DomainNonAdminMember
+            dataSource.updateMember(familyMemberMapper.toRepository(familyMember))
         }
     }
 
-    override fun deleteMemberById(id: Int) = dataSource.deleteMemberById(id)
+    override suspend fun deleteMemberById(id: Int) {
+        dataSource.deleteMemberById(id)
+    }
 }

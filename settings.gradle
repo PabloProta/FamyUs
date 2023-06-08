@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 rootProject.name = "FamyUs"
 include ':app'
 include ':data:repository'
+include ':data:database'
 include ':domain'
 include ':feature:home'
 include ':feature:authentication'

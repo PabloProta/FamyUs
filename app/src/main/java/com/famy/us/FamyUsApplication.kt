@@ -1,9 +1,11 @@
 package com.famy.us
 
 import android.app.Application
+import com.famy.database.dataDatabaseModule
 import com.famy.us.domain.domainModule
 import com.famy.us.injection.homeModule
 import com.famy.us.repository.dataRepositoryModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 /**
@@ -13,8 +15,10 @@ class FamyUsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
+            androidContext(baseContext)
             modules(
                 dataRepositoryModule,
+                dataDatabaseModule,
                 domainModule,
                 homeModule,
             )

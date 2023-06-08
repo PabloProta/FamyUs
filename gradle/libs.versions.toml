@@ -7,6 +7,12 @@ compose_nav = "2.5.3"
 koin = "3.4.0"
 koin_compose = "3.4.3"
 
+## Room
+room = "2.5.0"
+
+## Gson
+gson = "2.10.1"
+
 [libraries]
 ## Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -14,7 +20,7 @@ compose-ui = { module = "androidx.compose.ui:ui" }
 compose-toolingpreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-icons = { module = "androidx.compose.material:material-icons-extended" }
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose_nav" }
-compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose"}
+compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose" }
 compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 compose-activity = { module = "androidx.activity:activity-compose" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
@@ -28,8 +34,16 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin_compose" }
 
+## Room
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-coroutines = { module = "androidx.room:room-ktx", version.ref = "room" }
+
+## Gson
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",
     "compose-viewmodel", "compose-activity", "compose-material3", "compose-uitest",
     "compose-manifest", "compose-windowsize", "compose-lifecycle"]
-koin-compose = ["koin-core","koin-android","koin-compose"]
+koin-compose = ["koin-core", "koin-android", "koin-compose"]
