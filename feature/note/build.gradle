@@ -1,0 +1,23 @@
+apply from: "/${rootDir}/config/conventions/android-common.gradle"
+
+android {
+    compileSdk Versions.COMPILE_SDK
+    namespace 'com.famy.us.note'
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.4"
+    }
+}
+
+dependencies {
+    implementation project(":core")
+    implementation project(":domain")
+    implementation project(":feature:home")
+    implementation platform(libs.compose.bom)
+    implementation libs.bundles.compose.ui.kit
+    implementation libs.bundles.koin.compose
+}

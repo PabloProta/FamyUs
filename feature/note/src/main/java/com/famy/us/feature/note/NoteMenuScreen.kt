@@ -1,14 +1,18 @@
-package com.famy.us.pages
+package com.famy.us.feature.note
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -21,25 +25,71 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.famy.us.core.extensions.logD
 import com.famy.us.core.ui.CustomDialog
+import com.famy.us.domain.model.HomeTask
 
 @Composable
-fun NoteMenuScreen() {
-    val showDialog = remember {
-        mutableStateOf(false)
-    }
-
-    if (showDialog.value) {
-        CreateHomeTaskDialog(shouldShow = {
-            showDialog.value = it
-        })
-    }
-
+internal fun NoteMenuScreen(viewModel: NoteMenuViewModel) {
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Green),
+
+        ) {
+
+        when (state.value) {
+            NoteScreenState.LoadingTasks -> {
+                logD { "LoadingTasks" }
+                ShowProgress()
+            }
+            is NoteScreenState.NoteScreenMenu -> {
+                logD { "NoteMenu" }
+                onLoadItem(viewModel = viewModel, state.value as NoteScreenState.NoteScreenMenu)
+            }
+            NoteScreenState.AddingTask -> {
+                logD { "OpenDialog" }
+                CreateHomeTaskDialog(viewModel)
+            }
+            else -> {}
+        }
+    }
+}
+
+@Composable
+fun ShowProgress() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            strokeWidth = 2.dp
+        )
+    }
+}
+
+@Composable
+internal fun onLoadItem(viewModel: NoteMenuViewModel, value: NoteScreenState.NoteScreenMenu) {
+    val tasks = value.listTask
+
+    LazyColumn {
+        items(tasks) { task ->
+            Text(text = "task: $task")
+        }
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom
     ) {
         Row(
             modifier = Modifier
@@ -50,7 +100,7 @@ fun NoteMenuScreen() {
             FloatingActionButton(
                 modifier = Modifier,
                 onClick = {
-                    showDialog.value = true
+                    viewModel.perform(NoteScreenIntent.AddTask)
                 },
             ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "")
@@ -61,14 +111,18 @@ fun NoteMenuScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateHomeTaskDialog(shouldShow: (Boolean) -> Unit) {
+internal fun CreateHomeTaskDialog(viewModel: NoteMenuViewModel) {
     var sliderValue by remember {
         mutableStateOf(0f)
     }
     var taskName by remember {
         mutableStateOf("")
     }
-    CustomDialog(showDialog = shouldShow) {
+    CustomDialog(showDialog = {
+        if (!it) {
+            viewModel.perform(NoteScreenIntent.Back)
+        }
+    }) {
         Text(text = "Qual vai ser a tarefa?")
         TextField(
             value = taskName,
@@ -91,7 +145,11 @@ fun CreateHomeTaskDialog(shouldShow: (Boolean) -> Unit) {
                 Icon(imageVector = Icons.Rounded.Check, contentDescription = "ds")
             },
             onClick = {
-                shouldShow(false)
+                viewModel.perform(
+                    NoteScreenIntent.SaveTask(
+                        HomeTask(0, "acah", 300, false)
+                    )
+                )
             },
         )
     }

@@ -1,4 +1,4 @@
-package com.famy.us.pages
+package com.famy.us.feature.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

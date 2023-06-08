@@ -1,8 +1,6 @@
-package com.famy.us.model
+package com.famy.us.feature.home.model
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.NoteAdd
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -11,14 +9,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
  *
  * @property name is the hint name in the menu.
  * @property route is the route to goes when menu item being clicked.
+ * @property priority the priority that need be shown.
  * @property icon the icon that will be shown.
+ * @property screen the corresponding screen for this menu.
  */
-sealed class MenuItem(
+data class MenuItem(
     val name: String,
     val route: String,
-    val icon: ImageVector
-) {
-    object Home : MenuItem("Home", "home", Icons.Rounded.Home)
-
-    object Note : MenuItem("Note", "note", Icons.Rounded.NoteAdd)
-}
+    val priority: Int,
+    val icon: ImageVector,
+    val screen: @Composable () -> Unit
+)

@@ -15,6 +15,6 @@ data class HomeTask(
     val name: String,
     val point: Int,
     val isAssigned: Boolean,
-    val start: Date?,
-    val finish: Date?,
+    val start: Date? = null,
+    val finish: Date? = null,
 )
