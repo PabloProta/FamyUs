@@ -1,5 +1,6 @@
 package com.famy.us.feature.note
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,43 +22,64 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.ui.CustomDialog
 import com.famy.us.domain.model.HomeTask
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun NoteMenuScreen(viewModel: NoteMenuViewModel) {
+internal fun NoteMenuScreen(viewModel: NoteMenuViewModel = koinViewModel()) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.Green),
+    ) {
+        val tasks = state.value.listTask
 
-        ) {
-
-        when (state.value) {
-            NoteScreenState.LoadingTasks -> {
+        LazyColumn {
+            items(tasks) { task ->
+                Text(text = "task: $task")
+            }
+        }
+        when {
+            state.value.isLoading -> {
                 logD { "LoadingTasks" }
                 ShowProgress()
             }
-            is NoteScreenState.NoteScreenMenu -> {
+            state.value.isLoading.not() -> {
                 logD { "NoteMenu" }
-                onLoadItem(viewModel = viewModel, state.value as NoteScreenState.NoteScreenMenu)
+                NoteMenuScreenContent(
+                    onAddTaskClicked = {
+                        viewModel.perform(NoteScreenIntent.AddTask)
+                    },
+                )
+                val addingTask = state.value.addingTask
+                if (state.value.shouldShowDialog) {
+                    CreateHomeTaskDialog(
+                        taskName = addingTask.taskName,
+                        sliderPosition = addingTask.sliderPosition,
+                        onDismissDialog = {
+                            viewModel.perform(NoteScreenIntent.DismissDialog)
+                        },
+                        onTypeText = {
+                            viewModel.perform(NoteScreenIntent.TypingText(it))
+                        },
+                        onSlideSlider = {
+                            viewModel.perform(NoteScreenIntent.SlidingSlider(it.toInt()))
+                        },
+                        onSaveTask = {
+                            viewModel.perform(NoteScreenIntent.SaveTask(it))
+                        },
+                    )
+                }
             }
-            NoteScreenState.AddingTask -> {
-                logD { "OpenDialog" }
-                CreateHomeTaskDialog(viewModel)
-            }
-            else -> {}
         }
     }
 }
@@ -67,29 +89,24 @@ fun ShowProgress() {
     Column(
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally),
-            strokeWidth = 2.dp
+            strokeWidth = 2.dp,
         )
     }
 }
 
 @Composable
-internal fun onLoadItem(viewModel: NoteMenuViewModel, value: NoteScreenState.NoteScreenMenu) {
-    val tasks = value.listTask
-
-    LazyColumn {
-        items(tasks) { task ->
-            Text(text = "task: $task")
-        }
-    }
+internal fun NoteMenuScreenContent(
+    onAddTaskClicked: () -> Unit,
+) {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom
+        modifier =
+        Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
     ) {
         Row(
             modifier = Modifier
@@ -99,9 +116,7 @@ internal fun onLoadItem(viewModel: NoteMenuViewModel, value: NoteScreenState.Not
         ) {
             FloatingActionButton(
                 modifier = Modifier,
-                onClick = {
-                    viewModel.perform(NoteScreenIntent.AddTask)
-                },
+                onClick = onAddTaskClicked,
             ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "")
             }
@@ -111,45 +126,44 @@ internal fun onLoadItem(viewModel: NoteMenuViewModel, value: NoteScreenState.Not
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun CreateHomeTaskDialog(viewModel: NoteMenuViewModel) {
-    var sliderValue by remember {
-        mutableStateOf(0f)
-    }
-    var taskName by remember {
-        mutableStateOf("")
-    }
+internal fun CreateHomeTaskDialog(
+    taskName: String,
+    sliderPosition: Int,
+    onDismissDialog: () -> Unit,
+    onTypeText: (String) -> Unit,
+    onSlideSlider: (Float) -> Unit,
+    onSaveTask: (HomeTask) -> Unit,
+) {
+    val context = LocalContext.current
+
     CustomDialog(showDialog = {
         if (!it) {
-            viewModel.perform(NoteScreenIntent.Back)
+            onDismissDialog()
         }
     }) {
         Text(text = "Qual vai ser a tarefa?")
         TextField(
             value = taskName,
-            onValueChange = {
-                taskName = it
-            },
+            onValueChange = onTypeText,
         )
         Slider(
-            value = sliderValue,
-            onValueChange = { _sliderValue ->
-                sliderValue = _sliderValue
-            },
+            value = sliderPosition.toFloat(),
+            onValueChange = onSlideSlider,
             valueRange = 0f..100f,
         )
         Text(
-            text = "${sliderValue.toInt()}",
+            text = sliderPosition.toString(),
         )
         IconButton(
             content = {
                 Icon(imageVector = Icons.Rounded.Check, contentDescription = "ds")
             },
             onClick = {
-                viewModel.perform(
-                    NoteScreenIntent.SaveTask(
-                        HomeTask(0, "acah", 300, false)
-                    )
-                )
+                if (taskName.isEmpty() || sliderPosition < 1) {
+                    Toast.makeText(context, "Preencha os campos", Toast.LENGTH_SHORT).show()
+                } else {
+                    onSaveTask(HomeTask(0, taskName, sliderPosition, false))
+                }
             },
         )
     }

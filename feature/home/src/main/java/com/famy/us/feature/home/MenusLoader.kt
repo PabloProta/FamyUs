@@ -10,5 +10,5 @@ interface MenusLoader {
     /**
      * Function to get the menus from each module that implements.
      */
-    fun loadMenu() : MenuItem
+    fun loadMenu(): MenuItem
 }
