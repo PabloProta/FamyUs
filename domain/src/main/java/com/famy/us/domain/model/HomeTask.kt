@@ -17,4 +17,18 @@ data class HomeTask(
     val isAssigned: Boolean,
     val start: Date? = null,
     val finish: Date? = null,
-)
+) {
+    companion object {
+        /**
+         * Variable to return a Empty object without set any attribute.
+         */
+        val Empty: HomeTask = HomeTask(
+            id = 0,
+            name = "",
+            point = 0,
+            isAssigned = false,
+            start = null,
+            finish = null,
+        )
+    }
+}

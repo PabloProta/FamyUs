@@ -2,6 +2,7 @@ package com.famy.us.feature.note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.famy.us.core.extensions.logD
 import com.famy.us.domain.repository.HomeTaskRepository
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -38,7 +39,16 @@ internal class NoteMenuViewModel(
         when (event) {
             is NoteScreenIntent.SaveTask -> {
                 viewModelScope.launch {
-                    homeTaskRepository.saveTask(event.task)
+                    if (event.isNewOne) {
+                        homeTaskRepository.saveTask(event.task)
+                    } else {
+                        homeTaskRepository.updateTask(event.task)
+                    }
+                }
+            }
+            is NoteScreenIntent.DeleteTask -> {
+                viewModelScope.launch {
+                    homeTaskRepository.deleteTaskById(event.task.id)
                 }
             }
             else -> {

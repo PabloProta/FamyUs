@@ -6,40 +6,47 @@ import com.famy.us.domain.model.HomeTask
 /**
  * Class to represent the screen state for [NoteMenuScreen].
  *
- * @property shouldShowDialog to know if the dialog to add task need be shown.
  * @property isLoading if the content is being loaded.
  * @property listTask the tasks that was loaded.
- * @property addingTask the status for when a task that are being added.
+ * @property managingTask the status for when a task that are being managed.
  */
 internal data class NoteScreenState(
-    val shouldShowDialog: Boolean,
+    val showDialog: ShowDialog,
     val isLoading: Boolean,
     val listTask: List<HomeTask>,
-    val addingTask: AddingTask,
+    val managingTask: HomeTask,
 ) : UiSate {
     companion object {
         /**
          * For when the state wasn't initialized.
          */
         val Idle = NoteScreenState(
-            shouldShowDialog = false,
+            showDialog = ShowDialog.Reset,
             isLoading = true,
             listTask = emptyList(),
-            addingTask = AddingTask(
-                taskName = "",
-                sliderPosition = 0,
-            ),
+            managingTask = HomeTask.Empty,
         )
     }
 }
 
 /**
- * A class representing the status info for when the user are adding a task.
+ * Class to represent the status info for when should show the dialog about a home task.
  *
- * @property taskName the task name.
- * @property sliderPosition the point to the task according the slider position.
+ * @property shouldShowDialog to know if the dialog to add task need be shown.
+ * @property isEditingTask to know if the dialog was opened in the edit mode to allow change the
+ * fields according or if is just to visualize the task content.
+ * @property isAddingTask to know if the dialog was opened to add a new task.
  */
-internal data class AddingTask(
-    val taskName: String,
-    val sliderPosition: Int,
-)
+internal data class ShowDialog(
+    val shouldShowDialog: Boolean,
+    val isEditingTask: Boolean,
+    val isAddingTask: Boolean,
+) {
+    companion object {
+        val Reset: ShowDialog = ShowDialog(
+            shouldShowDialog = false,
+            isEditingTask = false,
+            isAddingTask = false,
+        )
+    }
+}

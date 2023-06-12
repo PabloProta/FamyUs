@@ -36,7 +36,7 @@ internal class HomeTaskRepositoryImpl(
     }
 
     override suspend fun updateTask(task: HomeTask) {
-        dataSource.saveTask(mapper.toRepository(task))
+        dataSource.updateTask(mapper.toRepository(task))
     }
 
     override suspend fun deleteTaskById(id: Int) {
