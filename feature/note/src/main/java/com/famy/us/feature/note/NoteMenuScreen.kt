@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
@@ -28,13 +30,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -177,15 +181,12 @@ internal fun HomeTaskDialog(
 ) {
     val context = LocalContext.current
     if (showDialog.shouldShowDialog) {
-        CustomDialog(showDialog = {
-            if (!it) {
-                onDismissDialog()
-            }
-        }) {
+        CustomDialog(onDismissDialog = onDismissDialog) {
             if (!showDialog.isEditingTask) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
                 ) {
                     IconButton(
                         modifier = Modifier,
@@ -198,11 +199,28 @@ internal fun HomeTaskDialog(
                     }
                 }
             }
-            Text(text = "Qual vai ser a tarefa?")
-            TextField(
+            Spacer(
+                modifier = Modifier
+                    .size(height = 10.dp, width = 0.dp),
+            )
+            OutlinedTextField(
                 value = task.name,
                 onValueChange = onTypeText,
                 enabled = showDialog.isEditingTask,
+                maxLines = 1,
+                label = {
+                    Text(text = "Tarefa")
+                },
+                placeholder = {
+                    Text(text = "digite o nome da tarefa")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { saveTask(task, showDialog.isAddingTask, onSaveTask) },
+                ),
             )
             Slider(
                 value = task.point.toFloat(),
@@ -215,24 +233,35 @@ internal fun HomeTaskDialog(
             )
 
             if (showDialog.isEditingTask) {
-                IconButton(
-                    content = {
-                        Icon(imageVector = Icons.Rounded.Check, contentDescription = "ds")
-                    },
-                    onClick = {
-                        if (task.name.isEmpty() || task.point < 1) {
-                            Toast.makeText(context, "Preencha os campos", Toast.LENGTH_SHORT).show()
-                        } else {
-                            if (showDialog.isAddingTask) {
-                                onSaveTask(HomeTask(0, task.name, task.point, false))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    IconButton(
+                        content = {
+                            Icon(imageVector = Icons.Rounded.Check, contentDescription = "ds")
+                        },
+                        onClick = {
+                            if (task.name.isEmpty() || task.point < 1) {
+                                Toast.makeText(context, "Preencha os campos", Toast.LENGTH_SHORT)
+                                    .show()
                             } else {
-                                onSaveTask(task)
+                                saveTask(task, showDialog.isAddingTask, onSaveTask)
                             }
-                        }
-                    },
-                )
+                        },
+                    )
+                }
             }
         }
+    }
+}
+
+private fun saveTask(task: HomeTask, isAddingTask: Boolean, onSaveTask: (HomeTask) -> Unit) {
+    if (isAddingTask) {
+        onSaveTask(HomeTask(0, task.name, task.point, false))
+    } else {
+        onSaveTask(task)
     }
 }
 

@@ -21,9 +21,9 @@ abstract class Reducer<State : UiSate, Event : UiEvent>(initialValue: State) {
     val state: StateFlow<State>
         get() = _state
 
-    abstract fun reduce(oldState: State, event: Event)
+    abstract suspend fun reduce(oldState: State, event: Event)
 
-    fun sendEvent(event: Event) {
+    suspend fun sendEvent(event: Event) {
         reduce(_state.value, event)
     }
 

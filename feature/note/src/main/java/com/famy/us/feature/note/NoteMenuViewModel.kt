@@ -2,30 +2,24 @@ package com.famy.us.feature.note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.famy.us.core.extensions.logD
-import com.famy.us.domain.repository.HomeTaskRepository
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
  * State Holder for our NoteMenu screen.
  *
- * @property homeTaskRepository is the repository to make some updates in the repository side.
+ * @property reducer the class responsible to reduce the state from new states.
  */
 internal class NoteMenuViewModel(
-    private val homeTaskRepository: HomeTaskRepository,
+    private val reducer: NoteScreenStateReducer,
 ) : ViewModel() {
-
-    private val reducer: NoteScreenStateReducer = NoteScreenStateReducer(NoteScreenState.Idle)
 
     val uiState: StateFlow<NoteScreenState>
         get() = reducer.state
 
     init {
         viewModelScope.launch {
-            homeTaskRepository.getAllTask().collect {
-                reducer.sendEvent(NoteScreenIntent.ShowContent(it))
-            }
+            reducer.sendEvent(NoteScreenIntent.ShowContent)
         }
     }
 
@@ -36,25 +30,8 @@ internal class NoteMenuViewModel(
      * @param event the event performed from UI.
      */
     fun perform(event: NoteScreenIntent) {
-        when (event) {
-            is NoteScreenIntent.SaveTask -> {
-                viewModelScope.launch {
-                    if (event.isNewOne) {
-                        homeTaskRepository.saveTask(event.task)
-                    } else {
-                        homeTaskRepository.updateTask(event.task)
-                    }
-                }
-            }
-            is NoteScreenIntent.DeleteTask -> {
-                viewModelScope.launch {
-                    homeTaskRepository.deleteTaskById(event.task.id)
-                }
-            }
-            else -> {
-                // Do nothing
-            }
+        viewModelScope.launch {
+            reducer.sendEvent(event)
         }
-        reducer.sendEvent(event)
     }
 }

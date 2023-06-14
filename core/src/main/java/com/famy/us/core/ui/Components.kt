@@ -13,10 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun CustomDialog(showDialog: (Boolean) -> Unit, content: @Composable () -> Unit) {
-    Dialog(onDismissRequest = {
-        showDialog(false)
-    }) {
+fun CustomDialog(onDismissDialog: () -> Unit, content: @Composable () -> Unit) {
+    Dialog(onDismissRequest = onDismissDialog) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colorScheme.primaryContainer,

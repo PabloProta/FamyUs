@@ -65,7 +65,9 @@ fun HomeScreen() {
     ) { contentPadding ->
         NavHost(
             navController,
-            startDestination = menus.first { it.priority == 0 }.route,
+            startDestination = menus
+                .sortedBy { it.priority }
+                .first().route,
             Modifier.padding(contentPadding),
         ) {
             menus.forEach { menu ->

@@ -38,9 +38,8 @@ internal sealed class NoteScreenIntent : UiEvent {
     /**
      * When the note menu screen is opened.
      *
-     * @property tasks the content that need be shown.
      */
-    data class ShowContent(val tasks: List<HomeTask>) : NoteScreenIntent()
+    object ShowContent : NoteScreenIntent()
 
     /**
      * Intent for when the user are typing some text.
