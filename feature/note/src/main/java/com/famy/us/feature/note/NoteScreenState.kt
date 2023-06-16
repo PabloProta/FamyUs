@@ -1,6 +1,6 @@
 package com.famy.us.feature.note
 
-import com.famy.us.core.utils.UiSate
+import com.famy.us.core.utils.statemachine.states.UiSate
 import com.famy.us.domain.model.HomeTask
 
 /**
@@ -39,8 +39,8 @@ internal data class NoteScreenState(
  */
 internal data class ShowDialog(
     val shouldShowDialog: Boolean,
-    val isEditingTask: Boolean,
     val isAddingTask: Boolean,
+    val isEditingTask: Boolean = isAddingTask,
 ) {
     companion object {
         val Reset: ShowDialog = ShowDialog(

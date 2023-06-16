@@ -105,12 +105,7 @@ internal fun NoteMenuScreen(viewModel: NoteMenuViewModel = koinViewModel()) {
                         viewModel.perform(NoteScreenIntent.SlidingSlider(it.toInt()))
                     },
                     onSaveTask = {
-                        viewModel.perform(
-                            NoteScreenIntent.SaveTask(
-                                task = it,
-                                isNewOne = state.value.showDialog.isAddingTask,
-                            ),
-                        )
+                        viewModel.perform(NoteScreenIntent.SaveTask)
                     },
                     onAllowEditMode = {
                         viewModel.perform(
@@ -176,7 +171,7 @@ internal fun HomeTaskDialog(
     onDismissDialog: () -> Unit,
     onTypeText: (String) -> Unit,
     onSlideSlider: (Float) -> Unit,
-    onSaveTask: (HomeTask) -> Unit,
+    onSaveTask: () -> Unit,
     onAllowEditMode: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -219,7 +214,7 @@ internal fun HomeTaskDialog(
                     imeAction = ImeAction.Done,
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { saveTask(task, showDialog.isAddingTask, onSaveTask) },
+                    onDone = { onSaveTask() },
                 ),
             )
             Slider(
@@ -247,21 +242,13 @@ internal fun HomeTaskDialog(
                                 Toast.makeText(context, "Preencha os campos", Toast.LENGTH_SHORT)
                                     .show()
                             } else {
-                                saveTask(task, showDialog.isAddingTask, onSaveTask)
+                                onSaveTask()
                             }
                         },
                     )
                 }
             }
         }
-    }
-}
-
-private fun saveTask(task: HomeTask, isAddingTask: Boolean, onSaveTask: (HomeTask) -> Unit) {
-    if (isAddingTask) {
-        onSaveTask(HomeTask(0, task.name, task.point, false))
-    } else {
-        onSaveTask(task)
     }
 }
 

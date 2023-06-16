@@ -1,6 +1,6 @@
 package com.famy.us.feature.note
 
-import com.famy.us.core.utils.UiEvent
+import com.famy.us.core.utils.statemachine.states.UiEvent
 import com.famy.us.domain.model.HomeTask
 
 /**
@@ -28,18 +28,8 @@ internal sealed class NoteScreenIntent : UiEvent {
 
     /**
      * Intent for when user save the task created by the dialog.
-     *
-     * @property task the task that will be saved.
-     * @property isNewOne if the task that will be save is a new one or is a existent task already
-     * created.
      */
-    data class SaveTask(val task: HomeTask, val isNewOne: Boolean) : NoteScreenIntent()
-
-    /**
-     * When the note menu screen is opened.
-     *
-     */
-    object ShowContent : NoteScreenIntent()
+    object SaveTask : NoteScreenIntent()
 
     /**
      * Intent for when the user are typing some text.

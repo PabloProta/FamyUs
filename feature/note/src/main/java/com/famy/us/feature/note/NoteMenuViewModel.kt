@@ -1,27 +1,22 @@
 package com.famy.us.feature.note
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.famy.us.core.utils.statemachine.machines.CommonStateMachine
+import com.famy.us.core.utils.statemachine.machines.FlowStateMachine
+import com.famy.us.feature.note.states.LoadingState
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 /**
  * State Holder for our NoteMenu screen.
- *
- * @property reducer the class responsible to reduce the state from new states.
  */
-internal class NoteMenuViewModel(
-    private val reducer: NoteScreenStateReducer,
-) : ViewModel() {
+internal class NoteMenuViewModel : ViewModel() {
+    private fun startMachine(): CommonStateMachine<NoteScreenIntent, NoteScreenState> =
+        LoadingState()
+
+    private val stateMachine = FlowStateMachine(NoteScreenState.Idle, ::startMachine)
 
     val uiState: StateFlow<NoteScreenState>
-        get() = reducer.state
-
-    init {
-        viewModelScope.launch {
-            reducer.sendEvent(NoteScreenIntent.ShowContent)
-        }
-    }
+        get() = stateMachine.uiState
 
     /**
      * Method to perform a event to send to the reducer, to get a new state according
@@ -30,8 +25,6 @@ internal class NoteMenuViewModel(
      * @param event the event performed from UI.
      */
     fun perform(event: NoteScreenIntent) {
-        viewModelScope.launch {
-            reducer.sendEvent(event)
-        }
+        stateMachine.process(event)
     }
 }
