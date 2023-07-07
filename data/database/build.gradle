@@ -2,7 +2,6 @@ apply from: "/${rootDir}/config/conventions/android-common.gradle"
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk Versions.COMPILE_SDK
     namespace 'com.famy.us.data.database'
 }
 

@@ -3,6 +3,7 @@ apply plugin: "kotlin-android"
 apply from: "$project.rootDir/config/quality/quality.gradle"
 
 android {
+    compileSdk Versions.COMPILE_SDK
     defaultConfig {
         minSdk Versions.MIN_SDK
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
