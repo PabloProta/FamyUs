@@ -1,7 +1,7 @@
 package com.famy.us.feature.note.states
 
 import com.famy.us.core.utils.statemachine.StateMachine
-import com.famy.us.core.utils.statemachine.machines.CommonStateMachine
+import com.famy.us.core.utils.statemachine.machines.CommonMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.NoteScreenIntent
 import com.famy.us.feature.note.NoteScreenState
@@ -15,7 +15,7 @@ import com.famy.us.feature.note.ShowDialog
  */
 internal class ShowTaskContentState<Event : NoteScreenIntent, State : NoteScreenState>(
     private val task: HomeTask,
-) : CommonStateMachine<Event, State>() {
+) : CommonMachineState<Event, State>() {
 
     override fun doStart() {
         val currentState = getUiState()
@@ -34,10 +34,10 @@ internal class ShowTaskContentState<Event : NoteScreenIntent, State : NoteScreen
 
         when (gesture) {
             is NoteScreenIntent.EditTask -> {
-                setMachineState(EditingTaskState(task = gesture.task))
+                setMachineState(EditingStateTask(task = gesture.task))
             }
             NoteScreenIntent.DismissDialog -> {
-                setMachineState(ItemListState(getUiState().listTask))
+                setMachineState(ItemStateList(getUiState().listTask))
             }
         }
     }

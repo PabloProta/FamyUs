@@ -1,8 +1,7 @@
 package com.famy.us.feature.note.states
 
-import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.statemachine.StateMachine
-import com.famy.us.core.utils.statemachine.machines.CoroutineStateMachine
+import com.famy.us.core.utils.statemachine.machines.CoroutineMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.repository.HomeTaskRepository
 import com.famy.us.feature.note.NoteScreenIntent
@@ -17,9 +16,9 @@ import org.koin.core.component.inject
  *
  * @property task the task that are being edited.
  */
-internal class EditingTaskState<Event : NoteScreenIntent, State : NoteScreenState>(
+internal class EditingStateTask<Event : NoteScreenIntent, State : NoteScreenState>(
     private val task: HomeTask,
-) : CoroutineStateMachine<Event, State>(), KoinComponent {
+) : CoroutineMachineState<Event, State>(), KoinComponent {
 
     private val homeTaskRepository: HomeTaskRepository by inject()
 
@@ -41,27 +40,14 @@ internal class EditingTaskState<Event : NoteScreenIntent, State : NoteScreenStat
         super.doProcess(gesture, machine)
         val currentState = getUiState()
         when (gesture) {
-            is NoteScreenIntent.TypingText -> {
-                val taskNameUpdated = currentState.managingTask.copy(
-                    name = gesture.value,
-                )
-                setMachineState(EditingTaskState(taskNameUpdated))
-            }
-            is NoteScreenIntent.SlidingSlider -> {
-                val taskPointUpdated = currentState.managingTask.copy(
-                    point = gesture.position,
-                )
-                setMachineState(EditingTaskState(taskPointUpdated))
-            }
             is NoteScreenIntent.SaveTask -> {
                 machineScope.launch {
-                    homeTaskRepository.updateTask(task = currentState.managingTask)
-                    logD { "Updating the ${currentState.managingTask}" }
-                    setMachineState(LoadingState())
+                    homeTaskRepository.updateTask(task = gesture.task)
+                    setMachineState(LoadingState(justFetch = true))
                 }
             }
             NoteScreenIntent.DismissDialog -> {
-                setMachineState(ItemListState(currentState.listTask))
+                setMachineState(ItemStateList(currentState.listTask))
             }
         }
     }

@@ -11,7 +11,7 @@ interface MachineOutput<Event : UiEvent, State : UiSate> {
     /**
      * Method to set a machine state.
      */
-    fun setMachineState(machineState: CommonStateMachine<Event, State>)
+    fun setMachineState(machineState: CommonMachineState<Event, State>)
 
     /**
      * Method to set the uiState for state machine.

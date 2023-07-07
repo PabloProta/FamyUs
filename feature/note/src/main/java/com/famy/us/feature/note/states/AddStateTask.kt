@@ -2,7 +2,7 @@ package com.famy.us.feature.note.states
 
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.statemachine.StateMachine
-import com.famy.us.core.utils.statemachine.machines.CoroutineStateMachine
+import com.famy.us.core.utils.statemachine.machines.CoroutineMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.repository.HomeTaskRepository
 import com.famy.us.feature.note.NoteScreenIntent
@@ -19,9 +19,9 @@ import org.koin.core.component.inject
  *
  * @param homeTask the task that it is editing.
  */
-internal class AddTaskState<Event : NoteScreenIntent, State : NoteScreenState>(
+internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState>(
     private val homeTask: HomeTask,
-) : CoroutineStateMachine<Event, State>(), KoinComponent {
+) : CoroutineMachineState<Event, State>(), KoinComponent {
 
     private val homeTaskRepository: HomeTaskRepository by inject()
 
@@ -44,27 +44,14 @@ internal class AddTaskState<Event : NoteScreenIntent, State : NoteScreenState>(
         super.doProcess(gesture, machine)
         val currentState = getUiState()
         when (gesture) {
-            is NoteScreenIntent.TypingText -> {
-                val taskNameUpdated = currentState.managingTask.copy(
-                    name = gesture.value,
-                )
-
-                setMachineState(AddTaskState(taskNameUpdated))
-            }
-            is NoteScreenIntent.SlidingSlider -> {
-                val taskPointUpdated = currentState.managingTask.copy(
-                    point = gesture.position,
-                )
-                setMachineState(AddTaskState(taskPointUpdated))
-            }
             is NoteScreenIntent.DismissDialog -> {
-                setMachineState(ItemListState(currentState.listTask))
+                setMachineState(ItemStateList(currentState.listTask))
             }
             is NoteScreenIntent.SaveTask -> {
                 machineScope.launch(Dispatchers.IO) {
                     currentState.apply {
-                        homeTaskRepository.saveTask(managingTask)
-                        setMachineState(LoadingState())
+                        homeTaskRepository.saveTask(gesture.task)
+                        setMachineState(LoadingState(justFetch = true))
                     }
                 }
             }

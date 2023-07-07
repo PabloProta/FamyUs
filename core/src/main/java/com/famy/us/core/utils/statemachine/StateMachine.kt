@@ -1,6 +1,6 @@
 package com.famy.us.core.utils.statemachine
 
-import com.famy.us.core.utils.statemachine.machines.CommonStateMachine
+import com.famy.us.core.utils.statemachine.machines.CommonMachineState
 import com.famy.us.core.utils.statemachine.machines.MachineInput
 import com.famy.us.core.utils.statemachine.machines.MachineOutput
 import com.famy.us.core.utils.statemachine.machines.MachineStatus
@@ -21,16 +21,16 @@ interface StateMachine<Event : UiEvent, State : UiSate> :
      * @property init a [StateMachine] to initialize the State machine.
      */
     abstract class Base<Event : UiEvent, State : UiSate>(
-        private val init: () -> CommonStateMachine<Event, State>,
+        private val init: () -> CommonMachineState<Event, State>,
     ) : StateMachine<Event, State> {
 
-        private lateinit var currentState: CommonStateMachine<Event, State>
+        private lateinit var currentState: CommonMachineState<Event, State>
 
         private var started: Boolean = false
 
         final override fun isStarted(): Boolean = started
 
-        override fun setMachineState(machineState: CommonStateMachine<Event, State>) {
+        override fun setMachineState(machineState: CommonMachineState<Event, State>) {
             clear()
             currentState = machineState
             startMachineState()

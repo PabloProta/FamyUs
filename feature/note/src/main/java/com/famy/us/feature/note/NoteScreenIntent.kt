@@ -28,22 +28,10 @@ internal sealed class NoteScreenIntent : UiEvent {
 
     /**
      * Intent for when user save the task created by the dialog.
-     */
-    object SaveTask : NoteScreenIntent()
-
-    /**
-     * Intent for when the user are typing some text.
      *
-     * @property value the string that are being typed.
+     * @property task the task that will be saved.
      */
-    data class TypingText(val value: String) : NoteScreenIntent()
-
-    /**
-     * Intent for when a slider in the NoteScreen are being slided.
-     *
-     * @property position the position that it are.
-     */
-    data class SlidingSlider(val position: Int) : NoteScreenIntent()
+    data class SaveTask(val task: HomeTask) : NoteScreenIntent()
 
     /**
      * For when any dialog into [NoteMenuScreen] is dismissed.

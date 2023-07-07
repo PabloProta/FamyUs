@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 open class FlowStateMachine<Event : UiEvent, State : UiSate>(
     initialUiState: State,
-    init: () -> CommonStateMachine<Event, State>,
+    init: () -> CommonMachineState<Event, State>,
 ) : StateMachine.Base<Event, State>(init) {
 
     private val mediator = MutableStateFlow(initialUiState)

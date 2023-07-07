@@ -8,10 +8,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
 /**
- * State Machine to use with coroutines, with own scope.
+ * This is class to represent a state to a state machine to use with coroutines, with own scope.
  */
-abstract class CoroutineStateMachine<Event : UiEvent, State : UiSate> :
-    CommonStateMachine<Event, State>() {
+abstract class CoroutineMachineState<Event : UiEvent, State : UiSate> :
+    CommonMachineState<Event, State>() {
 
     /**
      * The scope used.

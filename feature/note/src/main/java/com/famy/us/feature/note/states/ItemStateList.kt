@@ -2,7 +2,7 @@ package com.famy.us.feature.note.states
 
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.statemachine.StateMachine
-import com.famy.us.core.utils.statemachine.machines.CoroutineStateMachine
+import com.famy.us.core.utils.statemachine.machines.CoroutineMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.repository.HomeTaskRepository
 import com.famy.us.feature.note.NoteScreenIntent
@@ -17,9 +17,9 @@ import org.koin.core.component.inject
  *
  * @property taskList the list of [HomeTask].
  */
-internal class ItemListState<Event : NoteScreenIntent, State : NoteScreenState>(
+internal class ItemStateList<Event : NoteScreenIntent, State : NoteScreenState>(
     private val taskList: List<HomeTask>,
-) : CoroutineStateMachine<Event, State>(), KoinComponent {
+) : CoroutineMachineState<Event, State>(), KoinComponent {
 
     private val homeTaskRepository: HomeTaskRepository by inject()
 
@@ -38,7 +38,7 @@ internal class ItemListState<Event : NoteScreenIntent, State : NoteScreenState>(
         super.doProcess(gesture, machine)
         when (gesture) {
             NoteScreenIntent.AddTask -> {
-                setMachineState(AddTaskState(HomeTask.Empty))
+                setMachineState(AddStateTask(HomeTask.Empty))
             }
             is NoteScreenIntent.DeleteTask -> {
                 machineScope.launch {
@@ -47,7 +47,7 @@ internal class ItemListState<Event : NoteScreenIntent, State : NoteScreenState>(
                 }
             }
             is NoteScreenIntent.EditTask -> {
-                setMachineState(EditingTaskState(gesture.task))
+                setMachineState(EditingStateTask(gesture.task))
             }
             is NoteScreenIntent.ShowTaskContent -> {
                 setMachineState(ShowTaskContentState(gesture.task))

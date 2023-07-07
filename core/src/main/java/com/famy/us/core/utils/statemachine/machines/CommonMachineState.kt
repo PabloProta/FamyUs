@@ -9,7 +9,7 @@ import com.famy.us.core.utils.statemachine.states.UiSate
  * This is the state machine common between any other type of state machine.
  * every state machine has this kind methods. This class just serves as abstraction.
  */
-abstract class CommonStateMachine<Event : UiEvent, State : UiSate> {
+abstract class CommonMachineState<Event : UiEvent, State : UiSate> {
     private lateinit var machine: StateMachine<Event, State>
 
     /**
@@ -54,7 +54,7 @@ abstract class CommonStateMachine<Event : UiEvent, State : UiSate> {
     /**
      *  update the Machine state.
      */
-    protected fun setMachineState(machineState: CommonStateMachine<Event, State>) {
+    protected fun setMachineState(machineState: CommonMachineState<Event, State>) {
         machine.setMachineState(machineState)
     }
 
