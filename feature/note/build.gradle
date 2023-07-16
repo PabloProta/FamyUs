@@ -1,7 +1,6 @@
 apply from: "/${rootDir}/config/conventions/android-common.gradle"
 
 android {
-    compileSdk Versions.COMPILE_SDK
     namespace 'com.famy.us.note'
 
     buildFeatures {

@@ -17,8 +17,7 @@ import org.koin.core.component.inject
  */
 internal class LoadingState<Event : NoteScreenIntent, State : NoteScreenState>(
     private val justFetch: Boolean = false,
-) :
-    CoroutineMachineState<Event, State>(), KoinComponent {
+) : CoroutineMachineState<Event, State>(), KoinComponent {
 
     private val homeTaskRepository: HomeTaskRepository by inject()
 
