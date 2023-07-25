@@ -40,56 +40,69 @@ internal fun HomeTaskDialog(
     onSaveClicked: (HomeTask) -> Unit,
 ) {
     val showDialog = showDialogProvider()
+    if (!showDialog.shouldShowDialog) return
+    val task = taskProvider()
+    var score by remember {
+        mutableStateOf(task.point.toFloat())
+    }
+    var name by remember {
+        mutableStateOf(task.name)
+    }
+    CustomDialog(onDismissDialog = onDismissDialog) {
+        if (!showDialog.isEditingTask) {
+            AllowEdit(taskName = name, onEditClicked = onEditClicked)
+        }
+        Spacer(
+            modifier = Modifier
+                .size(height = 10.dp, width = 0.dp),
+        )
+        OutlinedTextField(
+            value = name,
+            onValueChange = {
+                name = it
+            },
+            enabled = showDialog.isEditingTask,
+            maxLines = 1,
+            label = {
+                Text(text = "Tarefa")
+            },
+            placeholder = {
+                Text(text = "digite o nome da tarefa")
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onSaveClicked(
+                        task.copy(
+                            name = name,
+                            point = score.toInt(),
+                        ),
+                    )
+                },
+            ),
+        )
+        ShowScore(
+            isEditing = showDialog.isEditingTask,
+            scoreProvider = { score },
+            onScoreChange = {
+                score = it
+            },
+        )
 
-    if (showDialog.shouldShowDialog) {
-        val task = taskProvider()
-        var score by remember {
-            mutableStateOf(task.point.toFloat())
-        }
-        var name by remember {
-            mutableStateOf(task.name)
-        }
-        CustomDialog(onDismissDialog = onDismissDialog) {
-            if (!showDialog.isEditingTask) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    IconButton(
-                        modifier = Modifier,
-                        onClick = onEditClicked,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Sharp.Edit,
-                            contentDescription = "edit ${task.name}",
-                        )
-                    }
-                }
-            }
-            Spacer(
+        if (showDialog.isEditingTask) {
+            Row(
                 modifier = Modifier
-                    .size(height = 10.dp, width = 0.dp),
-            )
-            OutlinedTextField(
-                value = name,
-                onValueChange = {
-                    name = it
-                },
-                enabled = showDialog.isEditingTask,
-                maxLines = 1,
-                label = {
-                    Text(text = "Tarefa")
-                },
-                placeholder = {
-                    Text(text = "digite o nome da tarefa")
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                IconButton(
+                    content = {
+                        Icon(imageVector = Icons.Rounded.Check, contentDescription = "ds")
+                    },
+                    onClick = {
                         onSaveClicked(
                             task.copy(
                                 name = name,
@@ -97,41 +110,48 @@ internal fun HomeTaskDialog(
                             ),
                         )
                     },
-                ),
-            )
-            Slider(
-                value = score,
-                onValueChange = {
-                    score = it
-                },
-                valueRange = 0f..100f,
-                enabled = showDialog.isEditingTask,
-            )
-            Text(
-                text = score.toInt().toString(),
-            )
-
-            if (showDialog.isEditingTask) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    IconButton(
-                        content = {
-                            Icon(imageVector = Icons.Rounded.Check, contentDescription = "ds")
-                        },
-                        onClick = {
-                            onSaveClicked(
-                                task.copy(
-                                    name = name,
-                                    point = score.toInt(),
-                                ),
-                            )
-                        },
-                    )
-                }
+                )
             }
         }
     }
+}
+
+@Composable
+fun AllowEdit(
+    taskName: String,
+    onEditClicked: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.End,
+    ) {
+        IconButton(
+            modifier = Modifier,
+            onClick = onEditClicked,
+        ) {
+            Icon(
+                imageVector = Icons.Sharp.Edit,
+                contentDescription = "edit $taskName",
+            )
+        }
+    }
+}
+
+@Composable
+fun ShowScore(
+    isEditing: Boolean,
+    scoreProvider: () -> Float,
+    onScoreChange: (Float) -> Unit,
+) {
+    val score = scoreProvider()
+    Slider(
+        value = score,
+        onValueChange = onScoreChange,
+        valueRange = 0f..100f,
+        enabled = isEditing,
+    )
+    Text(
+        text = score.toInt().toString(),
+    )
 }
