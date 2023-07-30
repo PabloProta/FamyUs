@@ -13,6 +13,9 @@ room = "2.5.0"
 ## Gson
 gson = "2.10.1"
 
+# Firebase
+firebase-bom = "32.2.0"
+
 [libraries]
 ## Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -41,6 +44,8 @@ room-coroutines = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 ## Gson
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = {module="com.google.firebase:firebase-analytics-ktx"}
 
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",
