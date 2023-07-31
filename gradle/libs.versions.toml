@@ -13,8 +13,14 @@ room = "2.5.0"
 ## Gson
 gson = "2.10.1"
 
-# Firebase
+## Firebase
 firebase-bom = "32.2.0"
+
+## Google play Services
+google-play-services = "20.6.0"
+
+## LifeCycle
+lifecycle = "2.6.1"
 
 [libraries]
 ## Compose
@@ -44,8 +50,19 @@ room-coroutines = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 ## Gson
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+## Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics = {module="com.google.firebase:firebase-analytics-ktx"}
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+
+## Google play Service
+google-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "google-play-services" }
+
+## Lifecycle
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version.ref = "lifecycle" }
+lifecycle-processes = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",

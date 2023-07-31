@@ -14,8 +14,12 @@ android {
 }
 
 dependencies {
+    implementation project(":core")
     implementation platform(libs.compose.bom)
     implementation platform(libs.firebase.bom)
     implementation libs.bundles.compose.ui.kit
+    implementation libs.bundles.koin.compose
     implementation libs.firebase.analytics
+    implementation libs.firebase.auth
+    implementation libs.google.services.auth
 }

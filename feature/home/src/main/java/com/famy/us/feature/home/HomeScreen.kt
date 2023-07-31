@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.famy.us.authentication.AuthenticationContainer
 import org.koin.compose.getKoin
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,48 +31,50 @@ fun HomeScreen() {
         it.loadMenu()
     }
 
-    Scaffold(
-        modifier = Modifier,
-        bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-            ) {
-                menus
+    AuthenticationContainer {
+        Scaffold(
+            modifier = Modifier,
+            bottomBar = {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                ) {
+                    menus
+                        .sortedBy { it.priority }
+                        .forEach { menuItem ->
+                            val selected =
+                                currentDestination?.hierarchy?.any { menuItem.route == it.route } == true
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = {
+                                    navController.navigate(menuItem.route)
+                                },
+                                label = {
+                                    Text(
+                                        text = menuItem.name,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = menuItem.icon,
+                                        contentDescription = "${menuItem.name} Icon",
+                                    )
+                                },
+                            )
+                        }
+                }
+            },
+        ) { contentPadding ->
+            NavHost(
+                navController,
+                startDestination = menus
                     .sortedBy { it.priority }
-                    .forEach { menuItem ->
-                        val selected =
-                            currentDestination?.hierarchy?.any { menuItem.route == it.route } == true
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(menuItem.route)
-                            },
-                            label = {
-                                Text(
-                                    text = menuItem.name,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = menuItem.icon,
-                                    contentDescription = "${menuItem.name} Icon",
-                                )
-                            },
-                        )
-                    }
-            }
-        },
-    ) { contentPadding ->
-        NavHost(
-            navController,
-            startDestination = menus
-                .sortedBy { it.priority }
-                .first().route,
-            Modifier.padding(contentPadding),
-        ) {
-            menus.forEach { menu ->
-                composable(menu.route) { menu.screen.invoke() }
+                    .first().route,
+                Modifier.padding(contentPadding),
+            ) {
+                menus.forEach { menu ->
+                    composable(menu.route) { menu.screen.invoke() }
+                }
             }
         }
     }

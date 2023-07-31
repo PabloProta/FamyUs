@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 apply from: "$rootDir/config/quality/quality.gradle"
 
@@ -47,8 +48,13 @@ dependencies {
     implementation project(":domain")
     implementation project(":feature:home")
     implementation project(":feature:note")
+    implementation project(":feature:authentication")
+    implementation project(":core")
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui.kit
     api libs.koin.core
     implementation libs.koin.android
+    implementation libs.lifecycle.runtime
+    implementation libs.lifecycle.processes
+    kapt libs.lifecycle.compiler
 }
