@@ -1,0 +1,6 @@
+apply from: "/${rootDir}/config/conventions/android-common.gradle"
+
+android {
+    namespace 'com.famy.us.core.extensions'
+
+}

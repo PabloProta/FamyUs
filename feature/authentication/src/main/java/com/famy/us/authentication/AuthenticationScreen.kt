@@ -1,6 +1,5 @@
 package com.famy.us.authentication
 
-import android.content.Context
 import android.content.IntentSender
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -25,14 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.famy.us.authentication.components.SignInButton
+import com.famy.us.authentication.state.AuthenticationState
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.extensions.logE
+import com.famy.us.domain.model.AuthenticationMethods
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -48,30 +47,44 @@ internal fun AuthenticationScreen(
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartIntentSenderForResult(),
         ) { result ->
-            handleClientSign(viewModel, context, result)
+            handleClientSign(viewModel, result)
         }
-    if (viewModel.isLogged.value) {
-        onFinishAuthentication()
-    } else {
-        SignInScreen(
-            isLoadingProvider = { isLoading },
-            onCLickSign = {
-                isLoading = true
-                signIn(
-                    viewModel.client,
-                    viewModel.signRequest(),
-                    onSuccess = { result ->
-                        val intent = IntentSenderRequest.Builder(result.pendingIntent).build()
-                        signContract.launch(intent)
-                    },
-                    onFailure = {
-                        isLoading = false
-                        Toast.makeText(context, "Failed on try sign in", Toast.LENGTH_SHORT)
-                            .show()
-                    },
-                )
-            },
-        )
+
+    when (val state = viewModel.authenticationState.value) {
+        AuthenticationState.USER_LOGGED -> {
+            onFinishAuthentication()
+        }
+
+        AuthenticationState.AUTHENTICATION_FAIL,
+        AuthenticationState.IDLE,
+        -> {
+            if (state == AuthenticationState.AUTHENTICATION_FAIL) {
+                Toast.makeText(
+                    context,
+                    "Failed to authenticate with firebase",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            SignInScreen(
+                isLoadingProvider = { isLoading },
+                onCLickSign = {
+                    isLoading = true
+                    signIn(
+                        viewModel.client,
+                        viewModel.signRequest(),
+                        onSuccess = { result ->
+                            val intent = IntentSenderRequest.Builder(result.pendingIntent).build()
+                            signContract.launch(intent)
+                        },
+                        onFailure = {
+                            isLoading = false
+                            Toast.makeText(context, "Failed on try sign in", Toast.LENGTH_SHORT)
+                                .show()
+                        },
+                    )
+                },
+            )
+        }
     }
 }
 
@@ -110,25 +123,6 @@ internal fun SignInScreen(
     }
 }
 
-private fun authenticateWithFirebase(
-    idToken: String,
-    auth: FirebaseAuth,
-    onSuccess: () -> Unit,
-    onFailure: () -> Unit,
-) {
-    val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-    auth.signInWithCredential(firebaseCredential)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                logD { "Logged with success" }
-                onSuccess()
-            } else {
-                logD { "Login failed" }
-                onFailure()
-            }
-        }
-}
-
 private fun signIn(
     client: SignInClient,
     signRequest: BeginSignInRequest,
@@ -149,31 +143,14 @@ private fun signIn(
 
 private fun handleClientSign(
     viewModel: AuthenticationViewModel,
-    context: Context,
     result: ActivityResult,
 ) {
-    val auth = viewModel.auth
     try {
         val credential = viewModel.client.getSignInCredentialFromIntent(result.data)
         val idToken = credential.googleIdToken
         when {
             idToken != null -> {
-                authenticateWithFirebase(
-                    idToken,
-                    auth,
-                    onSuccess = {
-                        viewModel.isLogged.value = auth.currentUser != null
-                    },
-                    onFailure = {
-                        Toast.makeText(
-                            context,
-                            "Failed to authenticate with firebase",
-                            Toast.LENGTH_SHORT,
-                        )
-                            .show()
-                        viewModel.isLogged.value = false
-                    },
-                )
+                viewModel.authenticateMember(AuthenticationMethods.Google(idToken = idToken))
             }
 
             else -> {

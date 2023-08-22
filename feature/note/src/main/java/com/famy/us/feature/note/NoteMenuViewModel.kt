@@ -2,8 +2,8 @@ package com.famy.us.feature.note
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
-import com.famy.us.core.utils.statemachine.machines.CommonMachineState
-import com.famy.us.core.utils.statemachine.machines.MutableStateMachine
+import com.famy.us.core.utils.machines.CommonMachineState
+import com.famy.us.core.utils.machines.MutableStateMachine
 import com.famy.us.feature.note.states.LoadingState
 
 /**

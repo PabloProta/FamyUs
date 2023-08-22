@@ -1,8 +1,10 @@
 package com.famy.us.repository.repository
 
+import com.famy.us.domain.model.AuthenticationMethods
 import com.famy.us.domain.model.FamilyMember
 import com.famy.us.domain.repository.FamilyRepository
 import com.famy.us.repository.datasource.FamilyMemberDataSource
+import com.famy.us.repository.datasource.firebase.FamilyFirebaseDataSource
 import com.famy.us.repository.mapper.FamilyMemberMapper
 import com.famy.us.repository.model.AdminMember
 import com.famy.us.repository.model.NonAdminMember
@@ -15,11 +17,13 @@ import com.famy.us.domain.model.NonAdminMember as DomainNonAdminMember
  * Class that implements the repository interface at domain layer.
  *
  * @property dataSource is the class responsible for the data source for this repository
+ * @property firebaseDataSource the data source based on the firebase.
  * @property familyMemberMapper is the mapper used by this repository to convert a model
  * between domain and data module.
  */
 internal class FamilyRepositoryImpl(
     private val dataSource: FamilyMemberDataSource,
+    private val firebaseDataSource: FamilyFirebaseDataSource,
     private val familyMemberMapper: FamilyMemberMapper,
 ) : FamilyRepository {
 
@@ -67,5 +71,32 @@ internal class FamilyRepositoryImpl(
 
     override suspend fun deleteMemberById(id: Int) {
         dataSource.deleteMemberById(id)
+    }
+
+    override fun isUserAuthenticated(): Boolean = firebaseDataSource.isUserAuthenticated()
+    override fun authenticateUser(
+        methods: AuthenticationMethods,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit,
+    ) {
+        when (methods) {
+            is AuthenticationMethods.Google -> firebaseDataSource.authenticateWithGoogle(
+                methods.idToken,
+                onSuccess = onSuccess,
+                onFail = onFail,
+            )
+
+            else -> {
+                // Do nothing...
+            }
+        }
+    }
+
+    override fun isUserAlreadyRegistered(): Boolean {
+        return false
+    }
+
+    override fun setIsUserRegistered() {
+        TODO("Not yet implemented")
     }
 }

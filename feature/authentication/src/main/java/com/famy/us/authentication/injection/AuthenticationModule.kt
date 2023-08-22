@@ -13,5 +13,5 @@ import org.koin.dsl.module
 val authenticationModule = module {
     single { RequestSignBuilder(androidContext()) }
     single { OneTapClient(androidContext()) }
-    viewModel { AuthenticationViewModel(get(), get()) }
+    viewModel { AuthenticationViewModel(get(), get(), get(), get()) }
 }

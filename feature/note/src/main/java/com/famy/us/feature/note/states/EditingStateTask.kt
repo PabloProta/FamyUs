@@ -1,7 +1,7 @@
 package com.famy.us.feature.note.states
 
-import com.famy.us.core.utils.statemachine.StateMachine
-import com.famy.us.core.utils.statemachine.machines.CoroutineMachineState
+import com.famy.us.core.utils.StateMachine
+import com.famy.us.core.utils.machines.CoroutineMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.repository.HomeTaskRepository
 import com.famy.us.feature.note.NoteScreenIntent

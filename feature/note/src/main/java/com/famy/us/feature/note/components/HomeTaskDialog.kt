@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.sharp.Edit
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -30,7 +29,6 @@ import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.ShowDialog
 
 @Suppress("LongMethod")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeTaskDialog(
     taskProvider: () -> HomeTask,

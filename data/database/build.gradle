@@ -7,7 +7,7 @@ android {
 
 dependencies {
     implementation project(':data:repository')
-    implementation project(':core')
+    implementation project(':core:extensions')
     implementation libs.room.runtime
     implementation libs.room.coroutines
     implementation libs.gson

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.famy.database.dataDatabaseModule
 import com.famy.us.authentication.injection.authenticationModule
+import com.famy.us.data.firebase.injection.dataFirebaseModule
 import com.famy.us.domain.domainModule
 import com.famy.us.feature.home.injection.homeModule
 import com.famy.us.feature.note.injection.noteModule
@@ -26,6 +27,7 @@ class FamyUsApplication : Application(), KoinComponent {
             modules(
                 dataRepositoryModule,
                 dataDatabaseModule,
+                dataFirebaseModule,
                 domainModule,
                 authenticationModule,
                 homeModule,

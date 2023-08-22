@@ -1,5 +1,6 @@
 package com.famy.us.domain.repository
 
+import com.famy.us.domain.model.AuthenticationMethods
 import com.famy.us.domain.model.FamilyMember
 import kotlinx.coroutines.flow.Flow
 
@@ -40,4 +41,34 @@ interface FamilyRepository {
      * @param id the member id that are going to be deleted.
      */
     suspend fun deleteMemberById(id: Int)
+
+    /**
+     * Method to know if user is already logged.
+     *
+     * @return [Boolean] true if the user is already logged in the firebase auth, otherwise false.
+     */
+    fun isUserAuthenticated(): Boolean
+
+    /**
+     * Method to authenticate the user.
+     *
+     * @param methods the method that will be used to authenticate the user.
+     * @param onSuccess when the authentication has being done successfully.
+     * @param onFail when the authentication gets failed.
+     */
+    fun authenticateUser(methods: AuthenticationMethods, onSuccess: () -> Unit, onFail: () -> Unit)
+
+    /**
+     * Method to know if the user is already registered, this step is different from authentication
+     * is more related to the user registration on app, with useful information to handle the
+     * family tasks.
+     *
+     * @return [Boolean] true is the user is already registered.
+     */
+    fun isUserAlreadyRegistered(): Boolean
+
+    /**
+     * Should be called when the user finish the registration step.
+     */
+    fun setIsUserRegistered()
 }
