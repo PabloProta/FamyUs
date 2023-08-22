@@ -8,6 +8,7 @@ import com.famy.database.model.FamilyMember
 import kotlinx.coroutines.flow.Flow
 
 /**
+ * TODO - The room database does not be used yet.
  * Interface responsible to provide the data access to the objects related to the family member.
  */
 @Dao

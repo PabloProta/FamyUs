@@ -1,5 +1,6 @@
 package com.famy.us.domain.repository
 
+import com.famy.us.domain.model.AdminMember
 import com.famy.us.domain.model.AuthenticationMethods
 import com.famy.us.domain.model.FamilyMember
 import kotlinx.coroutines.flow.Flow
@@ -10,37 +11,6 @@ import kotlinx.coroutines.flow.Flow
  * the FamilyMember only.
  */
 interface FamilyRepository {
-
-    /**
-     * Method to get all members registered.
-     */
-    suspend fun getAllMembers(): Flow<List<FamilyMember>>
-
-    /**
-     * Method to get a member by Id.
-     */
-    suspend fun getMemberById(id: Int): Flow<FamilyMember>
-
-    /**
-     * Method to save a member.
-     *
-     * @param familyMember the new member that are going to be saved.
-     */
-    suspend fun saveMember(familyMember: FamilyMember)
-
-    /**
-     * Method to update a already existent member.
-     *
-     * @param familyMember the member that will be updated.
-     */
-    suspend fun updateMember(familyMember: FamilyMember)
-
-    /**
-     * Method to delete a member by id.
-     *
-     * @param id the member id that are going to be deleted.
-     */
-    suspend fun deleteMemberById(id: Int)
 
     /**
      * Method to know if user is already logged.
@@ -59,16 +29,17 @@ interface FamilyRepository {
     fun authenticateUser(methods: AuthenticationMethods, onSuccess: () -> Unit, onFail: () -> Unit)
 
     /**
-     * Method to know if the user is already registered, this step is different from authentication
-     * is more related to the user registration on app, with useful information to handle the
-     * family tasks.
+     * Method to create a new family.
      *
-     * @return [Boolean] true is the user is already registered.
+     * @param familyName the name for the new family.
+     * @param newMember the member that is mandatory to create a new family
      */
-    fun isUserAlreadyRegistered(): Boolean
+    fun createNewFamily(familyName: String, newMember: AdminMember)
 
     /**
-     * Should be called when the user finish the registration step.
+     * Method to get the current family member registered.
+     *
+     * @return [Flow] of  the current [FamilyMember].
      */
-    fun setIsUserRegistered()
+    fun getCurrentMember(): Flow<FamilyMember?>
 }

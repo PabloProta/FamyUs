@@ -9,7 +9,7 @@ import java.util.Date
  * @property point how many point it value.
  * @property isAssigned if this task was already assigned.
  */
-data class HomeTask(
+data class RepositoryTask(
     val id: Int,
     val name: String,
     val point: Int,

@@ -10,5 +10,5 @@ import org.koin.dsl.module
 val homeModule = module {
     //  TODO - remove comments when the home screen is getting ready.
 //    factory { HomeMenuLoader() } bind MenusLoader::class
-    viewModel { HomeViewModel(get(), getAll()) }
+    viewModel { HomeViewModel(get(), get(), getAll()) }
 }

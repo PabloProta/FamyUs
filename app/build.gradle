@@ -50,6 +50,7 @@ dependencies {
     implementation project(":feature:home")
     implementation project(":feature:note")
     implementation project(":feature:authentication")
+    implementation project(":feature:registration")
     implementation project(":core:utils")
     implementation project(":core:extensions")
     implementation platform(libs.compose.bom)
@@ -59,4 +60,5 @@ dependencies {
     implementation libs.lifecycle.runtime
     implementation libs.lifecycle.processes
     kapt libs.lifecycle.compiler
+    implementation libs.firebase.realtime.database
 }

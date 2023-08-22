@@ -1,6 +1,8 @@
 package com.famy.us.data.firebase.injection
 
-import com.famy.us.data.firebase.FamilyFirebaseDataSourceImpl
+import com.famy.us.data.firebase.datasource.FamilyFirebaseDataSourceImpl
+import com.famy.us.data.firebase.mapper.FamilyMemberMapper
+import com.famy.us.data.firebase.mapper.FamilyTaskMapper
 import com.famy.us.repository.datasource.firebase.FamilyFirebaseDataSource
 import org.koin.dsl.module
 
@@ -9,5 +11,8 @@ import org.koin.dsl.module
  */
 val dataFirebaseModule = module {
 
-    single<FamilyFirebaseDataSource> { FamilyFirebaseDataSourceImpl() }
+    factory { FamilyTaskMapper() }
+    factory { FamilyMemberMapper() }
+
+    single<FamilyFirebaseDataSource> { FamilyFirebaseDataSourceImpl(get()) }
 }

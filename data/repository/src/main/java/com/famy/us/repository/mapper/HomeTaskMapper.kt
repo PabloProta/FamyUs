@@ -1,7 +1,7 @@
 package com.famy.us.repository.mapper
 
 import com.famy.us.domain.model.HomeTask as DomainHomeTask
-import com.famy.us.repository.model.HomeTask as DataHomeTask
+import com.famy.us.repository.model.RepositoryTask as DataHomeTask
 
 /**
  * Class to map the models of HomeTaskMapper between modules.

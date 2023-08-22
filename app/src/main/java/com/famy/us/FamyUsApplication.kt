@@ -4,10 +4,12 @@ import android.app.Application
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.famy.database.dataDatabaseModule
 import com.famy.us.authentication.injection.authenticationModule
+import com.famy.us.core.utils.injection.coreUtilsModule
 import com.famy.us.data.firebase.injection.dataFirebaseModule
 import com.famy.us.domain.domainModule
 import com.famy.us.feature.home.injection.homeModule
 import com.famy.us.feature.note.injection.noteModule
+import com.famy.us.feature.registration.injection.registrationModule
 import com.famy.us.injection.appModule
 import com.famy.us.repository.dataRepositoryModule
 import org.koin.android.ext.koin.androidContext
@@ -28,10 +30,12 @@ class FamyUsApplication : Application(), KoinComponent {
                 dataRepositoryModule,
                 dataDatabaseModule,
                 dataFirebaseModule,
+                coreUtilsModule,
                 domainModule,
                 authenticationModule,
                 homeModule,
                 noteModule,
+                registrationModule,
                 appModule,
             )
         }
