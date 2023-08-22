@@ -1,7 +1,7 @@
 package com.famy.database.mapper
 
 import com.famy.database.model.HomeTask as DatabaseHomeTask
-import com.famy.us.repository.model.HomeTask as RepositoryHomeTask
+import com.famy.us.repository.model.RepositoryTask as RepositoryHomeTask
 
 /**
  * Mapper class to convert models between data:database and data:repository module.

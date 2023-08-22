@@ -4,7 +4,7 @@ import com.famy.database.DatabaseProvider
 import com.famy.database.mapper.HomeTaskMapper
 import com.famy.us.core.extensions.logD
 import com.famy.us.repository.datasource.HomeTaskDataSource
-import com.famy.us.repository.model.HomeTask
+import com.famy.us.repository.model.RepositoryTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -24,25 +24,25 @@ internal class HomeTaskDataSourceImpl(
 
     private val homeTaskDao = databaseProvider.database.homeTaskDao()
 
-    override suspend fun getAllTask(): Flow<List<HomeTask>> = withContext(Dispatchers.IO) {
+    override suspend fun getAllTask(): Flow<List<RepositoryTask>> = withContext(Dispatchers.IO) {
         homeTaskDao.getAllTasks().distinctUntilChanged().map {
             mapper.toRepository(it)
         }
     }
 
-    override suspend fun getTaskById(id: Int): Flow<HomeTask> = withContext(Dispatchers.IO) {
+    override suspend fun getTaskById(id: Int): Flow<RepositoryTask> = withContext(Dispatchers.IO) {
         homeTaskDao.getTaskById(id).distinctUntilChanged().map {
             mapper.toRepository(it)
         }
     }
 
-    override suspend fun saveTask(newTask: HomeTask) {
+    override suspend fun saveTask(newTask: RepositoryTask) {
         withContext(Dispatchers.IO) {
             homeTaskDao.saveTask(mapper.toDatabase(newTask))
         }
     }
 
-    override suspend fun updateTask(task: HomeTask) {
+    override suspend fun updateTask(task: RepositoryTask) {
         withContext(Dispatchers.IO) {
             logD { "Atualizando o $task" }
             homeTaskDao.updateTask(mapper.toDatabase(task))

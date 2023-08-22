@@ -15,6 +15,6 @@ val dataRepositoryModule = module {
     factory { HomeTaskMapper() }
     factory { FamilyMemberMapper(get()) }
 
-    single<FamilyRepository> { FamilyRepositoryImpl(get(), get(), get()) }
+    single<FamilyRepository> { FamilyRepositoryImpl(get(), get()) }
     single<HomeTaskRepository> { HomeTaskRepositoryImpl(get(), get()) }
 }

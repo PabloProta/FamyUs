@@ -1,75 +1,59 @@
 package com.famy.us.repository.mapper
 
-import com.famy.us.domain.model.AdminMember as DomainAdminMember
-import com.famy.us.domain.model.NonAdminMember as DomainNonAdminMember
-import com.famy.us.repository.model.AdminMember as DataAdminMember
-import com.famy.us.repository.model.NonAdminMember as DataNonAdminMember
+import com.famy.us.domain.model.AdminMember
+import com.famy.us.domain.model.FamilyMember
+import com.famy.us.domain.model.NonAdminMember
+import com.famy.us.repository.model.RepositoryFamilyMember
 
 /**
- * Class to map the models of FamilyMember between modules.
+ * Class to map family members data between repository and domain module.
+ *
+ * @property homeTaskMapper the mapper to map the tasks.
  */
 internal class FamilyMemberMapper(private val homeTaskMapper: HomeTaskMapper) {
 
     /**
-     * Method to convert a data model to domain module.
-     *
-     * @param dataAdminMember the model that will be converted to the domain module.
-     * @return a model already converted to the domain module.
+     * Method to convert a [RepositoryFamilyMember] to [AdminMember] or [NonAdminMember].
      */
-    fun toDomain(dataAdminMember: DataAdminMember): DomainAdminMember = dataAdminMember.run {
-        DomainAdminMember(
-            id,
-            name,
-            homeTaskMapper.toDomain(tasks),
-            score,
-        )
+    fun toDomain(repositoryFamilyMember: RepositoryFamilyMember) =
+        if (repositoryFamilyMember.isAdmin) {
+            AdminMember(
+                id = repositoryFamilyMember.id,
+                name = repositoryFamilyMember.name,
+                tasks = homeTaskMapper.toDomain(repositoryFamilyMember.tasks),
+                score = repositoryFamilyMember.score,
+            )
+        } else {
+            NonAdminMember(
+                id = repositoryFamilyMember.id,
+                name = repositoryFamilyMember.name,
+                tasks = homeTaskMapper.toDomain(repositoryFamilyMember.tasks),
+                score = repositoryFamilyMember.score,
+            )
+        }
+
+    /**
+     * Method to convert a any kind of [FamilyMember] to [RepositoryFamilyMember].
+     */
+    fun toRepository(familyMember: FamilyMember) = if (familyMember is AdminMember) {
+        toRepository(familyMember)
+    } else {
+        toRepository(familyMember as NonAdminMember)
     }
 
-    /**
-     * Method to convert a data model to domain module.
-     *
-     * @param dataNonAdminMember the model that will be converted to the domain module.
-     * @return a model already converted to the domain module.
-     */
-    fun toDomain(dataNonAdminMember: DataNonAdminMember): DomainNonAdminMember =
-        dataNonAdminMember.run {
-            DomainNonAdminMember(
-                id,
-                name,
-                homeTaskMapper.toDomain(tasks),
-                score,
-            )
-        }
+    private fun toRepository(adminMember: AdminMember) = RepositoryFamilyMember(
+        id = adminMember.id,
+        name = adminMember.name,
+        tasks = homeTaskMapper.toRepository(adminMember.tasks),
+        score = adminMember.score,
+        isAdmin = true,
+    )
 
-    /**
-     * Method to convert a domain model to data module.
-     *
-     * @param domainAdminMember the model that will be converted to the data module.
-     * @return a model already converted to the data module.
-     */
-    fun toRepository(domainAdminMember: DomainAdminMember): DataAdminMember =
-        domainAdminMember.run {
-            DataAdminMember(
-                id,
-                name,
-                homeTaskMapper.toRepository(tasks),
-                score,
-            )
-        }
-
-    /**
-     * Method to convert a domain model to data module.
-     *
-     * @param domainNonAdminMember the model that will be converted to the data module.
-     * @return a model already converted to the data module.
-     */
-    fun toRepository(domainNonAdminMember: DomainNonAdminMember): DataNonAdminMember =
-        domainNonAdminMember.run {
-            DataNonAdminMember(
-                id,
-                name,
-                homeTaskMapper.toRepository(tasks),
-                score,
-            )
-        }
+    private fun toRepository(nonAdminMember: NonAdminMember) = RepositoryFamilyMember(
+        id = nonAdminMember.id,
+        name = nonAdminMember.name,
+        tasks = homeTaskMapper.toRepository(nonAdminMember.tasks),
+        score = nonAdminMember.score,
+        isAdmin = false,
+    )
 }

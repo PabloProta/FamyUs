@@ -56,6 +56,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+firebase-realtime-database = { module = "com.google.firebase:firebase-database-ktx"}
 
 ## Google play Service
 google-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "google-play-services" }
