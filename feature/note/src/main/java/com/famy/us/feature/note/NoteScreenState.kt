@@ -1,6 +1,6 @@
 package com.famy.us.feature.note
 
-import com.famy.us.core.utils.statemachine.states.UiSate
+import com.famy.us.core.utils.UiSate
 import com.famy.us.domain.model.HomeTask
 
 /**

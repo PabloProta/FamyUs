@@ -6,6 +6,6 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':core:extensions')
     compileOnly libs.koin.core
 }

@@ -1,0 +1,20 @@
+apply from: "/${rootDir}/config/conventions/android-common.gradle"
+
+android {
+    namespace 'com.famy.us.core.ui'
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.4"
+    }
+}
+
+dependencies {
+    compileOnly libs.koin.core
+    implementation platform(libs.compose.bom)
+    implementation libs.bundles.compose.ui.kit
+    implementation libs.bundles.koin.compose
+}

@@ -13,7 +13,9 @@ android {
 }
 
 dependencies {
-    implementation project(":core")
+    implementation project(":core:utils")
+    implementation project(":core:extensions")
+    implementation project(":core:ui")
     implementation project(":domain")
     implementation project(":feature:home")
     implementation platform(libs.compose.bom)

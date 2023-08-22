@@ -1,0 +1,13 @@
+apply from: "/${rootDir}/config/conventions/android-common.gradle"
+
+android {
+    namespace 'com.famy.us.data.firebase'
+}
+
+dependencies {
+    implementation project(':data:repository')
+    implementation project(':core:extensions')
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.analytics
+    implementation libs.firebase.auth
+}

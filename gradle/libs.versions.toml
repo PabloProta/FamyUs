@@ -1,20 +1,20 @@
 [versions]
 ## Compose versions
-compose-bom = "2023.03.00"
-compose_nav = "2.5.3"
+compose-bom = "2023.08.00"
+compose_nav = "2.7.0"
 
 ## Koin
 koin = "3.4.0"
 koin_compose = "3.4.3"
 
 ## Room
-room = "2.5.0"
+room = "2.5.2"
 
 ## Gson
 gson = "2.10.1"
 
 ## Firebase
-firebase-bom = "32.2.0"
+firebase-bom = "32.2.2"
 
 ## Google play Services
 google-play-services = "20.6.0"
@@ -27,6 +27,7 @@ lifecycle = "2.6.1"
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-toolingpreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-tolling = { module = "androidx.compose.ui:ui-tooling" }
 compose-icons = { module = "androidx.compose.material:material-icons-extended" }
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose_nav" }
 compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose" }
@@ -67,5 +68,5 @@ lifecycle-processes = { module = "androidx.lifecycle:lifecycle-process", version
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",
     "compose-viewmodel", "compose-activity", "compose-material3", "compose-uitest",
-    "compose-manifest", "compose-windowsize", "compose-lifecycle"]
+    "compose-manifest", "compose-windowsize", "compose-lifecycle","compose-tolling"]
 koin-compose = ["koin-core", "koin-android", "koin-compose"]

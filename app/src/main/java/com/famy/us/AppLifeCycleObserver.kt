@@ -2,7 +2,7 @@ package com.famy.us
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.famy.us.core.lifecycle.AppLifeCycleSubscriber
+import com.famy.us.core.utils.lifecycle.AppLifeCycleSubscriber
 
 /**
  * Class to observer the app lifecycle.
@@ -29,7 +29,7 @@ internal class AppLifeCycleObserver(
 
     override fun onDestroy(owner: LifecycleOwner) {
         subscribers.forEach {
-            it.detroy()
+            it.destroy()
         }
         super.onDestroy(owner)
     }

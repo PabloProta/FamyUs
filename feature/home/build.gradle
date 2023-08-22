@@ -13,9 +13,10 @@ android {
 }
 
 dependencies {
-    implementation project(":core")
+    implementation project(":core:extensions")
     implementation project(":domain")
     implementation project(":feature:authentication")
+    implementation project(":feature:registration")
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui.kit
     implementation libs.bundles.koin.compose
