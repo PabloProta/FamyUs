@@ -1,4 +1,4 @@
-package com.famy.us.repository.datasource.firebase
+package com.famy.us.repository.datasource
 
 import com.famy.us.domain.model.FamilyMember
 import com.famy.us.repository.model.RepositoryFamilyMember
@@ -44,4 +44,11 @@ interface FamilyFirebaseDataSource {
      * @return [Flow] of  the current [FamilyMember].
      */
     fun getCurrentMember(): Flow<RepositoryFamilyMember?>
+
+    /**
+     * Method to get the family invite.
+     *
+     * @return a string with the information to build a invite.
+     */
+    fun getFamilyInvite(): Flow<String>
 }

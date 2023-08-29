@@ -13,5 +13,5 @@ data class RepositoryFamilyMember(
     val name: String,
     val tasks: List<RepositoryTask> = emptyList(),
     val score: Int,
-    val isAdmin: Boolean
+    val isAdmin: Boolean,
 )

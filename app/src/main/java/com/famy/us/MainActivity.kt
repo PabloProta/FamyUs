@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.famy.us.feature.home.HomeScreen
+import com.famy.us.invite.InviteScreenContainer
 
 class MainActivity : ComponentActivity() {
 
@@ -25,7 +29,22 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppContainer() {
     Column(modifier = Modifier.fillMaxSize()) {
-        HomeScreen()
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+        ) {
+            composable("home") {
+                HomeScreen(
+                    navigateOutsideTo = {
+                        navController.navigate(it)
+                    },
+                )
+            }
+            composable("invite") {
+                InviteScreenContainer()
+            }
+        }
     }
 }
 

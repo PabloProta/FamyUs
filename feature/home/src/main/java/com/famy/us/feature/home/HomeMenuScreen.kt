@@ -2,19 +2,41 @@ package com.famy.us.feature.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun HomeMenuScreen() {
+fun HomeMenuScreen(onNavigate: (route: String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.Green),
     ) {
-        Text(text = "Menu Screen")
+        Column {
+            Text(text = "Menu Screen")
+        }
+        ElevatedButton(
+            onClick = {
+                onNavigate("invite")
+            },
+        ) {
+            Text(text = "Invite Screen")
+        }
     }
+}
+
+@Preview(
+    device = "spec:width=1440px," + "height=2560px,dpi=640",
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF,
+)
+@Composable
+private fun HomeMenuScreenPreview() {
+    HomeMenuScreen({})
 }
