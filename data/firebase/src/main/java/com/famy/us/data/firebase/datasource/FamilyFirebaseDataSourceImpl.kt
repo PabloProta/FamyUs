@@ -2,11 +2,13 @@ package com.famy.us.data.firebase.datasource
 
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.extensions.logW
+import com.famy.us.core.extensions.toHex
+import com.famy.us.core.extensions.toMD5
 import com.famy.us.data.firebase.FamyUsDatabase
 import com.famy.us.data.firebase.mapper.FamilyMemberMapper
 import com.famy.us.data.firebase.model.FirebaseMember
 import com.famy.us.data.firebase.model.FirebaseMemberReference
-import com.famy.us.repository.datasource.firebase.FamilyFirebaseDataSource
+import com.famy.us.repository.datasource.FamilyFirebaseDataSource
 import com.famy.us.repository.model.RepositoryFamilyMember
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -57,7 +59,9 @@ internal class FamilyFirebaseDataSourceImpl(
         val firebaseMember = familyMemberMapper.toFirebase(newMember)
         val familyPush = familyDatabase.push()
         val familyKey = familyPush.key
+        val familyIdentifier = familyKey?.toMD5()?.toHex()
         familyPush.child("name").setValue(familyName)
+        familyPush.child("identifier").setValue(familyIdentifier)
         familyPush.child("members").child(auth.uid.toString()).setValue(firebaseMember)
         memberDatabase.child(auth.uid.toString()).setValue(
             FirebaseMemberReference(
@@ -97,5 +101,29 @@ internal class FamilyFirebaseDataSourceImpl(
         awaitClose {
             logD { "Current member is: $memberGotcha" }
         }
+    }
+
+    override fun getFamilyInvite(): Flow<String> = callbackFlow {
+        val memberEndpoint = memberDatabase.child(auth.uid.toString())
+        memberEndpoint.get()
+            .addOnSuccessListener { reference ->
+                val memberReference: FirebaseMemberReference? =
+                    reference.getValue(FirebaseMemberReference::class.java)
+                familyDatabase
+                    .child(memberReference?.familyKey.toString())
+                    .child("identifier")
+                    .get()
+                    .addOnSuccessListener { identifier ->
+                        identifier.getValue(String::class.java)?.let {
+                            trySend(it)
+                        } ?: trySend("")
+                    }
+            }
+            .addOnFailureListener {
+                logW { "Fail on search member" }
+                trySend("")
+            }
+
+        awaitClose()
     }
 }

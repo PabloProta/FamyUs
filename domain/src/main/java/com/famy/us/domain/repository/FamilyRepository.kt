@@ -42,4 +42,11 @@ interface FamilyRepository {
      * @return [Flow] of  the current [FamilyMember].
      */
     fun getCurrentMember(): Flow<FamilyMember?>
+
+    /**
+     * Method to get the family invite.
+     *
+     * @return a string with the information to build a invite.
+     */
+    fun getFamilyInvite(): Flow<String>
 }

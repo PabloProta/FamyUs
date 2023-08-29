@@ -25,7 +25,10 @@ import com.famy.us.feature.registration.RegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
+    navigateOutsideTo: (route: String) -> Unit,
+) {
     val isMemberRegistered by remember {
         viewModel.hasUserRegistered
     }
@@ -35,7 +38,10 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             NoInternet()
         } else {
             if (isMemberRegistered) {
-                RouterNavigation(menus = viewModel.getMenus())
+                RouterNavigation(
+                    menus = viewModel.getMenus(),
+                    navigateOutsideTo = navigateOutsideTo,
+                )
             } else {
                 RegistrationScreen(
                     onFinishRegistration = {
@@ -58,7 +64,10 @@ fun NoInternet() {
 }
 
 @Composable
-fun RouterNavigation(menus: List<MenuItem>) {
+fun RouterNavigation(
+    menus: List<MenuItem>,
+    navigateOutsideTo: (route: String) -> Unit,
+) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
@@ -103,7 +112,9 @@ fun RouterNavigation(menus: List<MenuItem>) {
             Modifier.padding(contentPadding),
         ) {
             menus.forEach { menu ->
-                composable(menu.route) { menu.screen.invoke() }
+                composable(menu.route) {
+                    menu.screen(navigateOutsideTo)
+                }
             }
         }
     }

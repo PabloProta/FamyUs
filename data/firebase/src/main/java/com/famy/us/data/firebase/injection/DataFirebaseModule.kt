@@ -3,7 +3,7 @@ package com.famy.us.data.firebase.injection
 import com.famy.us.data.firebase.datasource.FamilyFirebaseDataSourceImpl
 import com.famy.us.data.firebase.mapper.FamilyMemberMapper
 import com.famy.us.data.firebase.mapper.FamilyTaskMapper
-import com.famy.us.repository.datasource.firebase.FamilyFirebaseDataSource
+import com.famy.us.repository.datasource.FamilyFirebaseDataSource
 import org.koin.dsl.module
 
 /**

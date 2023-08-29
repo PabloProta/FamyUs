@@ -49,6 +49,7 @@ dependencies {
     implementation project(":domain")
     implementation project(":feature:home")
     implementation project(":feature:note")
+    implementation project(":feature:invite")
     implementation project(":feature:authentication")
     implementation project(":feature:registration")
     implementation project(":core:utils")

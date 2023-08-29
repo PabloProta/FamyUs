@@ -4,7 +4,7 @@ import com.famy.us.domain.model.AdminMember
 import com.famy.us.domain.model.AuthenticationMethods
 import com.famy.us.domain.model.FamilyMember
 import com.famy.us.domain.repository.FamilyRepository
-import com.famy.us.repository.datasource.firebase.FamilyFirebaseDataSource
+import com.famy.us.repository.datasource.FamilyFirebaseDataSource
 import com.famy.us.repository.mapper.FamilyMemberMapper
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -54,4 +54,6 @@ internal class FamilyRepositoryImpl(
         }
         awaitClose()
     }
+
+    override fun getFamilyInvite(): Flow<String> = firebaseDataSource.getFamilyInvite()
 }
