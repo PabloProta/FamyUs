@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun NoteMenuScreenContent(
@@ -29,8 +27,7 @@ internal fun NoteMenuScreenContent(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 16.dp, bottom = 32.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
                 FloatingActionButton(

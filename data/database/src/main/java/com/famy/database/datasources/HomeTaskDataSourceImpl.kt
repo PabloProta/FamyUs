@@ -2,7 +2,6 @@ package com.famy.database.datasources
 
 import com.famy.database.DatabaseProvider
 import com.famy.database.mapper.HomeTaskMapper
-import com.famy.us.core.extensions.logD
 import com.famy.us.repository.datasource.HomeTaskDataSource
 import com.famy.us.repository.model.RepositoryTask
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +43,6 @@ internal class HomeTaskDataSourceImpl(
 
     override suspend fun updateTask(task: RepositoryTask) {
         withContext(Dispatchers.IO) {
-            logD { "Atualizando o $task" }
             homeTaskDao.updateTask(mapper.toDatabase(task))
         }
     }

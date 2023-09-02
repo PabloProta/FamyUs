@@ -42,7 +42,7 @@ inline fun logE(tag: String = Logger.getTag(), desc: () -> String) {
  * @param tag Used to identify the source of the log message
  * @param tr Throwable
  */
-inline fun logE(tag: String = Logger.getTag(), tr: Throwable) {
+fun logE(tag: String = Logger.getTag(), tr: Throwable) {
     Log.e(tag, tr.localizedMessage, tr)
 }
 

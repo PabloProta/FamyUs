@@ -18,6 +18,7 @@ internal class HomeTaskMapper {
         DomainHomeTask(
             id,
             name,
+            description,
             point,
             isAssigned,
             start,
@@ -46,6 +47,7 @@ internal class HomeTaskMapper {
         DataHomeTask(
             id,
             name,
+            description,
             point,
             isAssigned,
             start,

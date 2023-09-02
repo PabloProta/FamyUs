@@ -18,5 +18,5 @@ data class MenuItem(
     val route: String,
     val priority: Int,
     val icon: ImageVector,
-    val screen: @Composable (onNavigate: (route: String) -> Unit) -> Unit,
+    val screen: @Composable (onNavigate: (String) -> Unit) -> Unit,
 )

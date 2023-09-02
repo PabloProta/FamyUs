@@ -19,6 +19,7 @@ internal class HomeTaskMapper {
             RepositoryHomeTask(
                 id,
                 name,
+                description,
                 point,
                 isAssigned,
                 start,
@@ -48,6 +49,7 @@ internal class HomeTaskMapper {
             DatabaseHomeTask(
                 id,
                 name,
+                description,
                 point,
                 isAssigned,
                 start,
