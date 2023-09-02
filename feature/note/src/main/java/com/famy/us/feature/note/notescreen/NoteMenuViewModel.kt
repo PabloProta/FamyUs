@@ -1,10 +1,12 @@
-package com.famy.us.feature.note
+package com.famy.us.feature.note.notescreen
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.famy.us.core.utils.machines.CommonMachineState
 import com.famy.us.core.utils.machines.MutableStateMachine
-import com.famy.us.feature.note.states.LoadingState
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
+import com.famy.us.feature.note.notescreen.machinestate.states.LoadingState
 
 /**
  * State Holder for our NoteMenu screen.
@@ -19,8 +21,7 @@ internal class NoteMenuViewModel : ViewModel() {
         get() = stateMachine.uiState
 
     /**
-     * Method to perform a event to send to the reducer, to get a new state according
-     * to the reduction.
+     * Method to perform an action in the state machine.
      *
      * @param event the event performed from UI.
      */

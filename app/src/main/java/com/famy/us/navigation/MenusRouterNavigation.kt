@@ -1,6 +1,5 @@
-package com.famy.us.feature.home
+package com.famy.us.navigation
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -11,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -19,60 +17,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.famy.us.authentication.AuthenticationContainer
 import com.famy.us.feature.home.model.MenuItem
-import com.famy.us.feature.registration.RegistrationScreen
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel(),
-    navigateOutsideTo: (route: String) -> Unit,
-) {
-    val isMemberRegistered by remember {
-        viewModel.hasUserRegistered
-    }
-
-    AuthenticationContainer {
-        if (!viewModel.hasMemberInternetConnection()) {
-            NoInternet()
-        } else {
-            if (isMemberRegistered) {
-                RouterNavigation(
-                    menus = viewModel.getMenus(),
-                    navigateOutsideTo = navigateOutsideTo,
-                )
-            } else {
-                RegistrationScreen(
-                    onFinishRegistration = {
-                        viewModel.checkMemberRegistered()
-                    },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun NoInternet() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        Text(text = "Sem conexão com a internet impossível sincronizar!")
-    }
-}
-
-@Composable
-fun RouterNavigation(
+internal fun MenusRouterNavigation(
     menus: List<MenuItem>,
-    navigateOutsideTo: (route: String) -> Unit,
+    startDestination: String?,
+    onNavigate: (String) -> Unit,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
     Scaffold(
-        modifier = Modifier,
+        modifier = Modifier
+            .fillMaxSize(),
         bottomBar = {
             NavigationBar(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -106,14 +64,15 @@ fun RouterNavigation(
     ) { contentPadding ->
         NavHost(
             navController,
-            startDestination = menus
+            startDestination = startDestination ?: menus
                 .sortedBy { it.priority }
-                .first().route,
+                .first()
+                .route,
             Modifier.padding(contentPadding),
         ) {
-            menus.forEach { menu ->
-                composable(menu.route) {
-                    menu.screen(navigateOutsideTo)
+            menus.forEach { menuItem ->
+                composable(route = menuItem.route) {
+                    menuItem.screen(onNavigate = onNavigate)
                 }
             }
         }

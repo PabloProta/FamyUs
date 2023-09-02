@@ -1,13 +1,12 @@
-package com.famy.us.feature.note.states
+package com.famy.us.feature.note.notescreen.machinestate.states
 
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.StateMachine
 import com.famy.us.core.utils.machines.CoroutineMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.repository.HomeTaskRepository
-import com.famy.us.feature.note.NoteScreenIntent
-import com.famy.us.feature.note.NoteScreenState
-import com.famy.us.feature.note.ShowDialog
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -19,9 +18,8 @@ import org.koin.core.component.inject
  *
  * @param homeTask the task that it is editing.
  */
-internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState>(
-    private val homeTask: HomeTask,
-) : CoroutineMachineState<Event, State>(), KoinComponent {
+internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState> :
+    CoroutineMachineState<Event, State>(), KoinComponent {
 
     private val homeTaskRepository: HomeTaskRepository by inject()
 
@@ -30,12 +28,7 @@ internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState>(
         logD { "AddTaskState" }
 
         val newState = getUiState().copy(
-            showDialog = ShowDialog(
-                shouldShowDialog = true,
-                isAddingTask = true,
-            ),
-            isLoading = false,
-            managingTask = homeTask,
+            isAddingTask = true,
         )
         setUiState(newState as State)
     }
@@ -44,9 +37,10 @@ internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState>(
         super.doProcess(gesture, machine)
         val currentState = getUiState()
         when (gesture) {
-            is NoteScreenIntent.DismissDialog -> {
-                setMachineState(ItemStateList(currentState.listTask))
+            is NoteScreenIntent.DismissTaskContent -> {
+                setMachineState(ItemStateList(currentState.showingTaskList))
             }
+
             is NoteScreenIntent.SaveTask -> {
                 machineScope.launch(Dispatchers.IO) {
                     currentState.apply {

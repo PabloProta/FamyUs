@@ -14,6 +14,6 @@ internal class HomeMenuLoader : MenusLoader {
         route = "home",
         priority = 0,
         icon = Icons.Rounded.Home,
-        screen = { HomeMenuScreen(it) },
+        screen = { HomeScreenContainer(onNavigate = it) },
     )
 }

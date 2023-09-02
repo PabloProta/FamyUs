@@ -31,6 +31,7 @@ internal class FamilyTaskMapper {
     private fun toRepository(firebaseTask: FirebaseTask) = RepositoryTask(
         id = firebaseTask.id ?: 0,
         name = firebaseTask.name ?: "",
+        description = firebaseTask.description ?: "",
         point = firebaseTask.score ?: 0,
         isAssigned = false,
         null,

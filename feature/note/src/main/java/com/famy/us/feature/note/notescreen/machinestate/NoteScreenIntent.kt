@@ -1,4 +1,4 @@
-package com.famy.us.feature.note
+package com.famy.us.feature.note.notescreen.machinestate
 
 import com.famy.us.core.utils.UiEvent
 import com.famy.us.domain.model.HomeTask
@@ -34,14 +34,14 @@ internal sealed class NoteScreenIntent : UiEvent {
     data class SaveTask(val task: HomeTask) : NoteScreenIntent()
 
     /**
-     * For when any dialog into [NoteMenuScreen] is dismissed.
+     * For when any dialog into [NoteMenuScreenContainer] is dismissed.
      */
-    object DismissDialog : NoteScreenIntent()
+    object DismissTaskContent : NoteScreenIntent()
 
     /**
      * When the user click in the task card content.
      *
-     * @property task the task that the content will be shown.
+     * @property taskId the taskId of the task that will be shown.
      */
-    data class ShowTaskContent(val task: HomeTask) : NoteScreenIntent()
+    data class ShowTaskContent(val taskId: Int) : NoteScreenIntent()
 }

@@ -1,10 +1,10 @@
-package com.famy.us.feature.note.states
+package com.famy.us.feature.note.notescreen.machinestate.states
 
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.machines.CoroutineMachineState
 import com.famy.us.domain.repository.HomeTaskRepository
-import com.famy.us.feature.note.NoteScreenIntent
-import com.famy.us.feature.note.NoteScreenState
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

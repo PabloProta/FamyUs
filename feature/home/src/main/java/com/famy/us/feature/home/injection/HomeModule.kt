@@ -12,5 +12,5 @@ import org.koin.dsl.module
  */
 val homeModule = module {
     factory { HomeMenuLoader() } bind MenusLoader::class
-    viewModel { HomeViewModel(get(), get(), getAll()) }
+    viewModel { HomeViewModel(get(), get()) }
 }

@@ -54,6 +54,7 @@ dependencies {
     implementation project(":feature:registration")
     implementation project(":core:utils")
     implementation project(":core:extensions")
+    implementation project(":core:ui")
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui.kit
     api libs.koin.core

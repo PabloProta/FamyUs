@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun HomeMenuScreen(onNavigate: (route: String) -> Unit) {
+internal fun HomeMenuScreen(onNavigate: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()

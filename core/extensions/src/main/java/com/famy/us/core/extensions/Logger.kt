@@ -1,6 +1,5 @@
 package com.famy.us.core.extensions
 
-import android.os.Build
 import java.util.regex.Pattern
 
 /**
@@ -9,14 +8,9 @@ import java.util.regex.Pattern
 object Logger {
 
     /**
-     * Check if this is a production build.
-     */
-    private val isProductBuild = Build.TYPE == "user"
-
-    /**
      * Flag to be used for debug logs.
      */
-    val DEBUG = !isProductBuild
+    val DEBUG = BuildConfig.DEBUG
 
     /**
      * Tag Prefix to be used across the application.
