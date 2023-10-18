@@ -3,11 +3,9 @@ package com.famy.us.feature.note.notescreen.machinestate.states
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.StateMachine
 import com.famy.us.core.utils.machines.CoroutineMachineState
-import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.repository.HomeTaskRepository
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -16,7 +14,6 @@ import org.koin.core.component.inject
  * This is the State for the state machine for when the user are
  * adding some task.
  *
- * @param homeTask the task that it is editing.
  */
 internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState> :
     CoroutineMachineState<Event, State>(), KoinComponent {
@@ -42,9 +39,15 @@ internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState> :
             }
 
             is NoteScreenIntent.SaveTask -> {
-                machineScope.launch(Dispatchers.IO) {
+                machineScope.launch {
                     currentState.apply {
-                        homeTaskRepository.saveTask(gesture.task)
+                        val currentList = showingTaskList
+                        val lastPosition = if (currentList.isEmpty()) {
+                            0
+                        } else {
+                            currentList.last().position + 1
+                        }
+                        homeTaskRepository.saveTask(gesture.task.copy(position = lastPosition))
                         setMachineState(LoadingState(justFetch = true))
                     }
                 }

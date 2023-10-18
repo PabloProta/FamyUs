@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.core.extensions.logD
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.components.NoteMenuScreenContent
 import com.famy.us.feature.note.components.TaskList
@@ -60,7 +61,6 @@ internal fun NoteMenuScreen(
             },
         )
 
-
         if (uiState.isLoading.not()) {
             when {
                 uiState.isAddingTask -> {
@@ -68,7 +68,7 @@ internal fun NoteMenuScreen(
                 }
 
                 uiState.goingToShowTaskContent > 0 -> {
-                    //TODO - we should navigate here check the bug later.
+                    // TODO - we should navigate here check the bug later.
                 }
             }
         }
@@ -81,12 +81,19 @@ internal fun NoteMenuScreen(
         NoteMenuScreenContent(
             onAddTaskClicked = {
                 onNavigate("create_task")
-//                performAction(NoteScreenIntent.AddTask)
+                performAction(NoteScreenIntent.AddTask)
             },
         ) {
             TaskList(
                 tasksProvider = {
                     uiState.showingTaskList
+                },
+                itemDragged = uiState.draggingItem,
+                onMoveItem = { from, to ->
+                    performAction(NoteScreenIntent.MoveNote(from, to))
+                },
+                onDragItem = { itemDragged ->
+                    performAction(NoteScreenIntent.DragNote(itemDragged))
                 },
                 onClickCard = {
                     onNavigate("note_content/${it.id}")
@@ -98,6 +105,9 @@ internal fun NoteMenuScreen(
                 },
                 onEditClicked = {
                     performAction(NoteScreenIntent.EditTask(it))
+                },
+                onStop = {
+                    performAction(NoteScreenIntent.StopDrag)
                 },
             )
         }
@@ -138,8 +148,8 @@ private fun NoteMenuScreenPreview() {
             showingTaskList = listOf(
                 taskDefault.copy(name = "task 1"),
                 taskDefault.copy(id = 1, name = "task 2"),
-                taskDefault.copy(id = 2, name = "task 3")
-            )
+                taskDefault.copy(id = 2, name = "task 3"),
+            ),
         ),
         onNavigate = {},
         performAction = {},

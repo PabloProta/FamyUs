@@ -10,6 +10,7 @@ import java.util.Date
  * @property id is the task id.
  * @property name the name of the task.
  * @property description the task description.
+ * @property position the position in the list
  * @property point how many point it value.
  * @property isAssigned if this task was already assigned.
  */
@@ -18,6 +19,7 @@ data class HomeTask(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "description") val description: String,
+    @ColumnInfo(name = "position") val position: Int,
     @ColumnInfo(name = "point") val point: Int,
     @ColumnInfo(name = "is_assigned") val isAssigned: Boolean,
     @ColumnInfo(name = "start") val start: Date?,

@@ -36,6 +36,7 @@ internal class ItemStateList<Event : NoteScreenIntent, State : NoteScreenState>(
 
     override fun doProcess(gesture: Event, machine: StateMachine<Event, State>) {
         super.doProcess(gesture, machine)
+        val currentState = getUiState()
         when (gesture) {
             NoteScreenIntent.AddTask -> {
                 setMachineState(AddStateTask())
@@ -51,6 +52,11 @@ internal class ItemStateList<Event : NoteScreenIntent, State : NoteScreenState>(
             }
             is NoteScreenIntent.ShowTaskContent -> {
                 setMachineState(ShowTaskContentState(gesture.taskId))
+            }
+            is NoteScreenIntent.DragNote -> {
+                val list = currentState.showingTaskList
+                val item = list.getOrNull(gesture.itemDragged ?: -1)
+                setMachineState(ItemDraggedState(item, list))
             }
         }
     }

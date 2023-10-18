@@ -1,13 +1,13 @@
 package com.famy.us.feature.note.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -23,49 +23,51 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.famy.us.core.extensions.logD
 import com.famy.us.domain.model.HomeTask
 
-@OptIn(ExperimentalFoundationApi::class)
 @Suppress("LongMethod", "MagicNumber")
 @Composable
 internal fun TaskItem(
     task: HomeTask,
-    onClickCard: () -> Unit,
+    isDragged: Boolean,
+    showContentProvider: () -> Boolean,
+    verticalTranslation: Int,
+    onClickCard: (showingContent: Boolean) -> Unit,
     onEditIsClicked: () -> Unit,
     onDeleteIsClicked: () -> Unit,
 ) {
-    var showContent by remember {
-        mutableStateOf(true)
-    }
+
+    val showContent = showContentProvider()
+    val zIndex = if (isDragged) 1.0f else 0.0f
+    val elevation = if (isDragged) 8.dp else 0.dp
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .size(148.dp)
             .padding(bottom = 8.dp)
-            .combinedClickable(
-                onClick = {
-                    if (showContent) {
-                        onClickCard()
-                    }
-                    showContent = true
-                },
-                onLongClick = {
-                    showContent = false
-                },
-            ),
+            .zIndex(zIndex)
+            .offset {
+                if (isDragged) {
+                    IntOffset(0, verticalTranslation)
+                } else {
+                    IntOffset(0, 0)
+                }
+            }
+            .clickable {
+                onClickCard(showContent)
+            },
         elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 0.dp,
+            defaultElevation = elevation,
             pressedElevation = 0.dp,
         ),
         colors = CardDefaults.cardColors(
@@ -154,7 +156,10 @@ private fun TaskItemPreview() {
         TaskItem(
             task = HomeTask.Empty.copy(name = "Joares", point = 10),
             onClickCard = {},
+            showContentProvider = { true },
+            isDragged = false,
             onEditIsClicked = {},
+            verticalTranslation = 0,
             onDeleteIsClicked = {},
         )
     }

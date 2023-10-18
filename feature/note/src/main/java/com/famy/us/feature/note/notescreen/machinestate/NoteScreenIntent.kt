@@ -44,4 +44,24 @@ internal sealed class NoteScreenIntent : UiEvent {
      * @property taskId the taskId of the task that will be shown.
      */
     data class ShowTaskContent(val taskId: Int) : NoteScreenIntent()
+
+    /**
+     * When some note is dragged.
+     *
+     * @property itemDragged the item dragged index according to the list.
+     */
+    data class DragNote(val itemDragged: Int?) : NoteScreenIntent()
+
+    /**
+     * When the user is moving some note.
+     *
+     * @property from position where item come from.
+     * @property to position that the item will be moved.
+     */
+    data class MoveNote(val from: Int, val to: Int) : NoteScreenIntent()
+
+    /**
+     * When the user stop the drag action.
+     */
+    object StopDrag : NoteScreenIntent()
 }
