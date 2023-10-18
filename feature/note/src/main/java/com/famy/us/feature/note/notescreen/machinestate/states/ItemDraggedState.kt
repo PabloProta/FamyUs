@@ -15,6 +15,9 @@ import org.koin.core.component.inject
 
 /**
  *  State for when some item is being dragged.
+ *
+ *  @property itemDragged the item whose was dragged.
+ *  @property currentList the current list of notes.
  */
 internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenState>(
     private val itemDragged: HomeTask?,
