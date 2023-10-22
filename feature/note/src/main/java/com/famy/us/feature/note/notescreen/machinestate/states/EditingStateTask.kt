@@ -23,7 +23,9 @@ internal class EditingStateTask<Event : NoteScreenIntent, State : NoteScreenStat
 
     override fun doStart() {
         val currentState = getUiState()
-        val newState = currentState
+        val newState = currentState.copy(
+            editingTask = task,
+        )
 
         setUiState(newState as State)
     }

@@ -11,6 +11,7 @@ import com.famy.us.domain.model.HomeTask
  * @property showingTaskList the tasks that was loaded.
  * @property editingTask if a task is being edited.
  * @property goingToShowTaskContent if the user asked to show the note content.
+ * @property draggingItem the item that is being dragged.
  */
 internal data class NoteScreenState(
     val isAddingTask: Boolean,
@@ -18,6 +19,7 @@ internal data class NoteScreenState(
     val goingToShowTaskContent: Int,
     val isLoading: Boolean,
     val showingTaskList: List<HomeTask>,
+    val draggingItem: HomeTask?,
 ) : UiSate {
     companion object {
         /**
@@ -28,7 +30,8 @@ internal data class NoteScreenState(
             editingTask = null,
             goingToShowTaskContent = -1,
             isLoading = false,
-            showingTaskList = emptyList()
+            showingTaskList = mutableListOf(),
+            draggingItem = null,
         )
     }
 }

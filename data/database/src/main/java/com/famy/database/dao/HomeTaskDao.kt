@@ -16,7 +16,7 @@ interface HomeTaskDao {
     /**
      * Method to get all tasks.
      */
-    @Query("SELECT * FROM home_task")
+    @Query("SELECT * FROM home_task ORDER BY position ASC")
     fun getAllTasks(): Flow<List<HomeTask>>
 
     /**

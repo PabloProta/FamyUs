@@ -32,7 +32,7 @@ interface HomeTaskRepository {
     /**
      * Method to update a existent task.
      *
-     * @param task the taskt that will be updated.
+     * @param task the task that will be updated.
      */
     suspend fun updateTask(task: HomeTask)
 

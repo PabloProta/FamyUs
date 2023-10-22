@@ -32,6 +32,7 @@ internal class FamilyTaskMapper {
         id = firebaseTask.id ?: 0,
         name = firebaseTask.name ?: "",
         description = firebaseTask.description ?: "",
+        position = 0,
         point = firebaseTask.score ?: 0,
         isAssigned = false,
         null,

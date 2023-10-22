@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.createNote.components.CreateNoteDescriptionScreen
 import com.famy.us.feature.note.createNote.components.CreateNoteNameScreen
+import com.famy.us.feature.note.notescreen.NoteMenuViewModel
+import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -22,12 +24,12 @@ fun CreateNoteScreenProvider(
 
 @Composable
 internal fun CreateNoteScreenContainer(
-    viewModel: CreateNoteScreenViewModel = koinViewModel(),
+    viewModel: NoteMenuViewModel = koinViewModel(),
     onFinish: (HomeTask) -> Unit,
 ) {
     CreateNoteScreen(
         onFinish = {
-            viewModel.createTask(it)
+            viewModel.perform(NoteScreenIntent.SaveTask(it))
             onFinish(it)
         },
     )
