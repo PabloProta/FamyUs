@@ -26,6 +26,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,6 +69,7 @@ fun CustomDialog(onDismissDialog: () -> Unit, content: @Composable () -> Unit) {
 fun <T> ReordableList(
     items: List<T>,
     contentPaddingValues: PaddingValues = PaddingValues(0.dp),
+    onLongPress: (itemDragged: Int) -> Unit = {},
     onDrag: (value: Float) -> Unit,
     onDragStart: (itemDragged: Int?) -> Unit,
     onMove: (fromIndex: Int, toIndex: Int) -> Unit,
@@ -82,6 +85,10 @@ fun <T> ReordableList(
         mutableStateOf<Job?>(null)
     }
     val scope = rememberCoroutineScope()
+    var shouldDispatchLongPress by remember {
+        mutableStateOf(true)
+    }
+    val longpressHoldDelay: Long = 600
 
     fun checkForOverScroll(): Float = itemInfoDragged?.let {
         val startOffset = it.offset + verticalOffset
@@ -96,34 +103,40 @@ fun <T> ReordableList(
         }
     } ?: 0f
 
+    fun resetDrag() {
+        verticalOffset = 0f
+        itemInfoDragged = null
+        overScrollJob?.cancel()
+        onStop()
+    }
+
+    fun isMoving(): Boolean = verticalOffset > 1.8 || verticalOffset < -1.8
+
     LazyColumn(
         modifier = Modifier
             .pointerInput(Unit) {
                 detectDragGesturesAfterLongPress(
                     onDrag = { change, dragAmount ->
                         change.consume()
-                        verticalOffset += dragAmount.y
+                        if (dragAmount.y > 1 || dragAmount.y < -1) {
+                            verticalOffset += dragAmount.y
+                        }
                         onDrag(verticalOffset)
-                        listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
-                            val itemRange = item.offset..item.offsetEnd
-                            val currentItem = itemInfoDragged ?: return@firstOrNull false
-                            val currentItemRange = currentItem.offset..currentItem.offsetEnd
-                            if (currentItemRange == itemRange) {
-                                false
-                            } else {
-                                val startOffset = currentItem.offset + verticalOffset
-                                val endOffset = currentItem.offsetEnd + verticalOffset
-                                val threshold = 40.dp
-                                endOffset.toInt() - threshold.roundToPx() in itemRange ||
-                                    startOffset.toInt() + threshold.roundToPx() in itemRange
-                            }
-                        }?.also { currentHoveredItem ->
-                            val currentItem = itemInfoDragged ?: return@also
-                            if (currentHoveredItem.index != currentItem.index) {
-                                onMove(currentItem.index, currentHoveredItem.index)
-                                itemInfoDragged = currentHoveredItem
-                                verticalOffset = 0f
-                            }
+                        val listItemVisible = listState.layoutInfo.visibleItemsInfo
+                        shouldDispatchLongPress = !isMoving()
+                        val itemHovered =
+                            itemInfoDragged?.getCurrentHoveredItem(verticalOffset, listItemVisible)
+                                ?.also { currentHoveredItem ->
+                                    val currentItem = itemInfoDragged ?: return@also
+                                    if (currentHoveredItem.index != currentItem.index) {
+                                        shouldDispatchLongPress = false
+                                        onMove(currentItem.index, currentHoveredItem.index)
+                                        itemInfoDragged = currentHoveredItem
+                                        verticalOffset = 0f
+                                    }
+                                }
+                        if (itemHovered == null || itemInfoDragged == null) {
+                            shouldDispatchLongPress = true
                         }
 
                         if (overScrollJob?.isActive == true) {
@@ -145,20 +158,16 @@ fun <T> ReordableList(
                         }?.also {
                             itemInfoDragged = it
                             onDragStart(itemInfoDragged?.index)
+                            MainScope().launch {
+                                delay(longpressHoldDelay)
+                                if (shouldDispatchLongPress && !isMoving()) {
+                                    onLongPress(itemInfoDragged?.index ?: -1)
+                                }
+                            }
                         }
                     },
-                    onDragEnd = {
-                        verticalOffset = 0f
-                        itemInfoDragged = null
-                        overScrollJob?.cancel()
-                        onStop()
-                    },
-                    onDragCancel = {
-                        verticalOffset = 0f
-                        itemInfoDragged = null
-                        overScrollJob?.cancel()
-                        onStop()
-                    },
+                    onDragEnd = { resetDrag() },
+                    onDragCancel = { resetDrag() },
                 )
             },
         contentPadding = contentPaddingValues,
@@ -170,6 +179,28 @@ fun <T> ReordableList(
             }
     }
 }
+
+private fun LazyListItemInfo.getCurrentHoveredItem(
+    verticalOffset: Float,
+    itemsVisible: List<LazyListItemInfo>,
+): LazyListItemInfo? = itemsVisible.firstOrNull { item ->
+    val itemRange = item.range()
+    val currentItemRange = this.range()
+    if (currentItemRange == itemRange) {
+        false
+    } else {
+        val threshold = offsetEnd / 3
+        val startOffset = offset + verticalOffset
+        val endOffset = offsetEnd + verticalOffset
+        endOffset.toInt() - threshold in itemRange ||
+            startOffset.toInt() + threshold in itemRange
+    }
+}
+
+/**
+ * Method to get the item offset range.
+ */
+internal fun LazyListItemInfo.range() = offset..offsetEnd
 
 internal val LazyListItemInfo.offsetEnd: Int
     get() = this.offset + this.size

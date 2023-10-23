@@ -32,8 +32,10 @@ fun TaskList(
         onDrag = { value ->
             verticalTranslation = value
         },
+        onLongPress = { itemIndex ->
+            itemToShowOption = itemIndex
+        },
         onDragStart = { itemIndex ->
-            itemToShowOption = itemIndex ?: -1
             onDragItem(itemIndex)
         },
         onStop = onStop,
