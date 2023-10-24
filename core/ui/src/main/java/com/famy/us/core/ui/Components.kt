@@ -1,5 +1,6 @@
 package com.famy.us.core.ui
 
+import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.famy.us.core.extensions.logD
+import com.famy.us.core.extensions.move
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -68,6 +71,7 @@ fun CustomDialog(onDismissDialog: () -> Unit, content: @Composable () -> Unit) {
 @Composable
 fun <T> ReordableList(
     items: List<T>,
+    threshold: Int = 80,
     contentPaddingValues: PaddingValues = PaddingValues(0.dp),
     onLongPress: (itemDragged: Int) -> Unit = {},
     onDrag: (value: Float) -> Unit,
@@ -89,6 +93,14 @@ fun <T> ReordableList(
         mutableStateOf(true)
     }
     val longpressHoldDelay: Long = 600
+    var listMutable: List<T> by remember {
+        mutableStateOf(items)
+    }
+    var currentHovered: LazyListItemInfo? by remember {
+        mutableStateOf(null)
+    }
+
+    listMutable = items
 
     fun checkForOverScroll(): Float = itemInfoDragged?.let {
         val startOffset = it.offset + verticalOffset
@@ -104,6 +116,7 @@ fun <T> ReordableList(
     } ?: 0f
 
     fun resetDrag() {
+        currentHovered = null
         verticalOffset = 0f
         itemInfoDragged = null
         overScrollJob?.cancel()
@@ -125,16 +138,23 @@ fun <T> ReordableList(
                         val listItemVisible = listState.layoutInfo.visibleItemsInfo
                         shouldDispatchLongPress = !isMoving()
                         val itemHovered =
-                            itemInfoDragged?.getCurrentHoveredItem(verticalOffset, listItemVisible)
-                                ?.also { currentHoveredItem ->
-                                    val currentItem = itemInfoDragged ?: return@also
-                                    if (currentHoveredItem.index != currentItem.index) {
-                                        shouldDispatchLongPress = false
-                                        onMove(currentItem.index, currentHoveredItem.index)
-                                        itemInfoDragged = currentHoveredItem
-                                        verticalOffset = 0f
-                                    }
-                                }
+                            itemInfoDragged?.getCurrentHoveredItem(
+                                threshold,
+                                verticalOffset,
+                                listItemVisible
+                            )?.also { currentHoveredItem ->
+                                if (currentHovered?.index == currentHoveredItem.index) return@also
+                                val currentItem = itemInfoDragged ?: return@also
+                                currentHovered = currentHoveredItem
+                                shouldDispatchLongPress = false
+                                listMutable = listMutable.move(
+                                    currentItem.index,
+                                    currentHoveredItem.index
+                                )
+                                onMove(currentItem.index, currentHoveredItem.index)
+                                itemInfoDragged = currentHoveredItem
+                                verticalOffset = 0f
+                            }
                         if (itemHovered == null || itemInfoDragged == null) {
                             shouldDispatchLongPress = true
                         }
@@ -173,28 +193,31 @@ fun <T> ReordableList(
         contentPadding = contentPaddingValues,
         state = listState,
     ) {
-        this
-            .itemsIndexed(items = items) { index, item ->
-                itemContent(item, index)
-            }
+        this.itemsIndexed(items = listMutable) { index, item ->
+            itemContent(item, index)
+        }
     }
 }
 
 private fun LazyListItemInfo.getCurrentHoveredItem(
+    threshold: Int,
     verticalOffset: Float,
     itemsVisible: List<LazyListItemInfo>,
-): LazyListItemInfo? = itemsVisible.firstOrNull { item ->
-    val itemRange = item.range()
-    val currentItemRange = this.range()
-    if (currentItemRange == itemRange) {
-        false
-    } else {
-        val threshold = offsetEnd / 3
-        val startOffset = offset + verticalOffset
-        val endOffset = offsetEnd + verticalOffset
-        endOffset.toInt() - threshold in itemRange ||
-            startOffset.toInt() + threshold in itemRange
-    }
+): LazyListItemInfo? {
+    val startOffset = offset + verticalOffset
+    val endOffset = offsetEnd + verticalOffset
+    val limitedEndOffset = endOffset.toInt() - threshold
+    val limitedStartOffset = startOffset.toInt() + threshold
+    return itemsVisible
+        .firstOrNull { item ->
+            if (item.index == index) {
+                false
+            } else {
+                val itemRange = item.range()
+                limitedEndOffset in itemRange ||
+                    limitedStartOffset in itemRange
+            }
+        }
 }
 
 /**

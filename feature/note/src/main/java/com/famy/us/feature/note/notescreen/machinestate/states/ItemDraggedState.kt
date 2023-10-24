@@ -38,20 +38,18 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
 
     override fun doProcess(gesture: Event, machine: StateMachine<Event, State>) {
         super.doProcess(gesture, machine)
-        val currentState = getUiState()
         when (gesture) {
             is NoteScreenIntent.MoveNote -> {
-                val list = currentState.showingTaskList
                 val from = gesture.from
                 val to = gesture.to
                 try {
-                    val fromItem = list[from]
-                    val toItem = list[to]
-                    val newList = list.move(from, to)
+                    val fromItem = currentList[from]
+                    val toItem = currentList[to]
+
                     machineScope.launch {
                         homeTaskRepository.updateTask(fromItem.copy(position = toItem.position))
                         homeTaskRepository.updateTask(toItem.copy(position = fromItem.position))
-                        setMachineState(ItemDraggedState(itemDragged, newList))
+                        setMachineState(ItemDraggedState(itemDragged, currentList.move(from, to)))
                     }
                 } catch (e: Exception) {
                     logE { "Error on access list elements: ${e.message}" }
