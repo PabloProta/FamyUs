@@ -45,7 +45,6 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
                 try {
                     val fromItem = currentList[from]
                     val toItem = currentList[to]
-
                     machineScope.launch {
                         homeTaskRepository.updateTask(fromItem.copy(position = toItem.position))
                         homeTaskRepository.updateTask(toItem.copy(position = fromItem.position))
@@ -57,7 +56,17 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
             }
 
             is NoteScreenIntent.StopDrag -> {
-                setMachineState(ItemStateList(currentList))
+                machineScope.launch {
+                    currentList.mapIndexed { index, homeTask ->
+                        val taskUpdated = homeTask.copy(
+                            position = index
+                        )
+                        homeTaskRepository.updateTask(taskUpdated)
+                        taskUpdated
+                    }.also { tasks ->
+                        setMachineState(ItemStateList(tasks))
+                    }
+                }
             }
         }
     }
