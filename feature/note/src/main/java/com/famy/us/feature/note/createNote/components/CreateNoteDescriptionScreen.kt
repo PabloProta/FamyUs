@@ -99,13 +99,6 @@ fun SimpleTextField(
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.clearFocus()
-                onDone(text.text)
-            },
         ),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
