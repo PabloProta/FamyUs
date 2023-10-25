@@ -11,12 +11,14 @@ import com.famy.us.domain.model.HomeTask
  * @property showingTaskList the tasks that was loaded.
  * @property editingTask if a task is being edited.
  * @property goingToShowTaskContent if the user asked to show the note content.
+ * @property selectingNotes if the user is selection some note.
  * @property draggingItem the item that is being dragged.
  */
 internal data class NoteScreenState(
     val isAddingTask: Boolean,
     val editingTask: HomeTask?,
     val goingToShowTaskContent: Int,
+    val selectingNotes: List<Int>,
     val isLoading: Boolean,
     val showingTaskList: List<HomeTask>,
     val draggingItem: HomeTask?,
@@ -32,6 +34,7 @@ internal data class NoteScreenState(
             isLoading = false,
             showingTaskList = mutableListOf(),
             draggingItem = null,
+            selectingNotes = emptyList(),
         )
     }
 }

@@ -61,6 +61,27 @@ internal sealed class NoteScreenIntent : UiEvent {
     data class MoveNote(val from: Int, val to: Int) : NoteScreenIntent()
 
     /**
+     * When the user make an action to select an note with a long press.
+     *
+     * @property noteIndex the index of the note that was selected.
+     */
+    data class NoteSelected(val noteIndex: Int) : NoteScreenIntent()
+
+    /**
+     * When the user dispatch done action for notes.
+     *
+     * @property notes the notes that will be marked as done.
+     */
+    data class DoneNotes(val notes: List<Int>) : NoteScreenIntent()
+
+    /**
+     * When the user dispatch a delete action for notes.
+     *
+     * @property notes the notes that will be excluded.
+     */
+    data class DeleteNotes(val notes: List<Int>) : NoteScreenIntent()
+
+    /**
      * When the user stop the drag action.
      */
     object StopDrag : NoteScreenIntent()
