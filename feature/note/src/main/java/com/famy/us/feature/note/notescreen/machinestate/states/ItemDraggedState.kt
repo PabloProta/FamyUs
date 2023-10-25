@@ -39,6 +39,10 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
     override fun doProcess(gesture: Event, machine: StateMachine<Event, State>) {
         super.doProcess(gesture, machine)
         when (gesture) {
+            is NoteScreenIntent.NoteSelected -> {
+                setMachineState(NoteSelectedState(listOf(gesture.noteIndex)))
+            }
+
             is NoteScreenIntent.MoveNote -> {
                 val from = gesture.from
                 val to = gesture.to
@@ -59,7 +63,7 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
                 machineScope.launch {
                     currentList.mapIndexed { index, homeTask ->
                         val taskUpdated = homeTask.copy(
-                            position = index
+                            position = index,
                         )
                         homeTaskRepository.updateTask(taskUpdated)
                         taskUpdated

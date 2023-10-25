@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.famy.us.core.extensions.logD
 import com.famy.us.core.ui.ReordableList
 import com.famy.us.domain.model.HomeTask
 
@@ -13,60 +12,83 @@ import com.famy.us.domain.model.HomeTask
 fun TaskList(
     tasksProvider: () -> List<HomeTask>,
     itemDragged: HomeTask?,
+    notesSelectedProvider: () -> List<Int>,
     onDragItem: (Int?) -> Unit,
     onMoveItem: (from: Int, to: Int) -> Unit,
+    onLongPress: (itemSelected: Int) -> Unit,
+    onSelectCard: (itemSelected: Int) -> Unit,
     onClickCard: (HomeTask) -> Unit,
     onStop: () -> Unit,
-    onDeleteClicked: (HomeTask) -> Unit,
-    onEditClicked: (HomeTask) -> Unit,
 ) {
     var verticalTranslation: Float by remember {
         mutableStateOf(0f)
     }
-    var itemToShowOption by remember {
-        mutableStateOf(-1)
-    }
+    val notesSelected = notesSelectedProvider()
+    val isSelecting = notesSelected.isNotEmpty()
     val list = tasksProvider()
-    ReordableList(
-        list,
-        onDrag = { value ->
-            verticalTranslation = value
-        },
-        onLongPress = { itemIndex ->
-            itemToShowOption = itemIndex
-        },
-        onDragStart = { itemIndex ->
-            onDragItem(itemIndex)
-        },
-        onStop = onStop,
-        onMove = onMoveItem,
-    ) { item, index ->
-        TaskItem(
-            item,
-            onClickCard = { showingConent ->
-                logD { "Clicking" }
-                if (showingConent) {
-                    onClickCard(item)
+    if (isSelecting) {
+        ReordableList(
+            list,
+            onDrag = { value ->
+                verticalTranslation = value
+            },
+            isReording = false,
+            onLongPress = {
+                onLongPress(it)
+            },
+            onDragStart = { itemIndex ->
+                onDragItem(itemIndex)
+            },
+            onStop = onStop,
+            onMove = onMoveItem,
+        ) { item, index ->
+            val isSelected = notesSelected.firstOrNull { it == index } != null
+            TaskItem(
+                item,
+                onClickCard = {
+                    onSelectCard(index)
+                },
+                isSelected = isSelected,
+                isDragged = if (itemDragged == null) {
+                    false
                 } else {
-                    itemToShowOption = -1
-                }
+                    itemDragged!!.id == item.id
+                },
+                verticalTranslation = verticalTranslation.toInt(),
+                isSelecting = isSelecting,
+            )
+        }
+    } else {
+        ReordableList(
+            list,
+            onDrag = { value ->
+                verticalTranslation = value
             },
-            showContentProvider = {
-                val show = itemToShowOption != index
-                show
+            isReording = true,
+            onLongPress = {
+                onLongPress(it)
             },
-            isDragged = if (itemDragged == null) {
-                false
-            } else {
-                itemDragged!!.id == item.id
+            onDragStart = { itemIndex ->
+                onDragItem(itemIndex)
             },
-            onDeleteIsClicked = {
-                onDeleteClicked(item)
-            },
-            onEditIsClicked = {
-                onEditClicked(item)
-            },
-            verticalTranslation = verticalTranslation.toInt(),
-        )
+            onStop = onStop,
+            onMove = onMoveItem,
+        ) { item, index ->
+            val isSelected = notesSelected.firstOrNull { it == index } != null
+            TaskItem(
+                item,
+                onClickCard = {
+                    onClickCard(item)
+                },
+                isSelected = isSelected,
+                isDragged = if (itemDragged == null) {
+                    false
+                } else {
+                    itemDragged!!.id == item.id
+                },
+                verticalTranslation = verticalTranslation.toInt(),
+                isSelecting = isSelecting,
+            )
+        }
     }
 }

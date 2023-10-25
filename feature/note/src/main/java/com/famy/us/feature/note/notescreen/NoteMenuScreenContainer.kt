@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.components.NoteMenuScreenContent
+import com.famy.us.feature.note.components.SelectNoteOption
 import com.famy.us.feature.note.components.TaskList
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
@@ -83,32 +84,48 @@ internal fun NoteMenuScreen(
                 performAction(NoteScreenIntent.AddTask)
             },
         ) {
-            TaskList(
-                tasksProvider = {
-                    uiState.showingTaskList
-                },
-                itemDragged = uiState.draggingItem,
-                onMoveItem = { from, to ->
-                    performAction(NoteScreenIntent.MoveNote(from, to))
-                },
-                onDragItem = { itemDragged ->
-                    performAction(NoteScreenIntent.DragNote(itemDragged))
-                },
-                onClickCard = {
-                    onNavigate("note_content/${it.id}")
-                    // TODO - A Bug here that the state are recomposing this method every time.
+            Column {
+                if (uiState.selectingNotes.isNotEmpty()) {
+                    SelectNoteOption(
+                        onClickDone = {
+                            performAction(NoteScreenIntent.DoneNotes(uiState.selectingNotes))
+                        },
+                        onClickDelete = {
+                            performAction(NoteScreenIntent.DeleteNotes(uiState.selectingNotes))
+                        },
+                    )
+                }
+
+                TaskList(
+                    tasksProvider = {
+                        uiState.showingTaskList
+                    },
+                    itemDragged = uiState.draggingItem,
+                    notesSelectedProvider = {
+                        uiState.selectingNotes
+                    },
+                    onMoveItem = { from, to ->
+                        performAction(NoteScreenIntent.MoveNote(from, to))
+                    },
+                    onDragItem = { itemDragged ->
+                        performAction(NoteScreenIntent.DragNote(itemDragged))
+                    },
+                    onClickCard = {
+                        onNavigate("note_content/${it.id}")
+                        // TODO - A Bug here that the state are recomposing this method every time.
 //                    performAction(NoteScreenIntent.ShowTaskContent(it.id))
-                },
-                onDeleteClicked = {
-                    performAction(NoteScreenIntent.DeleteTask(it))
-                },
-                onEditClicked = {
-                    performAction(NoteScreenIntent.EditTask(it))
-                },
-                onStop = {
-                    performAction(NoteScreenIntent.StopDrag)
-                },
-            )
+                    },
+                    onStop = {
+                        performAction(NoteScreenIntent.StopDrag)
+                    },
+                    onLongPress = {
+                        performAction(NoteScreenIntent.NoteSelected(it))
+                    },
+                    onSelectCard = {
+                        performAction(NoteScreenIntent.NoteSelected(it))
+                    },
+                )
+            }
         }
     }
 }
