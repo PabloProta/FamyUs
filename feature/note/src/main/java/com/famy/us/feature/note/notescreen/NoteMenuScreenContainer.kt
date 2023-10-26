@@ -85,22 +85,29 @@ internal fun NoteMenuScreen(
             },
         ) {
             Column {
-                if (uiState.selectingNotes.isNotEmpty()) {
-                    SelectNoteOption(
-                        onClickDone = {
-                            performAction(NoteScreenIntent.DoneNotes(uiState.selectingNotes))
-                        },
-                        onClickDelete = {
-                            performAction(NoteScreenIntent.DeleteNotes(uiState.selectingNotes))
-                        },
-                    )
-                }
+                SelectNoteOption(
+                    isSelecting = uiState.selectingNotes.isNotEmpty(),
+                    isAllCheckedProvider = {
+                        uiState.selectingNotes.size == uiState.showingTaskList.size
+                    },
+                    onClickDone = {
+                        performAction(NoteScreenIntent.DoneNotes(uiState.selectingNotes))
+                    },
+                    onClickDelete = {
+                        performAction(NoteScreenIntent.DeleteNotes(uiState.selectingNotes))
+                    },
+                    onCheckClicked = {
+                        performAction(NoteScreenIntent.SelectAllNotes(it))
+                    },
+                )
+
 
                 TaskList(
                     tasksProvider = {
                         uiState.showingTaskList
                     },
                     itemDragged = uiState.draggingItem,
+                    isReordering = uiState.reorderingList,
                     notesSelectedProvider = {
                         uiState.selectingNotes
                     },
