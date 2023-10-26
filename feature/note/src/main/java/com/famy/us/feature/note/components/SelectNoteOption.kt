@@ -12,19 +12,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SelectNoteOption(
+    isSelecting: Boolean,
     isAllCheckedProvider: () -> Boolean,
     onClickDone: () -> Unit,
     onClickDelete: () -> Unit,
     onCheckClicked: (isChecked: Boolean) -> Unit,
 ) {
+    val alphaValue = if (isSelecting) 1f else 0f
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .alpha(alphaValue)
             .padding(end = 32.dp),
         horizontalArrangement = Arrangement.End,
     ) {
@@ -51,6 +55,7 @@ fun SelectNoteOption(
 @Composable
 fun SelectNoteOptionPreview() {
     SelectNoteOption(
+        isSelecting = false,
         isAllCheckedProvider = { true },
         onClickDone = { },
         onClickDelete = {},
