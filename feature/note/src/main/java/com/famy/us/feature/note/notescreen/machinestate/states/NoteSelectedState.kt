@@ -27,6 +27,7 @@ internal class NoteSelectedState<Event : NoteScreenIntent, State : NoteScreenSta
         val currentState = getUiState()
         val newState = currentState.copy(
             selectingNotes = notesSelected,
+            reorderingList = false,
         )
         setUiState(newState as State)
     }
@@ -47,6 +48,16 @@ internal class NoteSelectedState<Event : NoteScreenIntent, State : NoteScreenSta
                 } else {
                     val newList = notesSelected + gesture.noteIndex
                     setMachineState(NoteSelectedState(newList))
+                }
+            }
+
+            is NoteScreenIntent.SelectAllNotes -> {
+                if (gesture.selected) {
+                    val newList = List(currentState.showingTaskList.size) { index -> index }
+                    setMachineState(NoteSelectedState(newList))
+                } else {
+                    val newList = currentState.draggingItem?.position ?: return
+                    setMachineState(NoteSelectedState(listOf(newList)))
                 }
             }
 

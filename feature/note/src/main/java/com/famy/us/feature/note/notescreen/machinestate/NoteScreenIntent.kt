@@ -61,11 +61,19 @@ internal sealed class NoteScreenIntent : UiEvent {
     data class MoveNote(val from: Int, val to: Int) : NoteScreenIntent()
 
     /**
-     * When the user make an action to select an note with a long press.
+     * When the user make an action to select a note with a long press or a click when is
+     * already selecting.
      *
      * @property noteIndex the index of the note that was selected.
      */
     data class NoteSelected(val noteIndex: Int) : NoteScreenIntent()
+
+    /**
+     * When the checkbox to select all notes is clicked.
+     *
+     * @property selected if the checkbox was selected or not.
+     */
+    data class SelectAllNotes(val selected: Boolean) : NoteScreenIntent()
 
     /**
      * When the user dispatch done action for notes.

@@ -12,6 +12,7 @@ import com.famy.us.domain.model.HomeTask
 fun TaskList(
     tasksProvider: () -> List<HomeTask>,
     itemDragged: HomeTask?,
+    isReordering: Boolean,
     notesSelectedProvider: () -> List<Int>,
     onDragItem: (Int?) -> Unit,
     onMoveItem: (from: Int, to: Int) -> Unit,
@@ -26,69 +27,39 @@ fun TaskList(
     val notesSelected = notesSelectedProvider()
     val isSelecting = notesSelected.isNotEmpty()
     val list = tasksProvider()
-    if (isSelecting) {
-        ReordableList(
-            list,
-            onDrag = { value ->
-                verticalTranslation = value
-            },
-            isReording = false,
-            onLongPress = {
-                onLongPress(it)
-            },
-            onDragStart = { itemIndex ->
-                onDragItem(itemIndex)
-            },
-            onStop = onStop,
-            onMove = onMoveItem,
-        ) { item, index ->
-            val isSelected = notesSelected.firstOrNull { it == index } != null
-            TaskItem(
-                item,
-                onClickCard = {
-                    onSelectCard(index)
-                },
-                isSelected = isSelected,
-                isDragged = if (itemDragged == null) {
-                    false
-                } else {
-                    itemDragged!!.id == item.id
-                },
-                verticalTranslation = verticalTranslation.toInt(),
-                isSelecting = isSelecting,
-            )
-        }
-    } else {
-        ReordableList(
-            list,
-            onDrag = { value ->
-                verticalTranslation = value
-            },
-            isReording = true,
-            onLongPress = {
-                onLongPress(it)
-            },
-            onDragStart = { itemIndex ->
-                onDragItem(itemIndex)
-            },
-            onStop = onStop,
-            onMove = onMoveItem,
-        ) { item, index ->
-            val isSelected = notesSelected.firstOrNull { it == index } != null
-            TaskItem(
-                item,
-                onClickCard = {
+    ReordableList(
+        list,
+        onDrag = { value ->
+            verticalTranslation = value
+        },
+        isReording = isReordering,
+        onLongPress = {
+            onLongPress(it)
+        },
+        onDragStart = { itemIndex ->
+            onDragItem(itemIndex)
+        },
+        onStop = onStop,
+        onMove = onMoveItem,
+    ) { item, index ->
+        val isSelected = notesSelected.firstOrNull { it == index } != null
+        TaskItem(
+            item,
+            onClickCard = {
+                if (!isSelecting) {
                     onClickCard(item)
-                },
-                isSelected = isSelected,
-                isDragged = if (itemDragged == null) {
-                    false
                 } else {
-                    itemDragged!!.id == item.id
-                },
-                verticalTranslation = verticalTranslation.toInt(),
-                isSelecting = isSelecting,
-            )
-        }
+                    onSelectCard(index)
+                }
+            },
+            isSelected = isSelected,
+            isDragged = if (itemDragged == null) {
+                false
+            } else {
+                itemDragged!!.id == item.id
+            },
+            verticalTranslation = verticalTranslation.toInt(),
+            isSelecting = isSelecting,
+        )
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -16,8 +17,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SelectNoteOption(
+    isAllCheckedProvider: () -> Boolean,
     onClickDone: () -> Unit,
     onClickDelete: () -> Unit,
+    onCheckClicked: (isChecked: Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -31,6 +34,12 @@ fun SelectNoteOption(
         IconButton(onClick = onClickDelete) {
             Icon(imageVector = Icons.Rounded.Delete, contentDescription = null)
         }
+        Checkbox(
+            checked = isAllCheckedProvider(),
+            onCheckedChange = {
+                onCheckClicked(it)
+            },
+        )
     }
 }
 
@@ -42,7 +51,9 @@ fun SelectNoteOption(
 @Composable
 fun SelectNoteOptionPreview() {
     SelectNoteOption(
+        isAllCheckedProvider = { true },
         onClickDone = { },
         onClickDelete = {},
+        onCheckClicked = {},
     )
 }
