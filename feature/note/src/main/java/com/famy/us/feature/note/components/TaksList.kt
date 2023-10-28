@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.famy.us.core.ui.ReordableList
+import com.famy.us.core.ui.ReorderableList
 import com.famy.us.domain.model.HomeTask
 
 @Composable
@@ -27,12 +27,12 @@ fun TaskList(
     val notesSelected = notesSelectedProvider()
     val isSelecting = notesSelected.isNotEmpty()
     val list = tasksProvider()
-    ReordableList(
+    ReorderableList(
         list,
         onDrag = { value ->
             verticalTranslation = value
         },
-        isReording = isReordering,
+        isReordering = isReordering,
         onLongPress = {
             onLongPress(it)
         },

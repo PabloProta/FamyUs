@@ -68,9 +68,9 @@ fun CustomDialog(onDismissDialog: () -> Unit, content: @Composable () -> Unit) {
  * @param itemContent the content of the list.
  */
 @Composable
-fun <T> ReordableList(
+fun <T> ReorderableList(
     items: List<T>,
-    isReording: Boolean = true,
+    isReordering: Boolean = true,
     threshold: Int = 80,
     contentPaddingValues: PaddingValues = PaddingValues(0.dp),
     onLongPress: (itemDragged: Int) -> Unit = {},
@@ -80,7 +80,7 @@ fun <T> ReordableList(
     onStop: () -> Unit = {},
     itemContent: @Composable (item: T, index: Int) -> Unit,
 ) {
-    val listState = rememberLazyListState()
+    var listState = rememberLazyListState()
     var verticalOffset by remember { mutableFloatStateOf(0f) }
     var itemInfoDragged by remember {
         mutableStateOf<LazyListItemInfo?>(null)
@@ -125,88 +125,175 @@ fun <T> ReordableList(
 
     fun isMoving(): Boolean = verticalOffset > 1.8 || verticalOffset < -1.8
 
-    LazyColumn(
-        modifier = Modifier
-            .pointerInput(Unit) {
-                if (isReording) {
-                    detectDragGesturesAfterLongPress(
-                        onDrag = { change, dragAmount ->
-                            change.consume()
-                            if (dragAmount.y > 1 || dragAmount.y < -1) {
-                                verticalOffset += dragAmount.y
-                            }
-                            onDrag(verticalOffset)
-                            val listItemVisible = listState.layoutInfo.visibleItemsInfo
-                            shouldDispatchLongPress = !isMoving()
-                            val itemHovered =
-                                itemInfoDragged?.getCurrentHoveredItem(
-                                    threshold,
-                                    verticalOffset,
-                                    listItemVisible,
-                                )?.also { currentHoveredItem ->
-                                    if (currentHovered?.index == currentHoveredItem.index) return@also
-                                    val currentItem = itemInfoDragged ?: return@also
-                                    currentHovered = currentHoveredItem
-                                    shouldDispatchLongPress = false
-                                    listMutable = listMutable.move(
-                                        currentItem.index,
-                                        currentHoveredItem.index,
-                                    )
-                                    onMove(currentItem.index, currentHoveredItem.index)
-                                    itemInfoDragged = currentHoveredItem
-                                    verticalOffset = 0f
+    if (!isReordering) {
+        LazyColumn(
+            modifier = Modifier
+                .pointerInput(Unit) {
+                    if (isReordering) {
+                        detectDragGesturesAfterLongPress(
+                            onDrag = { change, dragAmount ->
+                                change.consume()
+                                if (dragAmount.y > 1 || dragAmount.y < -1) {
+                                    verticalOffset += dragAmount.y
                                 }
-                            if (itemHovered == null || itemInfoDragged == null) {
-                                shouldDispatchLongPress = true
-                            }
-
-                            if (overScrollJob?.isActive == true) {
-                                return@detectDragGesturesAfterLongPress
-                            }
-
-                            checkForOverScroll()
-                                .takeIf { offset -> offset != 0f }
-                                ?.let { offset ->
-                                    overScrollJob = scope.launch {
-                                        listState.scrollBy(offset)
+                                onDrag(verticalOffset)
+                                val listItemVisible = listState.layoutInfo.visibleItemsInfo
+                                shouldDispatchLongPress = !isMoving()
+                                val itemHovered =
+                                    itemInfoDragged?.getCurrentHoveredItem(
+                                        threshold,
+                                        verticalOffset,
+                                        listItemVisible,
+                                    )?.also { currentHoveredItem ->
+                                        if (currentHovered?.index == currentHoveredItem.index) return@also
+                                        val currentItem = itemInfoDragged ?: return@also
+                                        currentHovered = currentHoveredItem
+                                        shouldDispatchLongPress = false
+                                        listMutable = listMutable.move(
+                                            currentItem.index,
+                                            currentHoveredItem.index,
+                                        )
+                                        onMove(currentItem.index, currentHoveredItem.index)
+                                        itemInfoDragged = currentHoveredItem
+                                        verticalOffset = 0f
                                     }
-                                } ?: kotlin.run { overScrollJob?.cancel() }
-                        },
-                        onDragStart = { offset ->
-                            val itemOffset = offset.y.toInt()
-                            listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
-                                itemOffset in item.offset..item.offsetEnd
-                            }?.also {
-                                itemInfoDragged = it
-                                onDragStart(itemInfoDragged?.index)
-                                MainScope().launch {
-                                    delay(longpressHoldDelay)
-                                    if (shouldDispatchLongPress && !isMoving()) {
-                                        onLongPress(itemInfoDragged?.index ?: -1)
+                                if (itemHovered == null || itemInfoDragged == null) {
+                                    shouldDispatchLongPress = true
+                                }
+
+                                if (overScrollJob?.isActive == true) {
+                                    return@detectDragGesturesAfterLongPress
+                                }
+
+                                checkForOverScroll()
+                                    .takeIf { offset -> offset != 0f }
+                                    ?.let { offset ->
+                                        overScrollJob = scope.launch {
+                                            listState.scrollBy(offset)
+                                        }
+                                    } ?: kotlin.run { overScrollJob?.cancel() }
+                            },
+                            onDragStart = { offset ->
+                                val itemOffset = offset.y.toInt()
+                                listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                                    itemOffset in item.offset..item.offsetEnd
+                                }?.also {
+                                    itemInfoDragged = it
+                                    onDragStart(itemInfoDragged?.index)
+                                    MainScope().launch {
+                                        delay(longpressHoldDelay)
+                                        if (shouldDispatchLongPress && !isMoving()) {
+                                            onLongPress(itemInfoDragged?.index ?: -1)
+                                        }
                                     }
                                 }
-                            }
-                        },
-                        onDragEnd = { resetDrag() },
-                        onDragCancel = { resetDrag() },
-                    )
-                } else {
-                    detectTapGestures(
-                        onLongPress = { offset ->
-                            listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
-                                offset.y.toInt() in item.range()
-                            }?.also {
-                                onLongPress(it.index)
-                            }
-                        },
-                    )
-                }
-            },
-        contentPadding = contentPaddingValues,
-        state = listState,
-    ) {
-        this.itemsIndexed(items = listMutable) { index, item ->
-            itemContent(item, index)
+                            },
+                            onDragEnd = { resetDrag() },
+                            onDragCancel = { resetDrag() },
+                        )
+                    } else {
+                        detectTapGestures(
+                            onLongPress = { offset ->
+                                listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                                    offset.y.toInt() in item.range()
+                                }?.also {
+                                    onLongPress(it.index)
+                                }
+                            },
+                        )
+                    }
+                },
+            contentPadding = contentPaddingValues,
+            state = listState,
+        ) {
+            this.itemsIndexed(items = listMutable) { index, item ->
+                itemContent(item, index)
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .pointerInput(Unit) {
+                    if (isReordering) {
+                        detectDragGesturesAfterLongPress(
+                            onDrag = { change, dragAmount ->
+                                change.consume()
+                                if (dragAmount.y > 1 || dragAmount.y < -1) {
+                                    verticalOffset += dragAmount.y
+                                }
+                                onDrag(verticalOffset)
+                                val listItemVisible = listState.layoutInfo.visibleItemsInfo
+                                shouldDispatchLongPress = !isMoving()
+                                val itemHovered =
+                                    itemInfoDragged?.getCurrentHoveredItem(
+                                        threshold,
+                                        verticalOffset,
+                                        listItemVisible,
+                                    )?.also { currentHoveredItem ->
+                                        if (currentHovered?.index == currentHoveredItem.index) return@also
+                                        val currentItem = itemInfoDragged ?: return@also
+                                        currentHovered = currentHoveredItem
+                                        shouldDispatchLongPress = false
+                                        listMutable = listMutable.move(
+                                            currentItem.index,
+                                            currentHoveredItem.index,
+                                        )
+                                        onMove(currentItem.index, currentHoveredItem.index)
+                                        itemInfoDragged = currentHoveredItem
+                                        verticalOffset = 0f
+                                    }
+                                if (itemHovered == null || itemInfoDragged == null) {
+                                    shouldDispatchLongPress = true
+                                }
+
+                                if (overScrollJob?.isActive == true) {
+                                    return@detectDragGesturesAfterLongPress
+                                }
+
+                                checkForOverScroll()
+                                    .takeIf { offset -> offset != 0f }
+                                    ?.let { offset ->
+                                        overScrollJob = scope.launch {
+                                            listState.scrollBy(offset)
+                                        }
+                                    } ?: kotlin.run { overScrollJob?.cancel() }
+                            },
+                            onDragStart = { offset ->
+                                val itemOffset = offset.y.toInt()
+                                listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                                    itemOffset in item.offset..item.offsetEnd
+                                }?.also {
+                                    itemInfoDragged = it
+                                    onDragStart(itemInfoDragged?.index)
+                                    MainScope().launch {
+                                        delay(longpressHoldDelay)
+                                        if (shouldDispatchLongPress && !isMoving()) {
+                                            onLongPress(itemInfoDragged?.index ?: -1)
+                                        }
+                                    }
+                                }
+                            },
+                            onDragEnd = { resetDrag() },
+                            onDragCancel = { resetDrag() },
+                        )
+                    } else {
+                        detectTapGestures(
+                            onLongPress = { offset ->
+                                listState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
+                                    offset.y.toInt() in item.range()
+                                }?.also {
+                                    onLongPress(it.index)
+                                }
+                            },
+                        )
+                    }
+                },
+            contentPadding = contentPaddingValues,
+            state = listState,
+        ) {
+            this.itemsIndexed(items = listMutable) { index, item ->
+                itemContent(item, index)
+            }
         }
     }
 }
