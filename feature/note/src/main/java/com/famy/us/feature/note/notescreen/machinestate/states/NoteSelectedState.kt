@@ -62,15 +62,15 @@ internal class NoteSelectedState<Event : NoteScreenIntent, State : NoteScreenSta
             }
 
             is NoteScreenIntent.DeleteNotes -> {
-                val notesToDelete = currentState.showingTaskList.filter { task ->
-                    gesture.notes.firstOrNull { it == task.position } != null
-                }.toSet()
-                val newList = currentState.showingTaskList - notesToDelete
+                val notesToDelete = currentState.showingTaskList
+                    .map { it.position to it }
+                    .filter { gesture.notes.contains(it.first) }
+
                 machineScope.launch {
-                    notesToDelete.forEach {
-                        homeTaskRepository.deleteTaskById(it.id)
+                    notesToDelete.forEach { value ->
+                        homeTaskRepository.deleteTaskById(value.second.id)
                     }
-                    setMachineState(ItemStateList(newList))
+                    setMachineState(LoadingState())
                 }
             }
 
