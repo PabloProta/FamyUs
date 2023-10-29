@@ -59,7 +59,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 ),
             ) { backstackEntry ->
                 val noteIdentifier: Int = backstackEntry.arguments?.getInt("taskId") ?: -1
-                TaskContentProvider(noteIdentifier)
+                TaskContentProvider(noteIdentifier) { onNavigateDestination ->
+                    navController.navigate(onNavigateDestination)
+                }
             }
 
             composable("create_task") {

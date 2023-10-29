@@ -19,7 +19,7 @@ internal class TaskContentState<Event : TaskContentScreenIntent, State : TaskCon
     override fun doStart() {
         super.doStart()
         logD { "Task content loaded!" }
-        val currentState = getUiState() as State
+        val currentState = getUiState()
         val newState = currentState.copy(
             onContent = note,
         )
@@ -29,9 +29,11 @@ internal class TaskContentState<Event : TaskContentScreenIntent, State : TaskCon
     override fun doProcess(gesture: Event, machine: StateMachine<Event, State>) {
         super.doProcess(gesture, machine)
         when (gesture) {
-            TaskContentScreenIntent.DeleteTask -> {}
+            TaskContentScreenIntent.DeleteTask -> setMachineState(DeletingTaskContentState(note.id))
 
-            TaskContentScreenIntent.EditTask -> {}
+            TaskContentScreenIntent.EditTask -> {
+                setMachineState(EditingContentState())
+            }
         }
     }
 }

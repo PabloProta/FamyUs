@@ -1,6 +1,7 @@
 package com.famy.us.feature.note.taskContent.machineState
 
 import com.famy.us.core.utils.UiEvent
+import com.famy.us.domain.model.HomeTask
 
 /**
  * Sealed interface that represents all intent actions possible at the task content screen.
@@ -19,8 +20,10 @@ internal sealed interface TaskContentScreenIntent : UiEvent {
 
     /**
      * When user fish the task edition.
+     *
+     * @property task the task that was updated.
      */
-    object FinishEdit : TaskContentScreenIntent
+    data class FinishEdit(val task: HomeTask) : TaskContentScreenIntent
 
     /**
      * When load an task is requested.
