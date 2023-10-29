@@ -68,7 +68,7 @@ internal fun NoteMenuScreen(
                 }
 
                 uiState.goingToShowTaskContent > 0 -> {
-                    // TODO - we should navigate here check the bug later.
+                    onNavigate("note_content/${uiState.goingToShowTaskContent}")
                 }
             }
         }
@@ -101,7 +101,6 @@ internal fun NoteMenuScreen(
                     },
                 )
 
-
                 TaskList(
                     tasksProvider = {
                         uiState.showingTaskList
@@ -118,9 +117,8 @@ internal fun NoteMenuScreen(
                         performAction(NoteScreenIntent.DragNote(itemDragged))
                     },
                     onClickCard = {
-                        onNavigate("note_content/${it.id}")
                         // TODO - A Bug here that the state are recomposing this method every time.
-//                    performAction(NoteScreenIntent.ShowTaskContent(it.id))
+                        performAction(NoteScreenIntent.ShowTaskContent(it.id))
                     },
                     onStop = {
                         performAction(NoteScreenIntent.StopDrag)

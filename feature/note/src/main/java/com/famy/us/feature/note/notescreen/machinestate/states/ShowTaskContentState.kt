@@ -2,7 +2,6 @@ package com.famy.us.feature.note.notescreen.machinestate.states
 
 import com.famy.us.core.utils.StateMachine
 import com.famy.us.core.utils.machines.CommonMachineState
-import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
 
@@ -13,14 +12,14 @@ import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
  * @property taskId the task that will be shown its content.
  */
 internal class ShowTaskContentState<Event : NoteScreenIntent, State : NoteScreenState>(
-    private val taskId: Int
+    private val taskId: Int,
 ) :
     CommonMachineState<Event, State>() {
 
     override fun doStart() {
         val currentState = getUiState()
         val newState = currentState.copy(
-            goingToShowTaskContent = taskId
+            goingToShowTaskContent = taskId,
         )
         setUiState(newState as State)
     }
@@ -34,7 +33,7 @@ internal class ShowTaskContentState<Event : NoteScreenIntent, State : NoteScreen
             }
 
             NoteScreenIntent.DismissTaskContent -> {
-                setMachineState(ItemStateList(getUiState().showingTaskList))
+                setMachineState(LoadingState())
             }
         }
     }
