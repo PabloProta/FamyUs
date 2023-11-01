@@ -1,27 +1,26 @@
 package com.famy.us
 
-import FamyUsTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavType
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.famy.us.feature.home.MenusLoader
-import com.famy.us.feature.note.createNote.CreateNoteScreenProvider
-import com.famy.us.feature.note.taskContent.TaskContentProvider
-import com.famy.us.invite.InviteScreenContainer
-import com.famy.us.navigation.MenusRouterNavigation
+import com.famy.us.core.extensions.logD
 import org.koin.core.component.KoinComponent
 
 class MainActivity : ComponentActivity(), KoinComponent {
-
-    private val menus = getKoin().getAll<MenusLoader>().map { it.loadMenu() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,66 +31,47 @@ class MainActivity : ComponentActivity(), KoinComponent {
     }
 
     @Composable
-    fun AppContainer() {
-        val navController = rememberNavController()
-
+    fun AppContainer(
+        navController: NavHostController = rememberNavController(),
+    ) {
         NavHost(
             navController,
-            startDestination = "menus/{menu}",
+            startDestination = "test",
         ) {
-            composable("menus/{menu}") { backstackEntry ->
-                val popupAt = backstackEntry.arguments?.getString("menu")
-                MenusRouterNavigation(
-                    menus = menus,
-                    startDestination = popupAt,
-                    onNavigate = {
-                        navController.navigate(it)
-                    },
-                )
+            composable("test") {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+
+                    ElevatedButton(
+                        onClick = {
+                            navController.navigate("navigation")
+                        },
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(20.dp),
+                            text = "Click to navigate"
+                        )
+                    }
+                }
             }
 
             composable(
-                route = "note_content/{taskId}",
-                arguments = listOf(
-                    navArgument("taskId") {
-                        type = NavType.IntType
-                    },
-                ),
+                route = "navigation",
             ) { backstackEntry ->
-                val noteIdentifier: Int = backstackEntry.arguments?.getInt("taskId") ?: -1
-                TaskContentProvider(noteIdentifier) { onNavigateDestination ->
-                    navController.navigate(onNavigateDestination)
+                logD { "navigation" }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Another screen")
                 }
             }
-
-            composable("create_task") {
-                CreateNoteScreenProvider(
-                    onFinish = {
-                        navController.navigate("menus/note") {
-                            popUpTo(navController.graph.id) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                )
-            }
-
-            navigation(
-                route = "invite",
-                startDestination = "invite_screen",
-            ) {
-                composable("invite_screen") {
-                    InviteScreenContainer()
-                }
-            }
-        }
-    }
-
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        FamyUsTheme {
-            AppContainer()
         }
     }
 }
