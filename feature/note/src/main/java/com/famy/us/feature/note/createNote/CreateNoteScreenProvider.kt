@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.createNote.components.CreateNoteDescriptionScreen
 import com.famy.us.feature.note.createNote.components.CreateNoteNameScreen
+import com.famy.us.feature.note.createNote.components.DefineNoteScoreScreen
 import com.famy.us.feature.note.notescreen.NoteMenuViewModel
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import org.koin.androidx.compose.koinViewModel
@@ -43,14 +44,13 @@ internal fun CreateNoteScreen(onFinish: (HomeTask) -> Unit) {
     }
     NavHost(
         navController = navController,
-        startDestination = "give_name"
+        startDestination = "give_name",
     ) {
-
         composable(route = "give_name") {
             CreateNoteNameScreen(
                 onCreateName = {
                     note = note.copy(
-                        name = it
+                        name = it,
                     )
                     navController.navigate("give_description")
                 },
@@ -61,7 +61,18 @@ internal fun CreateNoteScreen(onFinish: (HomeTask) -> Unit) {
             CreateNoteDescriptionScreen(
                 onCreateDescription = {
                     note = note.copy(
-                        description = it
+                        description = it,
+                    )
+                    navController.navigate("give_score")
+                },
+            )
+        }
+
+        composable(route = "give_score") {
+            DefineNoteScoreScreen(
+                onDefine = {
+                    note = note.copy(
+                        point = it,
                     )
                     onFinish(note)
                 },
@@ -69,5 +80,3 @@ internal fun CreateNoteScreen(onFinish: (HomeTask) -> Unit) {
         }
     }
 }
-
-

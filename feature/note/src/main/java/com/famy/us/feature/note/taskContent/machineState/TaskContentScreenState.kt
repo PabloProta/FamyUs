@@ -10,12 +10,14 @@ import com.famy.us.domain.model.HomeTask
  * @property onContent when a task is loaded.
  * @property editing when a task is being edited.
  * @property deleting if a task is being deleted.
+ * @property finishing if the task was done.
  */
 internal data class TaskContentScreenState(
     val loading: Boolean,
     val onContent: HomeTask?,
     val editing: Boolean,
     val deleting: Boolean,
+    val finishing: Boolean,
 ) : UiSate {
     companion object {
         /**
@@ -26,6 +28,7 @@ internal data class TaskContentScreenState(
             onContent = null,
             editing = false,
             deleting = false,
+            finishing = false,
         )
     }
 }

@@ -2,7 +2,7 @@ package com.famy.us.feature.note.taskContent.machineState.states
 
 import com.famy.us.core.extensions.logD
 import com.famy.us.core.utils.StateMachine
-import com.famy.us.core.utils.machines.CommonMachineState
+import com.famy.us.core.utils.machines.CoroutineMachineState
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.taskContent.machineState.TaskContentScreenIntent
 import com.famy.us.feature.note.taskContent.machineState.TaskContentScreenState
@@ -14,7 +14,7 @@ import com.famy.us.feature.note.taskContent.machineState.TaskContentScreenState
  */
 internal class TaskContentState<Event : TaskContentScreenIntent, State : TaskContentScreenState>(
     private val note: HomeTask,
-) : CommonMachineState<Event, State>() {
+) : CoroutineMachineState<Event, State>() {
 
     override fun doStart() {
         super.doStart()
@@ -33,6 +33,10 @@ internal class TaskContentState<Event : TaskContentScreenIntent, State : TaskCon
 
             TaskContentScreenIntent.EditTask -> {
                 setMachineState(EditingContentState())
+            }
+
+            TaskContentScreenIntent.DoneTask -> {
+                setMachineState(DoneTaskState())
             }
         }
     }

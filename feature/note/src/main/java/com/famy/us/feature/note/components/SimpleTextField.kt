@@ -34,7 +34,6 @@ fun SimpleTextField(
         mutableStateOf(TextFieldValue(content))
     }
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
     TextField(
         modifier = modifier
             .background(Color.Transparent)

@@ -33,14 +33,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun CustomDialog(onDismissDialog: () -> Unit, content: @Composable () -> Unit) {
+fun CustomDialog(
+    modifier: Modifier,
+    onDismissDialog: () -> Unit,
+    content: @Composable () -> Unit,
+) {
     Dialog(onDismissRequest = onDismissDialog) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colorScheme.primaryContainer,
         ) {
             Box(
-                modifier = Modifier,
+                modifier = modifier,
                 contentAlignment = Alignment.Center,
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
