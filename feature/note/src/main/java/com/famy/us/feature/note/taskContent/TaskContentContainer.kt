@@ -1,6 +1,7 @@
 package com.famy.us.feature.note.taskContent
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.ModeEditOutline
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -32,8 +34,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.core.ui.CustomDialog
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.components.SimpleTextField
+import com.famy.us.feature.note.createNote.components.DefineNoteScoreScreen
 import com.famy.us.feature.note.notescreen.NoteMenuViewModel
 import com.famy.us.feature.note.notescreen.ShowProgress
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
@@ -62,7 +66,7 @@ internal fun TaskContentContainer(
     if (uiState.onContent == null) {
         viewModel.perform(TaskContentScreenIntent.LoadTask(taskId))
     }
-    if (uiState.deleting) {
+    if (uiState.deleting || uiState.finishing) {
         noteListViewModel.perform(NoteScreenIntent.DismissTaskContent)
         onNavigate("menus/note")
     }
@@ -103,6 +107,9 @@ private fun TaskContent(
                     onDeleteClicked = {
                         performAction(TaskContentScreenIntent.DeleteTask)
                     },
+                    onDoneTask = {
+                        performAction(TaskContentScreenIntent.DoneTask)
+                    },
                 )
             }
         }
@@ -114,11 +121,15 @@ internal fun OnTaskContent(
     onEditing: () -> Boolean,
     onTask: () -> HomeTask,
     onEditClicked: () -> Unit,
+    onDoneTask: () -> Unit,
     onSave: (HomeTask) -> Unit,
     onDeleteClicked: () -> Unit,
 ) {
     var task by remember {
         mutableStateOf(onTask())
+    }
+    var shouldShowDialog by remember {
+        mutableStateOf(false)
     }
     val isEditing = onEditing()
     Column(
@@ -126,6 +137,21 @@ internal fun OnTaskContent(
             .fillMaxSize()
             .padding(24.dp),
     ) {
+        if (shouldShowDialog) {
+            EditScoreDialog(
+                onDismiss = {
+                    shouldShowDialog = false
+                },
+                onDefine = { score ->
+                    onSave(
+                        task.copy(
+                            point = score,
+                        ),
+                    )
+                },
+            )
+        }
+
         SimpleTextField(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -174,6 +200,11 @@ internal fun OnTaskContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
+                modifier = Modifier.clickable {
+                    if (isEditing) {
+                        shouldShowDialog = true
+                    }
+                },
                 text = "Pontos:",
                 style = MaterialTheme.typography.headlineMedium,
             )
@@ -185,10 +216,10 @@ internal fun OnTaskContent(
                 ),
             )
         }
-        Spacer(modifier = Modifier.size(80.dp))
+        Spacer(modifier = Modifier.size(24.dp))
         Row(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
             if (!isEditing) {
@@ -243,6 +274,33 @@ internal fun OnTaskContent(
                 }
             }
         }
+
+        if (!isEditing) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            ElevatedButton(
+                modifier = Modifier
+                    .align(Alignment.End),
+                onClick = {
+                    onDoneTask()
+                },
+            ) {
+                Text(text = "Finalizar Tarefa")
+            }
+        }
+    }
+}
+
+@Composable
+private fun EditScoreDialog(
+    onDefine: (Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    CustomDialog(
+        modifier = Modifier.padding(vertical = 140.dp),
+        onDismissDialog = onDismiss,
+    ) {
+        DefineNoteScoreScreen(onDefine = onDefine)
     }
 }
 

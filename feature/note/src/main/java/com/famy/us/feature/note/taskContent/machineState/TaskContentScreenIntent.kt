@@ -31,4 +31,9 @@ internal sealed interface TaskContentScreenIntent : UiEvent {
      * @property taskId the task that was requested.
      */
     data class LoadTask(val taskId: Int) : TaskContentScreenIntent
+
+    /**
+     * When the task is finished.
+     */
+    object DoneTask : TaskContentScreenIntent
 }
