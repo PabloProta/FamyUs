@@ -2,6 +2,7 @@ package com.famy.us.feature.home.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.famy.us.core.utils.navigation.Navigator
 
 /**
  * Class to provide all menus available in the home screen with they data necessary to build each
@@ -18,5 +19,5 @@ data class MenuItem(
     val route: String,
     val priority: Int,
     val icon: ImageVector,
-    val screen: @Composable (onNavigate: (String) -> Unit) -> Unit,
+    val screen: @Composable (onNavigate: (Navigator) -> Unit) -> Unit,
 )

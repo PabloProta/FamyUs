@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CustomDialog(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onDismissDialog: () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -73,6 +73,7 @@ fun CustomDialog(
  */
 @Composable
 fun <T> ReorderableList(
+    modifier: Modifier = Modifier,
     items: List<T>,
     isReordering: Boolean = true,
     threshold: Int = 80,
@@ -131,7 +132,7 @@ fun <T> ReorderableList(
 
     if (!isReordering) {
         LazyColumn(
-            modifier = Modifier
+            modifier = modifier
                 .pointerInput(Unit) {
                     if (isReordering) {
                         detectDragGesturesAfterLongPress(

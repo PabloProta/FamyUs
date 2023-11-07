@@ -93,4 +93,9 @@ internal sealed class NoteScreenIntent : UiEvent {
      * When the user stop the drag action.
      */
     object StopDrag : NoteScreenIntent()
+
+    /**
+     * Intent representing the back action.
+     */
+    object DoBack: NoteScreenIntent()
 }

@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.famy.us.core.utils.navigation.Navigator
+import com.famy.us.invite.navigation.InviteScreenNavigation
 
 @Composable
-internal fun HomeMenuScreen(onNavigate: (String) -> Unit) {
+internal fun HomeMenuScreen(onNavigate: (Navigator) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -23,7 +25,7 @@ internal fun HomeMenuScreen(onNavigate: (String) -> Unit) {
         }
         ElevatedButton(
             onClick = {
-                onNavigate("invite")
+                onNavigate(Navigator.NavigateTo(InviteScreenNavigation.InviteScreen))
             },
         ) {
             Text(text = "Invite Screen")

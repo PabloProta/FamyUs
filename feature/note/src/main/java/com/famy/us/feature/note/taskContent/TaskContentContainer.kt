@@ -296,11 +296,12 @@ private fun EditScoreDialog(
     onDefine: (Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    CustomDialog(
-        modifier = Modifier.padding(vertical = 140.dp),
-        onDismissDialog = onDismiss,
-    ) {
-        DefineNoteScoreScreen(onDefine = onDefine)
+    CustomDialog(onDismissDialog = onDismiss) {
+        DefineNoteScoreScreen(
+            modifier = Modifier
+                .size(460.dp),
+            onDefine = onDefine,
+        )
     }
 }
 

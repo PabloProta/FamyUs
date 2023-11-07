@@ -28,7 +28,7 @@ fun TaskList(
     val isSelecting = notesSelected.isNotEmpty()
     val list = tasksProvider()
     ReorderableList(
-        list,
+        items = list,
         onDrag = { value ->
             verticalTranslation = value
         },
