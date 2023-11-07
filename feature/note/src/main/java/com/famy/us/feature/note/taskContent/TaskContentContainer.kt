@@ -228,7 +228,7 @@ internal fun OnTaskContent(
                         .size(48.dp)
                         .clip(CircleShape),
                     colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onBackground,
                     ),
                     onClick = onEditClicked,
@@ -245,7 +245,7 @@ internal fun OnTaskContent(
                     .size(48.dp)
                     .clip(CircleShape),
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 onClick = onDeleteClicked,
