@@ -27,7 +27,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
         actionBar?.hide()
         setContent {
-            AppContainer()
+            FamyUsTheme {
+                AppContainer()
+            }
         }
     }
 

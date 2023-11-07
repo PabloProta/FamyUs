@@ -1,7 +1,7 @@
 package com.famy.us.feature.note
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.NoteAdd
+import androidx.compose.material.icons.rounded.Notes
 import com.famy.us.feature.home.MenusLoader
 import com.famy.us.feature.home.model.MenuItem
 import com.famy.us.feature.note.notescreen.NoteMenuScreenContainer
@@ -15,7 +15,7 @@ internal class NoteMenuLoader : MenusLoader {
         name = "Note",
         route = "note",
         priority = 1,
-        icon = Icons.Rounded.NoteAdd,
+        icon = Icons.Rounded.Notes,
         screen = { NoteMenuScreenContainer(onNavigate = it) },
     )
 }
