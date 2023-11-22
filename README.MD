@@ -2,6 +2,9 @@
 An app to handle family home tasks in a easy way (and free).
 This app is to practice good practices developing mobile 
 application and is also for case study to new patterns, apis, libs, etc...
+## Preview
+![](famyus.gif)
+
 ## Architecture 
 This is a brief explanation of how the app was organized 
 <br>
