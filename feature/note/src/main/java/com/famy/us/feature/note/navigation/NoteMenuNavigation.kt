@@ -22,5 +22,5 @@ object NoteMenuNavigation {
     /**
      * Object representing the note menu destination.
      */
-    object NoteMenu: Destination("menus/note")
+    object NoteMenu : Destination("menus/note")
 }

@@ -54,7 +54,7 @@ fun SimpleTextField(
                 style = textStyle,
             )
             innerTextField()
-        }
+        },
     )
 
     LaunchedEffect(Unit) {

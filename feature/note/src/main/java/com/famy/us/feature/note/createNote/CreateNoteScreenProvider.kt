@@ -1,7 +1,13 @@
 package com.famy.us.feature.note.createNote
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +24,6 @@ import com.famy.us.feature.note.createNote.components.CreateNoteDescriptionScree
 import com.famy.us.feature.note.createNote.components.CreateNoteNameScreen
 import com.famy.us.feature.note.createNote.components.DefineNoteScoreScreen
 import com.famy.us.feature.note.createNote.navigation.CreateNoteNavigation
-import com.famy.us.feature.note.navigation.NoteMenuNavigation
 import com.famy.us.feature.note.notescreen.NoteMenuViewModel
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import org.koin.androidx.compose.koinViewModel
@@ -35,12 +40,18 @@ internal fun CreateNoteScreenContainer(
     viewModel: NoteMenuViewModel = koinViewModel(),
     onNavigate: (Navigator) -> Unit,
 ) {
-    CreateNoteScreen(
-        onFinish = {
-            viewModel.perform(NoteScreenIntent.SaveTask(it))
-            onNavigate(Navigator.NavigateTo(NoteMenuNavigation.NoteMenu))
-        },
-    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
+        CreateNoteScreen(
+            onFinish = {
+                viewModel.perform(NoteScreenIntent.SaveTask(it))
+                onNavigate(Navigator.PopBackStack)
+            },
+        )
+    }
 
     BackHandler {
         onNavigate(Navigator.PopBackStack)
@@ -54,42 +65,62 @@ internal fun CreateNoteScreen(onFinish: (HomeTask) -> Unit) {
     var note by remember {
         mutableStateOf(HomeTask.Empty)
     }
-    NavHost(
-        navController = navController,
-        startDestination = CreateNoteNavigation.GiveName.fullRoute,
-    ) {
-        composable(destination = CreateNoteNavigation.GiveName) {
-            CreateNoteNameScreen(
-                onCreateName = {
-                    note = note.copy(
-                        name = it,
-                    )
-                    navController.doAction(Navigator.NavigateTo(CreateNoteNavigation.GiveDescription))
-                },
-            )
-        }
+    Column(modifier = Modifier.fillMaxSize()) {
+        NavHost(
+            navController = navController,
+            startDestination = CreateNoteNavigation.GiveName.fullRoute,
+        ) {
+            composable(
+                destination = CreateNoteNavigation.GiveName,
+            ) {
+                CreateNoteNameScreen(
+                    onCreateName = {
+                        note = note.copy(
+                            name = it,
+                        )
+                        navController.doAction(Navigator.NavigateTo(CreateNoteNavigation.GiveDescription))
+                    },
+                )
+            }
 
-        composable(destination = CreateNoteNavigation.GiveDescription) {
-            CreateNoteDescriptionScreen(
-                onCreateDescription = {
-                    note = note.copy(
-                        description = it,
-                    )
-                    navController.doAction(Navigator.NavigateTo(CreateNoteNavigation.GiveScore))
-                },
-            )
-        }
+            composable(
+                destination = CreateNoteNavigation.GiveDescription,
+                enterTransition = slideInHorizontally(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessLow,
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                    ),
+                ),
+            ) {
+                CreateNoteDescriptionScreen(
+                    onCreateDescription = {
+                        note = note.copy(
+                            description = it,
+                        )
+                        navController.doAction(Navigator.NavigateTo(CreateNoteNavigation.GiveScore))
+                    },
+                )
+            }
 
-        composable(destination = CreateNoteNavigation.GiveScore) {
-            DefineNoteScoreScreen(
-                modifier = Modifier.fillMaxSize(),
-                onDefine = {
-                    note = note.copy(
-                        point = it,
-                    )
-                    onFinish(note)
-                },
-            )
+            composable(
+                destination = CreateNoteNavigation.GiveScore,
+                enterTransition = slideInHorizontally(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessLow,
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                    ),
+                ),
+            ) {
+                DefineNoteScoreScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onDefine = {
+                        note = note.copy(
+                            point = it,
+                        )
+                        onFinish(note)
+                    },
+                )
+            }
         }
     }
 }

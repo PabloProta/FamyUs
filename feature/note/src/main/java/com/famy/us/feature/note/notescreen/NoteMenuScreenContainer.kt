@@ -70,13 +70,7 @@ internal fun NoteMenuScreen(
                 }
 
                 uiState.goingToShowTaskContent > 0 -> {
-                    onNavigate(
-                        Navigator.NavigateTo(
-                            NoteMenuNavigation.NoteContent(
-                                uiState.goingToShowTaskContent.toString(),
-                            ),
-                        )
-                    )
+                    // TODO - also recomposing unnecessary.
                 }
             }
         }
@@ -126,6 +120,13 @@ internal fun NoteMenuScreen(
                     },
                     onClickCard = {
                         // TODO - A Bug here that the state are recomposing this method every time.
+                        onNavigate(
+                            Navigator.NavigateTo(
+                                NoteMenuNavigation.NoteContent(
+                                    it.id.toString(),
+                                ),
+                            ),
+                        )
                         performAction(NoteScreenIntent.ShowTaskContent(it.id))
                     },
                     onStop = {

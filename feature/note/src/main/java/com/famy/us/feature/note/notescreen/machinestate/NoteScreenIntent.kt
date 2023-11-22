@@ -97,5 +97,5 @@ internal sealed class NoteScreenIntent : UiEvent {
     /**
      * Intent representing the back action.
      */
-    object DoBack: NoteScreenIntent()
+    object DoBack : NoteScreenIntent()
 }

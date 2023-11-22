@@ -26,6 +26,7 @@ import com.famy.us.core.utils.navigation.Navigator
 import com.famy.us.feature.home.model.MenuItem
 
 @Composable
+@Suppress("LongMethod")
 internal fun MenusRouterNavigation(
     menus: List<MenuItem>,
     startDestination: String?,
@@ -85,8 +86,8 @@ internal fun MenusRouterNavigation(
                         slideInHorizontally(
                             animationSpec = spring(
                                 stiffness = Spring.StiffnessLow,
-                                dampingRatio = Spring.DampingRatioMediumBouncy
-                            )
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                            ),
                         )
                     },
                 ) {

@@ -49,7 +49,7 @@ fun DefineNoteScoreScreen(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = score.roundToInt().toString(),
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialTheme.typography.displayMedium,
         )
         Slider(
             value = score,

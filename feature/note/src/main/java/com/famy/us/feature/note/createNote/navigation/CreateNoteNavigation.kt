@@ -15,10 +15,10 @@ object CreateNoteNavigation {
     /**
      * Destination to give a note description screen.
      */
-    object GiveDescription: Destination("give_description")
+    object GiveDescription : Destination("give_description")
 
     /**
      * Destination to give a score screen.
      */
-    object GiveScore: Destination("give_score")
+    object GiveScore : Destination("give_score")
 }

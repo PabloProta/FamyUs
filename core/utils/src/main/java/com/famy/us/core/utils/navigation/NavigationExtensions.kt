@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 
 /**
  * Method to set a composable for the nav host based on [Destination].
@@ -28,17 +29,33 @@ fun NavGraphBuilder.composable(
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
     content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit),
+) = composable(
+    route = destination.fullRoute,
+    enterTransition = { enterTransition },
+    exitTransition = { exitTransition },
+    arguments = arguments,
+    deepLinks = deepLinks,
+    content = content,
+)
+
+/**
+ * Method to set a navigation host using [Destination].
+ *
+ * @param route the route as [Destination].
+ * @param startDestination the start destination.
+ * @param navGraphBuilder the scope to the nav graphBuilder build the nav graph.
+ */
+fun NavGraphBuilder.navigation(
+    route: Destination,
+    startDestination: Destination,
+    navGraphBuilder: NavGraphBuilder.() -> Unit,
 ) {
-    composable(
-        route = destination.fullRoute,
-        enterTransition = { enterTransition },
-        exitTransition = { exitTransition },
-        arguments = arguments,
-        deepLinks = deepLinks,
-        content = content
+    navigation(
+        route = route.fullRoute,
+        startDestination = startDestination.fullRoute,
+        builder = navGraphBuilder,
     )
 }
-
 
 /**
  * Method to make an action with the navcontroller based on a [Navigator]

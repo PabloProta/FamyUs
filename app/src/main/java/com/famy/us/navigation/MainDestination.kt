@@ -11,4 +11,9 @@ object MainDestination {
      * Object representing the menu destination.
      */
     object Menu : Destination("menus/{menu}")
+
+    /**
+     * Object representing the invite menu route flow.
+     */
+    object Invite : Destination("invite")
 }
