@@ -52,6 +52,8 @@ internal class AddStateTask<Event : NoteScreenIntent, State : NoteScreenState> :
                     }
                 }
             }
+
+            NoteScreenIntent.DoBack -> setMachineState(ItemStateList(currentState.showingTaskList))
         }
     }
 }

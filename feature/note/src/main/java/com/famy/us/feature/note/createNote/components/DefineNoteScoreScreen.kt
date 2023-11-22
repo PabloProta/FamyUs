@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -23,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
-fun DefineNoteScoreScreen(onDefine: (Int) -> Unit) {
+fun DefineNoteScoreScreen(
+    modifier: Modifier = Modifier,
+    onDefine: (Int) -> Unit,
+) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(24.dp)
             .padding(top = 40.dp),
     ) {
@@ -42,12 +43,13 @@ fun DefineNoteScoreScreen(onDefine: (Int) -> Unit) {
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Start,
         )
-        Spacer(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = score.roundToInt().toString(),
+            style = MaterialTheme.typography.displayMedium,
         )
         Slider(
             value = score,
@@ -78,5 +80,5 @@ fun DefineNoteScoreScreen(onDefine: (Int) -> Unit) {
 )
 @Composable
 fun DefineNoteScoreScreenPreview() {
-    DefineNoteScoreScreen({})
+    DefineNoteScoreScreen(modifier = Modifier.fillMaxSize(), {})
 }

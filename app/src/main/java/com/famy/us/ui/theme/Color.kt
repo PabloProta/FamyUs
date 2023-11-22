@@ -59,7 +59,4 @@ val md_theme_dark_surface = Color(0xFF121316)
 val md_theme_dark_onSurface = Color(0xFFC7C6CA)
 val md_theme_dark_surfaceVariant = Color(0xFF44474F)
 val md_theme_dark_onSurfaceVariant = Color(0xFFC4C6D0)
-
-
 val seed = Color(0xFF4285F4)
-

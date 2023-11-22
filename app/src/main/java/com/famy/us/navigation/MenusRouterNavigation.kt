@@ -1,5 +1,10 @@
 package com.famy.us.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -17,13 +22,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.famy.us.core.utils.navigation.Navigator
 import com.famy.us.feature.home.model.MenuItem
 
 @Composable
+@Suppress("LongMethod")
 internal fun MenusRouterNavigation(
     menus: List<MenuItem>,
     startDestination: String?,
-    onNavigate: (String) -> Unit,
+    onNavigate: (Navigator) -> Unit,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -64,14 +71,26 @@ internal fun MenusRouterNavigation(
     ) { contentPadding ->
         NavHost(
             navController,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
             startDestination = startDestination ?: menus
                 .sortedBy { it.priority }
                 .first()
                 .route,
-            Modifier.padding(contentPadding),
+            modifier = Modifier.padding(contentPadding),
         ) {
             menus.forEach { menuItem ->
-                composable(route = menuItem.route) {
+                composable(
+                    route = menuItem.route,
+                    enterTransition = {
+                        slideInHorizontally(
+                            animationSpec = spring(
+                                stiffness = Spring.StiffnessLow,
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                            ),
+                        )
+                    },
+                ) {
                     menuItem.screen(onNavigate = onNavigate)
                 }
             }

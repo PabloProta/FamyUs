@@ -17,10 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.core.utils.navigation.Navigator
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.components.NoteMenuScreenContent
 import com.famy.us.feature.note.components.SelectNoteOption
 import com.famy.us.feature.note.components.TaskList
+import com.famy.us.feature.note.navigation.NoteMenuNavigation
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenIntent
 import com.famy.us.feature.note.notescreen.machinestate.NoteScreenState
 import org.koin.androidx.compose.koinViewModel
@@ -29,7 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun NoteMenuScreenContainer(
     viewModel: NoteMenuViewModel = koinViewModel(),
-    onNavigate: (String) -> Unit,
+    onNavigate: (Navigator) -> Unit,
 ) {
     val uiState by remember {
         viewModel.uiState
@@ -46,14 +48,14 @@ internal fun NoteMenuScreenContainer(
 @Composable
 internal fun NoteMenuScreen(
     uiState: NoteScreenState,
-    onNavigate: (String) -> Unit,
+    onNavigate: (Navigator) -> Unit,
     performAction: (NoteScreenIntent) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(16.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
         ShowProgress(
             isLoadingProvider = {
@@ -68,7 +70,7 @@ internal fun NoteMenuScreen(
                 }
 
                 uiState.goingToShowTaskContent > 0 -> {
-                    onNavigate("note_content/${uiState.goingToShowTaskContent}")
+                    // TODO - also recomposing unnecessary.
                 }
             }
         }
@@ -80,7 +82,7 @@ internal fun NoteMenuScreen(
         Spacer(modifier = Modifier.size(32.dp))
         NoteMenuScreenContent(
             onAddTaskClicked = {
-                onNavigate("create_task")
+                onNavigate(Navigator.NavigateTo(NoteMenuNavigation.CreateTask))
                 performAction(NoteScreenIntent.AddTask)
             },
         ) {
@@ -118,6 +120,13 @@ internal fun NoteMenuScreen(
                     },
                     onClickCard = {
                         // TODO - A Bug here that the state are recomposing this method every time.
+                        onNavigate(
+                            Navigator.NavigateTo(
+                                NoteMenuNavigation.NoteContent(
+                                    it.id.toString(),
+                                ),
+                            ),
+                        )
                         performAction(NoteScreenIntent.ShowTaskContent(it.id))
                     },
                     onStop = {

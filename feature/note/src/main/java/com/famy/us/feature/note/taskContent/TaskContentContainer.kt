@@ -1,6 +1,7 @@
 package com.famy.us.feature.note.taskContent
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.core.ui.CustomDialog
+import com.famy.us.core.utils.navigation.Navigator
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.components.SimpleTextField
 import com.famy.us.feature.note.createNote.components.DefineNoteScoreScreen
@@ -48,34 +50,45 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun TaskContentProvider(
     taskId: Int,
-    navigateTo: (String) -> Unit,
+    navigateTo: (Navigator) -> Unit,
 ) {
-    TaskContentContainer(taskId = taskId, onNavigate = navigateTo)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
+        TaskContentContainer(taskId = taskId, onNavigate = navigateTo)
+    }
 }
 
 @Composable
 internal fun TaskContentContainer(
     viewModel: TaskContentViewModel = koinViewModel(),
-    noteListViewModel: NoteMenuViewModel = koinViewModel(),
-    onNavigate: (String) -> Unit,
+    noteMenuViewModel: NoteMenuViewModel = koinViewModel(),
+    onNavigate: (Navigator) -> Unit,
     taskId: Int,
 ) {
     val uiState by remember {
         viewModel.uiState
     }
-    if (uiState.onContent == null) {
+
+    if (uiState.deleting || uiState.finishing) {
+        noteMenuViewModel.perform(NoteScreenIntent.DismissTaskContent)
+        /*
+            TODO - I cant do the dismiss action here, because apparently compose has an issue that
+             forces our composable recompose every time we make an navigation with the navigation
+             lib, the issue tracker is here: https://issuetracker.google.com/issues/302212882
+             for now I'll ignore this statements and do nothing until google answers.
+         */
+    } else if (uiState.onContent == null) {
         viewModel.perform(TaskContentScreenIntent.LoadTask(taskId))
     }
-    if (uiState.deleting || uiState.finishing) {
-        noteListViewModel.perform(NoteScreenIntent.DismissTaskContent)
-        onNavigate("menus/note")
-    }
     BackHandler {
-        noteListViewModel.perform(NoteScreenIntent.DismissTaskContent)
-        onNavigate("menus/note")
+        onNavigate(Navigator.PopBackStack)
     }
     TaskContent(
         uiState = uiState,
+        onNavigate = onNavigate,
         performAction = {
             viewModel.perform(it)
         },
@@ -85,8 +98,13 @@ internal fun TaskContentContainer(
 @Composable
 private fun TaskContent(
     uiState: TaskContentScreenState,
+    onNavigate: (Navigator) -> Unit,
     performAction: (TaskContentScreenIntent) -> Unit,
 ) {
+    fun dismissContent() {
+        onNavigate(Navigator.PopBackStack)
+    }
+
     ShowProgress(
         isLoadingProvider = {
             uiState.loading
@@ -106,9 +124,11 @@ private fun TaskContent(
                     },
                     onDeleteClicked = {
                         performAction(TaskContentScreenIntent.DeleteTask)
+                        dismissContent()
                     },
                     onDoneTask = {
                         performAction(TaskContentScreenIntent.DoneTask)
+                        dismissContent()
                     },
                 )
             }
@@ -296,11 +316,12 @@ private fun EditScoreDialog(
     onDefine: (Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    CustomDialog(
-        modifier = Modifier.padding(vertical = 140.dp),
-        onDismissDialog = onDismiss,
-    ) {
-        DefineNoteScoreScreen(onDefine = onDefine)
+    CustomDialog(onDismissDialog = onDismiss) {
+        DefineNoteScoreScreen(
+            modifier = Modifier
+                .size(460.dp),
+            onDefine = onDefine,
+        )
     }
 }
 
@@ -327,5 +348,6 @@ private fun TaskContentPreview() {
             ),
         ),
         performAction = {},
+        onNavigate = {},
     )
 }
