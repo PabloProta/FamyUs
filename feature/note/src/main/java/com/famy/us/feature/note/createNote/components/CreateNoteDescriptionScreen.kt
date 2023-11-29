@@ -72,7 +72,6 @@ fun CreateNoteDescriptionScreen(onCreateDescription: (String) -> Unit) {
     showBackground = true,
     backgroundColor = 0xFFFFFFFF,
 )
-
 @Composable
 fun CreateNoteDescriptionPreview() {
     CreateNoteDescriptionScreen(onCreateDescription = {})

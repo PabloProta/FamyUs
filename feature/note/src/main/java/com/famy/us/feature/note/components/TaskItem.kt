@@ -1,12 +1,11 @@
 package com.famy.us.feature.note.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,10 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.famy.us.domain.model.HomeTask
@@ -30,14 +29,12 @@ import com.famy.us.domain.model.HomeTask
 @Composable
 internal fun TaskItem(
     task: HomeTask,
-    isDragged: Boolean,
+    isReordering: Boolean,
     isSelected: Boolean,
     isSelecting: Boolean,
-    verticalTranslation: Int,
     onClickCard: () -> Unit,
+    onLongPress: () -> Unit,
 ) {
-    val zIndex = if (isDragged) 1.0f else 0.0f
-    val elevation = if (isDragged) 8.dp else 0.dp
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -57,21 +54,21 @@ internal fun TaskItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(148.dp)
-                .padding(all = if (!isSelected) 0.dp else 18.dp)
+                .padding(all = if (isSelected && !isReordering) 18.dp else 0.dp)
                 .padding(bottom = 8.dp)
-                .zIndex(zIndex)
-                .offset {
-                    if (isDragged) {
-                        IntOffset(0, verticalTranslation)
-                    } else {
-                        IntOffset(0, 0)
-                    }
-                }
-                .clickable {
-                    onClickCard()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            onClickCard()
+                        },
+                        onLongPress = {
+                            if (!isReordering) {
+                                onLongPress()
+                            }
+                        },
+                    )
                 },
             elevation = CardDefaults.elevatedCardElevation(
-                defaultElevation = elevation,
                 pressedElevation = 0.dp,
             ),
             colors = CardDefaults.cardColors(
@@ -120,9 +117,9 @@ private fun TaskItemPreview() {
             task = HomeTask.Empty.copy(name = "Joares", point = 10),
             onClickCard = {},
             isSelecting = true,
-            isDragged = false,
-            verticalTranslation = 0,
             isSelected = false,
+            isReordering = false,
+            onLongPress = {},
         )
     }
 }

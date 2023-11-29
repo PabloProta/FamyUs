@@ -14,12 +14,12 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- *  State for when some item is being dragged.
+ *  State for when the list being be reorder.
  *
  *  @property itemDragged the item whose was dragged.
  *  @property currentList the current list of notes.
  */
-internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenState>(
+internal class ReorderingListState<Event : NoteScreenIntent, State : NoteScreenState>(
     private val itemDragged: HomeTask?,
     private val currentList: List<HomeTask>,
 ) : CoroutineMachineState<Event, State>(), KoinComponent {
@@ -32,17 +32,15 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
         val newState = currentState.copy(
             draggingItem = itemDragged,
             showingTaskList = currentList,
+            reorderingList = true,
         )
         setUiState(newState as State)
     }
 
     override fun doProcess(gesture: Event, machine: StateMachine<Event, State>) {
         super.doProcess(gesture, machine)
+        val currentState = getUiState()
         when (gesture) {
-            is NoteScreenIntent.NoteSelected -> {
-                setMachineState(NoteSelectedState(listOf(gesture.noteIndex)))
-            }
-
             is NoteScreenIntent.MoveNote -> {
                 val from = gesture.from
                 val to = gesture.to
@@ -52,11 +50,26 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
                     machineScope.launch {
                         homeTaskRepository.updateTask(fromItem.copy(position = toItem.position))
                         homeTaskRepository.updateTask(toItem.copy(position = fromItem.position))
-                        setMachineState(ItemDraggedState(itemDragged, currentList.move(from, to)))
+                        setMachineState(
+                            ReorderingListState(
+                                itemDragged,
+                                currentList.move(from, to),
+                            ),
+                        )
                     }
                 } catch (e: Exception) {
                     logE { "Error on access list elements: ${e.message}" }
                 }
+            }
+
+            is NoteScreenIntent.DragNote -> {
+                val list = currentState.showingTaskList
+                val item = list.getOrNull(gesture.itemDragged ?: -1)
+                setMachineState(ReorderingListState(item, list))
+            }
+
+            is NoteScreenIntent.DoneNotes -> {
+                setMachineState(ItemStateList(currentList))
             }
 
             is NoteScreenIntent.StopDrag -> {
@@ -68,7 +81,7 @@ internal class ItemDraggedState<Event : NoteScreenIntent, State : NoteScreenStat
                         homeTaskRepository.updateTask(taskUpdated)
                         taskUpdated
                     }.also { tasks ->
-                        setMachineState(ItemStateList(tasks))
+                        setMachineState(ReorderingListState(itemDragged, tasks))
                     }
                 }
             }

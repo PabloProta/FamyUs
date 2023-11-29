@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun CreateNoteNameScreen(onCreateName: (String) -> Unit) {
     Column(
@@ -82,7 +81,6 @@ fun CreateNoteNameScreen(onCreateName: (String) -> Unit) {
         }
     }
 }
-
 
 @Preview(
     device = "id:pixel_xl",

@@ -78,6 +78,10 @@ internal class NoteSelectedState<Event : NoteScreenIntent, State : NoteScreenSta
                 // TODO - NEED Implement the done action at the repository level.
                 setMachineState(ItemStateList(currentState.showingTaskList))
             }
+
+            NoteScreenIntent.ReorderList -> {
+                setMachineState(ReorderingListState(null, currentState.showingTaskList))
+            }
         }
     }
 }

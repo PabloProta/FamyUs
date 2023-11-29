@@ -67,10 +67,18 @@ internal fun NoteMenuScreen(
             when {
                 uiState.isAddingTask -> {
                     // TODO - also recomposing unnecessary.
+                    onNavigate(Navigator.NavigateTo(NoteMenuNavigation.CreateTask))
                 }
 
                 uiState.goingToShowTaskContent > 0 -> {
                     // TODO - also recomposing unnecessary.
+                    onNavigate(
+                        Navigator.NavigateTo(
+                            NoteMenuNavigation.NoteContent(
+                                uiState.goingToShowTaskContent.toString(),
+                            ),
+                        ),
+                    )
                 }
             }
         }
@@ -82,12 +90,12 @@ internal fun NoteMenuScreen(
         Spacer(modifier = Modifier.size(32.dp))
         NoteMenuScreenContent(
             onAddTaskClicked = {
-                onNavigate(Navigator.NavigateTo(NoteMenuNavigation.CreateTask))
                 performAction(NoteScreenIntent.AddTask)
             },
         ) {
             Column {
                 SelectNoteOption(
+                    isReordering = uiState.reorderingList,
                     isSelecting = uiState.selectingNotes.isNotEmpty(),
                     isAllCheckedProvider = {
                         uiState.selectingNotes.size == uiState.showingTaskList.size
@@ -101,13 +109,15 @@ internal fun NoteMenuScreen(
                     onCheckClicked = {
                         performAction(NoteScreenIntent.SelectAllNotes(it))
                     },
+                    onClickToReorder = {
+                        performAction(NoteScreenIntent.ReorderList)
+                    },
                 )
 
                 TaskList(
                     tasksProvider = {
                         uiState.showingTaskList
                     },
-                    itemDragged = uiState.draggingItem,
                     isReordering = uiState.reorderingList,
                     notesSelectedProvider = {
                         uiState.selectingNotes
@@ -120,20 +130,10 @@ internal fun NoteMenuScreen(
                     },
                     onClickCard = {
                         // TODO - A Bug here that the state are recomposing this method every time.
-                        onNavigate(
-                            Navigator.NavigateTo(
-                                NoteMenuNavigation.NoteContent(
-                                    it.id.toString(),
-                                ),
-                            ),
-                        )
                         performAction(NoteScreenIntent.ShowTaskContent(it.id))
                     },
                     onStop = {
                         performAction(NoteScreenIntent.StopDrag)
-                    },
-                    onLongPress = {
-                        performAction(NoteScreenIntent.NoteSelected(it))
                     },
                     onSelectCard = {
                         performAction(NoteScreenIntent.NoteSelected(it))
