@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Reorder
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,10 +19,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SelectNoteOption(
+    isReordering: Boolean,
     isSelecting: Boolean,
     isAllCheckedProvider: () -> Boolean,
     onClickDone: () -> Unit,
     onClickDelete: () -> Unit,
+    onClickToReorder: () -> Unit,
     onCheckClicked: (isChecked: Boolean) -> Unit,
 ) {
     val alphaValue = if (isSelecting) 1f else 0f
@@ -32,18 +35,26 @@ fun SelectNoteOption(
             .padding(end = 32.dp),
         horizontalArrangement = Arrangement.End,
     ) {
+        if (!isReordering) {
+            IconButton(onClick = onClickToReorder) {
+                Icon(imageVector = Icons.Rounded.Reorder, contentDescription = null)
+            }
+        }
         IconButton(onClick = onClickDone) {
             Icon(imageVector = Icons.Rounded.Done, contentDescription = null)
         }
-        IconButton(onClick = onClickDelete) {
-            Icon(imageVector = Icons.Rounded.Delete, contentDescription = null)
+        if (!isReordering) {
+            IconButton(onClick = onClickDelete) {
+                Icon(imageVector = Icons.Rounded.Delete, contentDescription = null)
+            }
+
+            Checkbox(
+                checked = isAllCheckedProvider(),
+                onCheckedChange = {
+                    onCheckClicked(it)
+                },
+            )
         }
-        Checkbox(
-            checked = isAllCheckedProvider(),
-            onCheckedChange = {
-                onCheckClicked(it)
-            },
-        )
     }
 }
 
@@ -55,10 +66,12 @@ fun SelectNoteOption(
 @Composable
 fun SelectNoteOptionPreview() {
     SelectNoteOption(
+        isReordering = false,
         isSelecting = false,
         isAllCheckedProvider = { true },
         onClickDone = { },
         onClickDelete = {},
         onCheckClicked = {},
+        onClickToReorder = {},
     )
 }

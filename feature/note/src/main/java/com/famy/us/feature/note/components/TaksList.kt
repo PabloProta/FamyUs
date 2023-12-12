@@ -1,45 +1,35 @@
 package com.famy.us.feature.note.components
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.famy.us.core.ui.ReorderableList
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.famy.us.core.ui.ReorderableColumnList
 import com.famy.us.domain.model.HomeTask
 
 @Composable
 fun TaskList(
     tasksProvider: () -> List<HomeTask>,
-    itemDragged: HomeTask?,
     isReordering: Boolean,
     notesSelectedProvider: () -> List<Int>,
     onDragItem: (Int?) -> Unit,
     onMoveItem: (from: Int, to: Int) -> Unit,
-    onLongPress: (itemSelected: Int) -> Unit,
     onSelectCard: (itemSelected: Int) -> Unit,
     onClickCard: (HomeTask) -> Unit,
     onStop: () -> Unit,
 ) {
-    var verticalTranslation: Float by remember {
-        mutableStateOf(0f)
-    }
     val notesSelected = notesSelectedProvider()
-    val isSelecting = notesSelected.isNotEmpty()
+    val isSelecting = notesSelected.isNotEmpty() && !isReordering
     val list = tasksProvider()
-    ReorderableList(
+    ReorderableColumnList(
+        modifier = Modifier
+            .padding(if (isReordering) 24.dp else 0.dp),
         items = list,
-        onDrag = { value ->
-            verticalTranslation = value
-        },
         isReordering = isReordering,
-        onLongPress = {
-            onLongPress(it)
-        },
         onDragStart = { itemIndex ->
             onDragItem(itemIndex)
         },
-        onStop = onStop,
+        onDragStop = { onStop() },
         onMove = onMoveItem,
     ) { item, index ->
         val isSelected = notesSelected.firstOrNull { it == index } != null
@@ -53,13 +43,11 @@ fun TaskList(
                 }
             },
             isSelected = isSelected,
-            isDragged = if (itemDragged == null) {
-                false
-            } else {
-                itemDragged!!.id == item.id
-            },
-            verticalTranslation = verticalTranslation.toInt(),
             isSelecting = isSelecting,
+            isReordering = isReordering,
+            onLongPress = {
+                onSelectCard(index)
+            },
         )
     }
 }

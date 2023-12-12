@@ -37,7 +37,7 @@ internal data class NoteScreenState(
             showingTaskList = mutableListOf(),
             draggingItem = null,
             selectingNotes = emptyList(),
-            reorderingList = true,
+            reorderingList = false,
         )
     }
 }

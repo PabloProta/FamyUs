@@ -98,4 +98,9 @@ internal sealed class NoteScreenIntent : UiEvent {
      * Intent representing the back action.
      */
     object DoBack : NoteScreenIntent()
+
+    /**
+     * Object representing that user intent to reorder de list.
+     */
+    object ReorderList : NoteScreenIntent()
 }

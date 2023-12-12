@@ -17,12 +17,11 @@ import org.koin.core.component.inject
  * @property taskId the taskId tha will be loaded.
  */
 internal class LoadingContentState<Event : TaskContentScreenIntent, State : TaskContentScreenState>(
-    private val taskId: Int
+    private val taskId: Int,
 ) :
     CoroutineMachineState<Event, State>(), KoinComponent {
 
     private val homeTaskRepository: HomeTaskRepository by inject()
-
 
     override fun doStart() {
         super.doStart()

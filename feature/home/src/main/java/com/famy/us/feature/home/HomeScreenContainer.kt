@@ -1,7 +1,9 @@
 package com.famy.us.feature.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,19 +22,24 @@ internal fun HomeScreenContainer(
     val isMemberRegistered by remember {
         viewModel.hasUserRegistered
     }
-
-    AuthenticationContainer {
-        if (!viewModel.hasMemberInternetConnection()) {
-            NoInternet()
-        } else {
-            if (isMemberRegistered) {
-                HomeMenuScreen(onNavigate)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
+        AuthenticationContainer {
+            if (!viewModel.hasMemberInternetConnection()) {
+                NoInternet()
             } else {
-                RegistrationScreen(
-                    onFinishRegistration = {
-                        viewModel.checkMemberRegistered()
-                    },
-                )
+                if (isMemberRegistered) {
+                    HomeMenuScreen(onNavigate)
+                } else {
+                    RegistrationScreen(
+                        onFinishRegistration = {
+                            viewModel.checkMemberRegistered()
+                        },
+                    )
+                }
             }
         }
     }
