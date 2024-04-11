@@ -35,7 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.famy.us.core.ui.CustomDialog
+import com.famy.us.core.ui.components.CustomDialog
 import com.famy.us.core.utils.navigation.Navigator
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.feature.note.components.SimpleTextField
