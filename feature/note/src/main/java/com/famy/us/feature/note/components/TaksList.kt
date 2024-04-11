@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.famy.us.core.ui.ReorderableColumnList
+import com.famy.us.core.ui.components.ReorderableColumnList
 import com.famy.us.domain.model.HomeTask
 
 @Composable

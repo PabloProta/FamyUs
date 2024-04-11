@@ -22,6 +22,9 @@ google-play-services = "20.6.0"
 ## LifeCycle
 lifecycle = "2.6.1"
 
+## activity
+activity = "1.8.2"
+
 [libraries]
 ## Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -69,6 +72,9 @@ lifecycle-processes = { module = "androidx.lifecycle:lifecycle-process", version
 
 ## Barcode
 zxing = { module = "com.google.zxing:core", version = "3.5.2" }
+
+## Activity
+activity-ktx = { module= "androidx.activity:activity-ktx", version.ref = "activity" }
 
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",

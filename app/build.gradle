@@ -53,6 +53,7 @@ dependencies {
     implementation project(":feature:invite")
     implementation project(":feature:authentication")
     implementation project(":feature:registration")
+    implementation project(":feature:onboarding")
     implementation project(":core:utils")
     implementation project(":core:extensions")
     implementation project(":core:ui")
@@ -64,4 +65,5 @@ dependencies {
     implementation libs.lifecycle.processes
     kapt libs.lifecycle.compiler
     implementation libs.firebase.realtime.database
+    implementation libs.activity.ktx
 }
