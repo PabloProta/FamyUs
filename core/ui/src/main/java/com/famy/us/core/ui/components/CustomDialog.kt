@@ -1,4 +1,4 @@
-package com.famy.us.core.ui
+package com.famy.us.core.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
