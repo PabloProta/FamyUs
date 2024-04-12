@@ -99,7 +99,7 @@ fun OpeningScreenBackground(content: @Composable () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .paint(
-                painterResource(id = R.drawable.background_pre_login),
+                painterResource(id = R.drawable.background_opening),
                 contentScale = ContentScale.FillBounds,
             ),
     ) {
