@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.H4
 import com.famy.us.core.ui.components.DefaultButton
@@ -31,9 +32,12 @@ import com.famy.us.core.ui.primary_main
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_main
+import com.famy.us.core.utils.navigation.Destination
 
 @Composable
-fun PreLoginScreen() {
+fun PreLoginScreen(
+    onNavigateTo: (Destination) -> Unit,
+) {
     PreLoginBackground {
         Column(
             modifier = Modifier
@@ -62,7 +66,7 @@ fun PreLoginScreen() {
                 color = tertiary_300,
             )
             Spacer(modifier = Modifier.size(32.dp))
-            ButtonsContainer()
+            ButtonsContainer(onNavigateTo)
             CreateAccountContainer()
         }
     }
@@ -98,7 +102,9 @@ internal fun CreateAccountContainer() {
 }
 
 @Composable
-internal fun ButtonsContainer() {
+internal fun ButtonsContainer(
+    onNavigateTo: (Destination) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -106,7 +112,9 @@ internal fun ButtonsContainer() {
         DefaultButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {},
+            onClick = {
+                onNavigateTo(AuthenticationNavigation.Login)
+            },
         ) {
             Text(text = "Login")
         }
@@ -144,5 +152,5 @@ internal fun PreLoginBackground(content: @Composable () -> Unit) {
 )
 @Composable
 fun PreLoginScreenPreview() {
-    PreLoginScreen()
+    PreLoginScreen({})
 }

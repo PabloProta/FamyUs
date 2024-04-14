@@ -50,7 +50,7 @@ import com.famy.us.core.ui.tertiary_main
 @Composable
 fun LoginScreen() {
     LoginBackground {
-        ConstraintLayout  (
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
@@ -72,13 +72,13 @@ fun LoginScreen() {
             ) {}
 
             Column(
-                modifier =  Modifier
+                modifier = Modifier
                     .constrainAs(contentContainer) {
                         top.linkTo(logo.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
-                    }
+                    },
             ) {
                 Text(
                     modifier = Modifier
@@ -113,7 +113,7 @@ internal fun LoginThirdAppsContainer() {
         text = "Ou faça login com",
         style = BodySmallRegular,
         color = tertiary_300,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
     )
     Spacer(modifier = Modifier.size(12.dp))
     Row(
@@ -126,7 +126,7 @@ internal fun LoginThirdAppsContainer() {
                     modifier = Modifier
                         .padding(12.dp),
                     painter = painterResource(id = R.drawable.ic_google),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -137,7 +137,7 @@ internal fun LoginThirdAppsContainer() {
                     modifier = Modifier
                         .padding(12.dp),
                     painter = painterResource(id = R.drawable.ic_facebook),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -145,14 +145,14 @@ internal fun LoginThirdAppsContainer() {
 }
 
 @Composable
-internal fun InputsContainer(){
+internal fun InputsContainer() {
     var userName by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     UserNameInput(
         value = userName,
         onValueChange = {
             userName = it
-        }
+        },
     )
     Spacer(modifier = Modifier.size(8.dp))
     UserPasswordInput(
@@ -170,7 +170,7 @@ internal fun InputsContainer(){
             text = "Esqueceu a senha?",
             style = BodySmallRegular,
             textAlign = TextAlign.End,
-            color = secondary_300
+            color = secondary_300,
         )
     }
     DefaultButton(
@@ -180,7 +180,7 @@ internal fun InputsContainer(){
     ) {
         Text(
             text = "Entrar",
-            style = ButtonMedium
+            style = ButtonMedium,
         )
     }
 }
@@ -193,9 +193,9 @@ internal fun LoginMethodContainer(content: @Composable () -> Unit) {
             .border(
                 width = 1.dp,
                 shape = RoundedCornerShape(12.dp),
-                color = tertiary_800
+                color = tertiary_800,
             ),
-        color = Color.Transparent
+        color = Color.Transparent,
     ) {
         content()
     }
@@ -204,7 +204,7 @@ internal fun LoginMethodContainer(content: @Composable () -> Unit) {
 @Composable
 internal fun UserNameInput(
     value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
 ) {
     DefaultTextField(
         modifier = Modifier
@@ -216,16 +216,16 @@ internal fun UserNameInput(
             Icon(
                 painter = painterResource(id = R.drawable.ic_person),
                 contentDescription = null,
-                tint = tertiary_400
+                tint = tertiary_400,
             )
-        }
+        },
     )
 }
 
 @Composable
 internal fun UserPasswordInput(
     value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
 ) {
     var shouldShowPassword by remember { mutableStateOf(false) }
     DefaultTextField(
@@ -239,12 +239,12 @@ internal fun UserPasswordInput(
             Icon(
                 painter = painterResource(id = R.drawable.ic_password),
                 contentDescription = null,
-                tint = tertiary_400
+                tint = tertiary_400,
             )
         },
         trailingIcon = {
             IconButton(
-                onClick = { shouldShowPassword = !shouldShowPassword }
+                onClick = { shouldShowPassword = !shouldShowPassword },
             ) {
                 if (shouldShowPassword) {
                     Icon(
@@ -260,10 +260,9 @@ internal fun UserPasswordInput(
                     )
                 }
             }
-        }
+        },
     )
 }
-
 
 @Composable
 internal fun LoginBackground(content: @Composable () -> Unit) {
