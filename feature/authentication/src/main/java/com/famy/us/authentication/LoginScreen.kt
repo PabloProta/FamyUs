@@ -214,7 +214,7 @@ internal fun UserNameInput(
         onValueChange = onValueChange,
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_person),
+                painter = painterResource(id = com.famy.us.core.ui.R.drawable.ic_person),
                 contentDescription = null,
                 tint = tertiary_400,
             )
@@ -237,7 +237,7 @@ internal fun UserPasswordInput(
         onValueChange = onValueChange,
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_password),
+                painter = painterResource(id = com.famy.us.core.ui.R.drawable.ic_password),
                 contentDescription = null,
                 tint = tertiary_400,
             )

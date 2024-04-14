@@ -35,6 +35,7 @@ fun DefaultTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     label: String = "",
+    contentColor: Color = tertiary_600,
     keyboardOptions: KeyboardOptions = if (isSecretInput) {
         KeyboardOptions(keyboardType = KeyboardType.Password)
     } else {
@@ -52,7 +53,7 @@ fun DefaultTextField(
             ),
         value = value,
         onValueChange = onValueChange,
-        textStyle = BodySmallRegular.copy(color = tertiary_600),
+        textStyle = BodySmallRegular.copy(color = contentColor),
         singleLine = true,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
@@ -60,7 +61,7 @@ fun DefaultTextField(
             Text(
                 text = label,
                 style = BodySmallRegular,
-                color = tertiary_600,
+                color = contentColor,
             )
         },
         visualTransformation = getVisualTransformation(isSecretInput),
