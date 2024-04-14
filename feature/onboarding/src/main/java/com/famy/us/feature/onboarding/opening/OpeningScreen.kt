@@ -24,15 +24,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.famy.us.core.ui.H4
 import com.famy.us.core.ui.components.DefaultButton
+import com.famy.us.core.utils.navigation.Destination
+import com.famy.us.feature.onboarding.navigation.OnBoardingNavigation
 import com.famy.us.onboarding.R
 
 @Composable
-fun OpeningScreenContainer() {
-    OpeningScreen()
+fun OpeningScreenContainer(onNavigateTo: (Destination) -> Unit) {
+    OpeningScreen(onNavigateTo)
 }
 
 @Composable
-fun OpeningScreen() {
+internal fun OpeningScreen(onNavigateTo: (Destination) -> Unit) {
     OpeningScreenBackground {
         Column(
             modifier = Modifier
@@ -56,7 +58,9 @@ fun OpeningScreen() {
                 DefaultButton(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        onNavigateTo(OnBoardingNavigation.Authentication)
+                    },
                 ) {
                     Text(
                         modifier = Modifier
@@ -123,6 +127,6 @@ fun OpeningScreenBackground(content: @Composable () -> Unit) {
     backgroundColor = 0xFFFFFFFF,
 )
 @Composable
-fun OpeningScreenPreview() {
-    OpeningScreen()
+internal fun OpeningScreenPreview() {
+    OpeningScreen({})
 }

@@ -17,17 +17,21 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.famy.us.authentication.LoginScreen
+import com.famy.us.authentication.PreLoginScreen
+import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.utils.navigation.composable
 import com.famy.us.core.utils.navigation.doAction
+import com.famy.us.core.utils.navigation.navigate
 import com.famy.us.core.utils.navigation.navigation
 import com.famy.us.feature.home.MenusLoader
 import com.famy.us.feature.note.createNote.CreateNoteScreenProvider
 import com.famy.us.feature.note.navigation.NoteMenuNavigation
 import com.famy.us.feature.note.taskContent.TaskContentProvider
+import com.famy.us.feature.onboarding.opening.OpeningScreenContainer
 import com.famy.us.invite.InviteScreenContainer
 import com.famy.us.invite.navigation.InviteScreenNavigation
 import com.famy.us.navigation.MainDestination
-import com.famy.us.navigation.MenusRouterNavigation
 import org.koin.core.component.KoinComponent
 
 class MainActivity : ComponentActivity(), KoinComponent {
@@ -49,7 +53,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
     @Suppress("LongMethod")
     fun AppContainer() {
         val navController = rememberNavController()
-
         NavHost(
             navController,
             enterTransition = { EnterTransition.None },
@@ -58,21 +61,36 @@ class MainActivity : ComponentActivity(), KoinComponent {
         ) {
             composable(
                 destination = MainDestination.Menu,
-                enterTransition = slideIn(
-                    animationSpec = spring(
-                        stiffness = Spring.StiffnessLow,
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                    ),
-                    initialOffset = { IntOffset(-it.width / 2, 100) },
-                ),
-            ) { backstackEntry ->
-                val popupAt = backstackEntry.arguments?.getString("menu")
-                MenusRouterNavigation(
-                    menus = menus,
-                    startDestination = popupAt,
-                    onNavigate = { navController.doAction(it) },
+            ) { _ ->
+                OpeningScreenContainer(
+                    onNavigateTo = { dest ->
+                        navController.navigate(dest)
+                    },
                 )
             }
+
+            navigation(
+                route = AuthenticationNavigation.ROUTE,
+                startDestination = AuthenticationNavigation.PreLogin
+            ) {
+                composable(
+                    destination = AuthenticationNavigation.PreLogin
+                ) {
+                    PreLoginScreen(
+                        onNavigateTo = { dest ->
+                            navController.navigate(dest)
+                        },
+                    )
+                }
+
+                composable(
+                    destination = AuthenticationNavigation.Login
+                ) {
+                    LoginScreen()
+                }
+            }
+
+
 
             composable(
                 destination = NoteMenuNavigation.NoteContent(),
