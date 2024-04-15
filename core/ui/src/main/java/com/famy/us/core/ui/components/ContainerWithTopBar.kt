@@ -1,12 +1,15 @@
 package com.famy.us.core.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,9 +43,10 @@ fun ContainerWithTopBar(
     ContainerBackground {
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .zIndex(1f),
         ) {
-            TopAppBar(onClickBack)
+            TopAppBar(onClickBack = onClickBack)
             Column(modifier = modifier) {
                 content()
             }
@@ -51,18 +55,22 @@ fun ContainerWithTopBar(
 }
 
 @Composable
-internal fun TopAppBar(onClickBack: () -> Unit) {
+fun TopAppBar(
+    withBackground: Boolean = true,
+    onClickBack: () -> Unit,
+) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = tertiary_main.copy(alpha = 0.4f),
+                color = if (withBackground) tertiary_main.copy(alpha = 0.4f) else Color.Transparent,
                 shape = RoundedCornerShape(
                     bottomStart = 12.dp,
                     bottomEnd = 12.dp,
                 ),
             )
-            .padding(24.dp),
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(20.dp),
     ) {
         val titleRef = createRef()
         val arrowRef = createRef()
@@ -106,19 +114,18 @@ private const val BlurThreshold = 1.26f
 
 @Composable
 internal fun ContainerBackground(content: @Composable () -> Unit) {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(tertiary_main),
     ) {
-
         Surface(
             modifier = Modifier
                 .zIndex(1f)
                 .fillMaxSize()
                 .blur(320.dp)
                 .graphicsLayer {
-                    translationY = -maxHeight.toPx() / BlurThreshold
+                    translationY = -size.maxDimension / BlurThreshold
                 },
             shape = CircleShape,
             color = primary_700,

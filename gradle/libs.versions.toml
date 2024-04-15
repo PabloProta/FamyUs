@@ -26,6 +26,9 @@ lifecycle = "2.6.1"
 ## activity
 activity = "1.8.2"
 
+## lottie
+lottie = "6.4.0"
+
 [libraries]
 ## Compose
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -76,7 +79,10 @@ lifecycle-processes = { module = "androidx.lifecycle:lifecycle-process", version
 zxing = { module = "com.google.zxing:core", version = "3.5.2" }
 
 ## Activity
-activity-ktx = { module= "androidx.activity:activity-ktx", version.ref = "activity" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
+
+## Lotie
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",
