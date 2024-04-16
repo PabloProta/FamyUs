@@ -79,7 +79,6 @@ fun TopAppBar(
                 .constrainAs(arrowRef) {
                     start.linkTo(parent.start)
                     top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
                 }
                 .size(48.dp),
             onClick = {
