@@ -2,7 +2,6 @@ package com.famy.us.feature.onboarding.opening
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -77,7 +76,7 @@ internal fun OpeningScreen(onNavigateTo: (Destination) -> Unit) {
 
 @Composable
 fun OpeningImageComposition() {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize(),
     ) {

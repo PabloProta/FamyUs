@@ -1,5 +1,6 @@
 package com.famy.us.feature.registration
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -47,9 +48,14 @@ import com.famy.us.registration.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun CreateFamilyScreen() {
+fun CreateFamilyScreen(
+    popBackStack: () -> Unit,
+) {
     var familyName by remember { mutableStateOf(TextFieldValue("")) }
     var isFinished by remember { mutableStateOf(false) }
+    BackHandler {
+        popBackStack()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -58,7 +64,7 @@ fun CreateFamilyScreen() {
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxSize(),
-            onClickBack = { /*TODO*/ },
+            onClickBack = popBackStack,
         ) {
             CreateFamilyTextContainer()
             Spacer(modifier = Modifier.size(24.dp))
@@ -78,13 +84,20 @@ fun CreateFamilyScreen() {
     }
 }
 
-@Suppress("MagicNumber")
+@Suppress("MagicNumber","LongMethod")
 @Composable
 internal fun NormalButton(
     onClick: () -> Unit,
     isFinishing: () -> Boolean,
 ) {
-    val animateSize by animateDpAsState(if (isFinishing()) { 120.dp } else { 5000.dp }, label = "")
+    val animateSize by animateDpAsState(
+        if (isFinishing()) {
+            120.dp
+        } else {
+            5000.dp
+        },
+        label = "",
+    )
 
     var expandContent by remember { mutableStateOf(false) }
     val animateFinishContentSize by animateDpAsState(
@@ -198,5 +211,5 @@ internal fun CreateFamilyTextContainer() {
 )
 @Composable
 internal fun CreateFamilyScreenPreview() {
-    CreateFamilyScreen()
+    CreateFamilyScreen({})
 }

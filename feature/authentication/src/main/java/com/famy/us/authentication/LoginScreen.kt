@@ -3,7 +3,7 @@ package com.famy.us.authentication
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -266,7 +266,7 @@ internal fun UserPasswordInput(
 
 @Composable
 internal fun LoginBackground(content: @Composable () -> Unit) {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize(),
     ) {

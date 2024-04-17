@@ -37,7 +37,9 @@ import com.famy.us.core.ui.tertiary_400
 import com.famy.us.core.ui.tertiary_50
 
 @Composable
-fun EnterFamilyScreen() {
+fun EnterFamilyScreen(
+    popBackStack: () -> Unit,
+) {
     var familyCode by remember { mutableStateOf(TextFieldValue("")) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var expandContent by remember { mutableStateOf(false) }
@@ -62,7 +64,7 @@ fun EnterFamilyScreen() {
                 title = "Você entrou na familia $familyName",
                 description = "Agora basta seguir para ver os detalhes dos controlados",
                 animateFinishContentSize = animateFinishContentSize,
-                onClickBack = { /*TODO*/ },
+                onClickBack = popBackStack,
             )
         }
         EnterFamilyContent(
@@ -79,6 +81,10 @@ fun EnterFamilyScreen() {
             onClickQuit = {
                 showBottomSheet = false
             },
+            onClickNext = {
+                showBottomSheet = true
+            },
+            onClickBack = popBackStack,
         )
     }
 
@@ -94,7 +100,9 @@ internal fun EnterFamilyContent(
     familyName: String,
     showBottomSheet: Boolean,
     onClickEnter: () -> Unit,
+    onClickBack: () -> Unit,
     onClickQuit: () -> Unit,
+    onClickNext: () -> Unit,
     familyCode: TextFieldValue,
     onChangeFamilyCode: (TextFieldValue) -> Unit,
 ) {
@@ -103,7 +111,7 @@ internal fun EnterFamilyContent(
             .fillMaxSize()
             .safeDrawingPadding()
             .padding(horizontal = 24.dp),
-        onClickBack = { /*TODO*/ },
+        onClickBack = onClickBack,
     ) {
         Box {
             if (showBottomSheet) {
@@ -138,7 +146,7 @@ internal fun EnterFamilyContent(
                 DefaultButton(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    onClick = onClickQuit,
+                    onClick = onClickNext,
                 ) {
                     Text(
                         text = "Avançar",
@@ -180,5 +188,5 @@ fun FamilyCodeInputContainer(
 )
 @Composable
 fun EnterFamilyScreenPreview() {
-    EnterFamilyScreen()
+    EnterFamilyScreen({})
 }
