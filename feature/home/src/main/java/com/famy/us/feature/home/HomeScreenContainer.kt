@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.famy.us.authentication.AuthenticationContainer
 import com.famy.us.core.utils.navigation.Navigator
-import com.famy.us.feature.registration.RegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -34,11 +33,7 @@ internal fun HomeScreenContainer(
                 if (isMemberRegistered) {
                     HomeMenuScreen(onNavigate)
                 } else {
-                    RegistrationScreen(
-                        onFinishRegistration = {
-                            viewModel.checkMemberRegistered()
-                        },
-                    )
+                    // if member is Registered
                 }
             }
         }

@@ -10,7 +10,12 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideIn
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavType
@@ -29,6 +34,10 @@ import com.famy.us.feature.note.createNote.CreateNoteScreenProvider
 import com.famy.us.feature.note.navigation.NoteMenuNavigation
 import com.famy.us.feature.note.taskContent.TaskContentProvider
 import com.famy.us.feature.onboarding.opening.OpeningScreenContainer
+import com.famy.us.feature.registration.CreateFamilyScreen
+import com.famy.us.feature.registration.CreatingAccountRouterScreen
+import com.famy.us.feature.registration.EnterFamilyScreen
+import com.famy.us.feature.registration.navigation.RegistrationNavigation
 import com.famy.us.invite.InviteScreenContainer
 import com.famy.us.invite.navigation.InviteScreenNavigation
 import com.famy.us.navigation.MainDestination
@@ -53,6 +62,8 @@ class MainActivity : ComponentActivity(), KoinComponent {
     @Suppress("LongMethod")
     fun AppContainer() {
         val navController = rememberNavController()
+        // TODO - Workaround to the top bar work with the window insets.
+        Spacer(modifier = Modifier.consumeWindowInsets(WindowInsets.statusBars))
         NavHost(
             navController,
             enterTransition = { EnterTransition.None },
@@ -90,7 +101,43 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 }
             }
 
+            navigation(
+                route = RegistrationNavigation.ROUTE,
+                startDestination = RegistrationNavigation.CreatingFamilyRouter
+            ) {
+                composable(
+                    destination = RegistrationNavigation.CreatingFamilyRouter
+                ) {
+                    CreatingAccountRouterScreen(
+                        onNavigateTo = {
+                            navController.navigate(it)
+                        },
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
 
+                composable(
+                    destination = RegistrationNavigation.CreateFamily
+                ) {
+                    CreateFamilyScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                composable(
+                    destination = RegistrationNavigation.EnterFamily
+                ) {
+                    EnterFamilyScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
 
             composable(
                 destination = NoteMenuNavigation.NoteContent(),

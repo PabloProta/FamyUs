@@ -15,8 +15,10 @@ android {
 dependencies {
     implementation project(":core:extensions")
     implementation project(":core:utils")
+    implementation project(":core:ui")
     implementation project(":domain")
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui.kit
     implementation libs.bundles.koin.compose
+    implementation libs.lottie.compose
 }

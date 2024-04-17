@@ -14,6 +14,7 @@ val primary_700 = Color(0XFF7046B7)
 val primary_800 = Color(0XFF5A3698)
 val primary_900 = Color(0XFF452974)
 val primary_main = Color(0XFFA371EF)
+val primary_container = Color(0XFF803DD1)
 
 // SECONDARY COLOR
 val secondary_50 = Color(0XFFFEF2E3)

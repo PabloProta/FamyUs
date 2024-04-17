@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
@@ -41,7 +42,7 @@ fun PreLoginScreen(
     PreLoginBackground {
         Column(
             modifier = Modifier
-                .safeContentPadding()
+                .safeDrawingPadding()
                 .padding(horizontal = 24.dp)
                 .fillMaxSize(),
         ) {
@@ -67,13 +68,19 @@ fun PreLoginScreen(
             )
             Spacer(modifier = Modifier.size(32.dp))
             ButtonsContainer(onNavigateTo)
-            CreateAccountContainer()
+            CreateAccountContainer(
+                onClickCreateAccount = {
+                    onNavigateTo(AuthenticationNavigation.CreateAccount)
+                }
+            )
         }
     }
 }
 
 @Composable
-internal fun CreateAccountContainer() {
+internal fun CreateAccountContainer(
+    onClickCreateAccount: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -91,7 +98,7 @@ internal fun CreateAccountContainer() {
             modifier = Modifier
                 .clickable(
                     enabled = true,
-                    onClick = {},
+                    onClick = onClickCreateAccount,
                 )
                 .clipToBounds(),
             text = "Criar conta",

@@ -9,7 +9,6 @@ import com.famy.us.data.firebase.injection.dataFirebaseModule
 import com.famy.us.domain.domainModule
 import com.famy.us.feature.home.injection.homeModule
 import com.famy.us.feature.note.injection.noteModule
-import com.famy.us.feature.registration.injection.registrationModule
 import com.famy.us.injection.appModule
 import com.famy.us.invite.injection.inviteModule
 import com.famy.us.repository.dataRepositoryModule
@@ -37,7 +36,6 @@ class FamyUsApplication : Application(), KoinComponent {
                 homeModule,
                 noteModule,
                 inviteModule,
-                registrationModule,
                 appModule,
             )
         }
