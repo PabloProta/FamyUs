@@ -48,7 +48,7 @@ import com.famy.us.registration.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun CreateFamilyScreen(
+fun InsertFamilyNameScreen(
     popBackStack: () -> Unit,
 ) {
     var familyName by remember { mutableStateOf(TextFieldValue("")) }
@@ -80,6 +80,8 @@ fun CreateFamilyScreen(
             isFinishing = {
                 isFinished
             },
+            onClickBack = popBackStack
+
         )
     }
 }
@@ -87,6 +89,7 @@ fun CreateFamilyScreen(
 @Suppress("MagicNumber", "LongMethod")
 @Composable
 internal fun NormalButton(
+    onClickBack: () -> Unit,
     onClick: () -> Unit,
     isFinishing: () -> Boolean,
 ) {
@@ -120,7 +123,7 @@ internal fun NormalButton(
                     animateFinishContentSize = animateFinishContentSize,
                     title = "Cadastro Realizado com sucesso",
                     description = "Voce será redirecionado para a página home",
-                    onClickBack = { /*TODO*/ },
+                    onClickBack = onClickBack,
                 )
             } else {
                 DefaultButton(
@@ -211,5 +214,5 @@ internal fun CreateFamilyTextContainer() {
 )
 @Composable
 internal fun CreateFamilyScreenPreview() {
-    CreateFamilyScreen({})
+    InsertFamilyNameScreen({})
 }

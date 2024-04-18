@@ -72,7 +72,7 @@ fun CreatingAccountRouterScreen(
                 modifier = Modifier
                     .weight(1f),
                 onClick = {
-                    onNavigateTo(RegistrationNavigation.CreateFamily)
+                    onNavigateTo(RegistrationNavigation.InsertMemberInfo)
                 },
             )
             Spacer(modifier = Modifier.size(8.dp))
