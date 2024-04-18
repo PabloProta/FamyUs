@@ -37,6 +37,7 @@ import com.famy.us.feature.onboarding.opening.OpeningScreenContainer
 import com.famy.us.feature.registration.CreateFamilyScreen
 import com.famy.us.feature.registration.CreatingAccountRouterScreen
 import com.famy.us.feature.registration.EnterFamilyScreen
+import com.famy.us.authentication.QrCodeScreen
 import com.famy.us.feature.registration.navigation.RegistrationNavigation
 import com.famy.us.invite.InviteScreenContainer
 import com.famy.us.invite.navigation.InviteScreenNavigation
@@ -98,6 +99,16 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     destination = AuthenticationNavigation.Login
                 ) {
                     LoginScreen()
+                }
+
+                composable(
+                    destination = AuthenticationNavigation.ReadQrCode
+                ){
+                    QrCodeScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
 

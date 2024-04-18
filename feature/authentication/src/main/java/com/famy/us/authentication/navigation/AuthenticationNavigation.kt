@@ -27,9 +27,10 @@ object AuthenticationNavigation {
      */
     object CreateAccount : Destination("create_account")
 
-
     /**
      * Destination for the forgot password flow.
      */
     object ForgotPassword : Destination("forgot_password")
+
+    object ReadQrCode : Destination("read_qr_code")
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.H4
+import com.famy.us.core.ui.R
 import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.primary_main
 import com.famy.us.core.ui.tertiary_300
@@ -71,7 +71,7 @@ fun PreLoginScreen(
             CreateAccountContainer(
                 onClickCreateAccount = {
                     onNavigateTo(AuthenticationNavigation.CreateAccount)
-                }
+                },
             )
         }
     }
@@ -129,7 +129,9 @@ internal fun ButtonsContainer(
         DefaultButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {},
+            onClick = {
+                onNavigateTo(AuthenticationNavigation.ReadQrCode)
+            },
         ) {
             Text(text = "Entrar com QR Code")
         }
@@ -144,7 +146,7 @@ internal fun PreLoginBackground(content: @Composable () -> Unit) {
     ) {
         Image(
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.background_pre_login),
+            painter = painterResource(id = R.drawable.background_top_composition),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
         )
