@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.H4
+import com.famy.us.core.ui.R
 import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.primary_main
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_main
-import com.famy.us.core.ui.R
 import com.famy.us.core.utils.navigation.Destination
 
 @Composable
@@ -71,7 +71,7 @@ fun PreLoginScreen(
             CreateAccountContainer(
                 onClickCreateAccount = {
                     onNavigateTo(AuthenticationNavigation.CreateAccount)
-                }
+                },
             )
         }
     }
@@ -129,7 +129,9 @@ internal fun ButtonsContainer(
         DefaultButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {},
+            onClick = {
+                onNavigateTo(AuthenticationNavigation.ReadQrCode)
+            },
         ) {
             Text(text = "Entrar com QR Code")
         }

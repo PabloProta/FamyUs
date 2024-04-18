@@ -1,5 +1,6 @@
-package com.famy.us.feature.registration
+package com.famy.us.authentication
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,10 +34,14 @@ import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.tertiary_600
 import com.famy.us.core.ui.tertiary_900
 import com.famy.us.core.ui.tertiary_main
-import com.famy.us.registration.R
 
 @Composable
-fun QrCodeScreen() {
+fun QrCodeScreen(
+    popBackStack: () -> Unit,
+) {
+    BackHandler {
+        popBackStack()
+    }
     QrCodeScreenBackGround {
         Column(
             modifier = Modifier
@@ -54,6 +59,9 @@ fun QrCodeScreen() {
             Spacer(modifier = Modifier.weight(1f))
             BottomSheet(
                 modifier = Modifier,
+                onClickReadQR = {
+                    // Read the qr code here.
+                },
             )
         }
     }
@@ -62,10 +70,10 @@ fun QrCodeScreen() {
 @Composable
 private fun BottomSheet(
     modifier: Modifier,
+    onClickReadQR: () -> Unit,
 ) {
     ConstraintLayout(
         modifier = modifier
-            .safeContentPadding()
             .heightIn(min = 316.dp, max = 512.dp)
             .fillMaxWidth(),
     ) {
@@ -93,7 +101,7 @@ private fun BottomSheet(
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },
-            onClickReadQR = { /*TODO*/ },
+            onClickReadQR = onClickReadQR,
         )
     }
 }
@@ -110,6 +118,7 @@ private fun BottomSheetContent(
                 color = Color.White,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
             )
+            .safeContentPadding()
             .padding(24.dp),
     ) {
         Spacer(modifier = Modifier.size(120.dp))
@@ -173,5 +182,5 @@ private fun QrCodeScreenBackGround(content: @Composable () -> Unit) {
 )
 @Composable
 internal fun QrCodeScreenPreview() {
-    QrCodeScreen()
+    QrCodeScreen({})
 }

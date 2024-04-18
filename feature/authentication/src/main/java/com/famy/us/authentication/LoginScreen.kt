@@ -273,7 +273,7 @@ internal fun LoginBackground(content: @Composable () -> Unit) {
         Image(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(
-                id = com.famy.us.core.ui.R.drawable.background_top_composition
+                id = com.famy.us.core.ui.R.drawable.background_top_composition,
             ),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
