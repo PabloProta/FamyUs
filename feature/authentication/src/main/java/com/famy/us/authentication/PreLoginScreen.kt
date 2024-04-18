@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -33,6 +32,7 @@ import com.famy.us.core.ui.primary_main
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_main
+import com.famy.us.core.ui.R
 import com.famy.us.core.utils.navigation.Destination
 
 @Composable
@@ -144,7 +144,7 @@ internal fun PreLoginBackground(content: @Composable () -> Unit) {
     ) {
         Image(
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.background_pre_login),
+            painter = painterResource(id = R.drawable.background_top_composition),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
         )

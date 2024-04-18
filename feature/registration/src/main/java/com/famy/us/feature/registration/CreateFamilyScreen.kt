@@ -84,7 +84,7 @@ fun CreateFamilyScreen(
     }
 }
 
-@Suppress("MagicNumber","LongMethod")
+@Suppress("MagicNumber", "LongMethod")
 @Composable
 internal fun NormalButton(
     onClick: () -> Unit,
