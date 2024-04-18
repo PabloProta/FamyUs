@@ -34,10 +34,11 @@ import com.famy.us.feature.note.createNote.CreateNoteScreenProvider
 import com.famy.us.feature.note.navigation.NoteMenuNavigation
 import com.famy.us.feature.note.taskContent.TaskContentProvider
 import com.famy.us.feature.onboarding.opening.OpeningScreenContainer
-import com.famy.us.feature.registration.CreateFamilyScreen
+import com.famy.us.feature.registration.InsertFamilyNameScreen
 import com.famy.us.feature.registration.CreatingAccountRouterScreen
 import com.famy.us.feature.registration.EnterFamilyScreen
 import com.famy.us.authentication.QrCodeScreen
+import com.famy.us.feature.registration.RegisterPersonalInfoScreen
 import com.famy.us.feature.registration.navigation.RegistrationNavigation
 import com.famy.us.invite.InviteScreenContainer
 import com.famy.us.invite.navigation.InviteScreenNavigation
@@ -130,9 +131,22 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 }
 
                 composable(
-                    destination = RegistrationNavigation.CreateFamily
+                    destination = RegistrationNavigation.InsertFamilyName
                 ) {
-                    CreateFamilyScreen(
+                    InsertFamilyNameScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                composable(
+                    destination = RegistrationNavigation.InsertMemberInfo
+                ) {
+                    RegisterPersonalInfoScreen(
+                        onNavigateAt = {dest ->
+                            navController.navigate(dest)
+                        },
                         popBackStack = {
                             navController.popBackStack()
                         }

@@ -1,7 +1,10 @@
 package com.famy.us.feature.registration
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,15 +34,24 @@ import com.famy.us.core.ui.components.DefaultTextField
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_400
 import com.famy.us.core.ui.tertiary_50
+import com.famy.us.core.utils.navigation.Destination
+import com.famy.us.feature.registration.navigation.RegistrationNavigation
 
 @Composable
-fun RegisterPersonalInfoScreen() {
+fun RegisterPersonalInfoScreen(
+    onNavigateAt: (Destination) -> Unit,
+    popBackStack: () -> Unit,
+) {
+    BackHandler {
+        popBackStack()
+    }
     ContainerWithTopBar(
         modifier = Modifier
+            .consumeWindowInsets(paddingValues = PaddingValues(all = 24.dp))
             .safeContentPadding()
             .padding(24.dp)
             .fillMaxSize(),
-        onClickBack = { /*TODO*/ },
+        onClickBack = popBackStack,
     ) {
         TextInformationContainer()
         Spacer(modifier = Modifier.size(24.dp))
@@ -52,7 +64,9 @@ fun RegisterPersonalInfoScreen() {
             DefaultButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onNavigateAt(RegistrationNavigation.InsertFamilyName)
+                },
             ) {
                 Text(
                     text = "Avançar",
@@ -212,5 +226,5 @@ internal fun ConfirmPasswordInput(
 )
 @Composable
 internal fun RegisterPersonalInfoPreview() {
-    RegisterPersonalInfoScreen()
+    RegisterPersonalInfoScreen({}, {})
 }

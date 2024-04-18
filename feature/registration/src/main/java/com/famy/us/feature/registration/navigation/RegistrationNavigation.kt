@@ -17,11 +17,6 @@ object RegistrationNavigation {
     object CreatingFamilyRouter : Destination("creating_family_router")
 
     /**
-     * Destination to create a family.
-     */
-    object CreateFamily : Destination("create_family")
-
-    /**
      * Destination to enter in a existent family.
      */
     object EnterFamily : Destination("enter_family")
