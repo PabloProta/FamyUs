@@ -38,6 +38,7 @@ import com.famy.us.feature.registration.InsertFamilyNameScreen
 import com.famy.us.feature.registration.CreatingAccountRouterScreen
 import com.famy.us.feature.registration.EnterFamilyScreen
 import com.famy.us.authentication.QrCodeScreen
+import com.famy.us.authentication.forgotpassword.ForgotPasswordScreen
 import com.famy.us.feature.registration.RegisterPersonalInfoScreen
 import com.famy.us.feature.registration.navigation.RegistrationNavigation
 import com.famy.us.invite.InviteScreenContainer
@@ -99,12 +100,29 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 composable(
                     destination = AuthenticationNavigation.Login
                 ) {
-                    LoginScreen()
+                    LoginScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        },
+                        onNavigateAt = { dest ->
+                            navController.navigate(dest)
+                        }
+                    )
+                }
+
+                composable(
+                    destination = AuthenticationNavigation.ForgotPassword,
+                ) {
+                    ForgotPasswordScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        },
+                    )
                 }
 
                 composable(
                     destination = AuthenticationNavigation.ReadQrCode
-                ){
+                ) {
                     QrCodeScreen(
                         popBackStack = {
                             navController.popBackStack()
@@ -144,7 +162,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     destination = RegistrationNavigation.InsertMemberInfo
                 ) {
                     RegisterPersonalInfoScreen(
-                        onNavigateAt = {dest ->
+                        onNavigateAt = { dest ->
                             navController.navigate(dest)
                         },
                         popBackStack = {

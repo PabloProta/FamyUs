@@ -1,5 +1,6 @@
 package com.famy.us.authentication
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H6
@@ -46,9 +48,16 @@ import com.famy.us.core.ui.tertiary_400
 import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_800
 import com.famy.us.core.ui.tertiary_main
+import com.famy.us.core.utils.navigation.Destination
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateAt: (Destination) -> Unit,
+    popBackStack: () -> Unit,
+) {
+    BackHandler {
+        popBackStack()
+    }
     LoginBackground {
         ConstraintLayout(
             modifier = Modifier
@@ -58,18 +67,14 @@ fun LoginScreen() {
         ) {
             val logo = createRef()
             val contentContainer = createRef()
-            Surface(
-                modifier = Modifier
-                    .constrainAs(logo) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(contentContainer.top)
-                    }
-                    .size(116.dp),
-                shape = CircleShape,
-                color = tertiary_main,
-            ) {}
+            ImagePlaceholder(
+                modifier = Modifier.constrainAs(logo) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(contentContainer.top)
+                },
+            )
 
             Column(
                 modifier = Modifier
@@ -98,7 +103,11 @@ fun LoginScreen() {
                     color = tertiary_300,
                 )
                 Spacer(modifier = Modifier.size(14.dp))
-                InputsContainer()
+                InputsContainer(
+                    onForgotPasswordClick = {
+                        onNavigateAt(AuthenticationNavigation.ForgotPassword)
+                    },
+                )
                 LoginThirdAppsContainer()
             }
         }
@@ -106,7 +115,19 @@ fun LoginScreen() {
 }
 
 @Composable
-internal fun LoginThirdAppsContainer() {
+private fun ImagePlaceholder(
+    modifier: Modifier,
+) {
+    Surface(
+        modifier = modifier
+            .size(116.dp),
+        shape = CircleShape,
+        color = tertiary_main,
+    ) {}
+}
+
+@Composable
+private fun LoginThirdAppsContainer() {
     Spacer(modifier = Modifier.size(24.dp))
     Text(
         modifier = Modifier.fillMaxWidth(),
@@ -145,7 +166,9 @@ internal fun LoginThirdAppsContainer() {
 }
 
 @Composable
-internal fun InputsContainer() {
+private fun InputsContainer(
+    onForgotPasswordClick: () -> Unit,
+) {
     var userName by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     UserNameInput(
@@ -163,7 +186,7 @@ internal fun InputsContainer() {
     )
     Spacer(modifier = Modifier.size(8.dp))
     TextButton(
-        onClick = { /*TODO*/ },
+        onClick = onForgotPasswordClick,
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
@@ -186,7 +209,7 @@ internal fun InputsContainer() {
 }
 
 @Composable
-internal fun LoginMethodContainer(content: @Composable () -> Unit) {
+private fun LoginMethodContainer(content: @Composable () -> Unit) {
     Surface(
         modifier = Modifier
             .size(48.dp)
@@ -202,7 +225,7 @@ internal fun LoginMethodContainer(content: @Composable () -> Unit) {
 }
 
 @Composable
-internal fun UserNameInput(
+private fun UserNameInput(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
 ) {
@@ -223,7 +246,7 @@ internal fun UserNameInput(
 }
 
 @Composable
-internal fun UserPasswordInput(
+private fun UserPasswordInput(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
 ) {
@@ -289,5 +312,5 @@ internal fun LoginBackground(content: @Composable () -> Unit) {
 )
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    LoginScreen({}, {})
 }
