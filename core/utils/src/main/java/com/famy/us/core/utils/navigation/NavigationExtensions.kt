@@ -9,7 +9,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 
 /**
@@ -77,4 +79,14 @@ fun NavController.doAction(navigator: Navigator) {
  */
 fun NavController.navigate(destination: Destination) {
     navigate(route = destination.fullRoute)
+}
+
+/**
+ * Method to call the navigate with a destination object.
+ *
+ * @param destination the destination that app should navigate.
+ * @param builder the nav options.
+ */
+fun NavController.navigate(destination: Destination, builder: NavOptionsBuilder.() -> Unit) {
+    navigate(route = destination.fullRoute, navOptions(builder))
 }

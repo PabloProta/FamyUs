@@ -24,6 +24,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.famy.us.authentication.LoginScreen
 import com.famy.us.authentication.PreLoginScreen
+import com.famy.us.authentication.QrCodeScreen
+import com.famy.us.authentication.forgotpassword.ForgotPasswordScreen
+import com.famy.us.authentication.forgotpassword.InsertEmailCodeScreen
+import com.famy.us.authentication.forgotpassword.InsertNewPasswordScreen
 import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.utils.navigation.composable
 import com.famy.us.core.utils.navigation.doAction
@@ -34,13 +38,9 @@ import com.famy.us.feature.note.createNote.CreateNoteScreenProvider
 import com.famy.us.feature.note.navigation.NoteMenuNavigation
 import com.famy.us.feature.note.taskContent.TaskContentProvider
 import com.famy.us.feature.onboarding.opening.OpeningScreenContainer
-import com.famy.us.feature.registration.InsertFamilyNameScreen
 import com.famy.us.feature.registration.CreatingAccountRouterScreen
 import com.famy.us.feature.registration.EnterFamilyScreen
-import com.famy.us.authentication.QrCodeScreen
-import com.famy.us.authentication.forgotpassword.ForgotPasswordScreen
-import com.famy.us.authentication.forgotpassword.InsertEmailCodeScreen
-import com.famy.us.authentication.forgotpassword.InsertNewPasswordScreen
+import com.famy.us.feature.registration.InsertFamilyNameScreen
 import com.famy.us.feature.registration.RegisterPersonalInfoScreen
 import com.famy.us.feature.registration.navigation.RegistrationNavigation
 import com.famy.us.invite.InviteScreenContainer
@@ -153,7 +153,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             navController.popBackStack()
                         },
                         onNavigateAt = { dest ->
-                            navController.navigate(dest)
+                            navController.navigate(dest) {
+                                popUpTo(AuthenticationNavigation.PreLogin.fullRoute)
+                            }
                         }
                     )
                 }
