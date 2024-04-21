@@ -32,68 +32,68 @@ internal fun MenusRouterNavigation(
     startDestination: String?,
     onNavigate: (Navigator) -> Unit,
 ) {
-    val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = backStackEntry?.destination
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
-        bottomBar = {
-            NavigationBar(
-                containerColor = Color.Transparent,
-            ) {
-                menus
-                    .sortedBy { it.priority }
-                    .forEach { menuItem ->
-                        val selected =
-                            currentDestination?.hierarchy?.any { menuItem.route == it.route } == true
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(menuItem.route)
-                            },
-                            label = {
-                                Text(
-                                    text = menuItem.name,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = menuItem.icon,
-                                    contentDescription = "${menuItem.name} Icon",
-                                )
-                            },
-                        )
-                    }
-            }
-        },
-    ) { contentPadding ->
-        NavHost(
-            navController,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
-            startDestination = startDestination ?: menus
-                .sortedBy { it.priority }
-                .first()
-                .route,
-            modifier = Modifier.padding(contentPadding),
-        ) {
-            menus.forEach { menuItem ->
-                composable(
-                    route = menuItem.route,
-                    enterTransition = {
-                        slideInHorizontally(
-                            animationSpec = spring(
-                                stiffness = Spring.StiffnessLow,
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                            ),
-                        )
-                    },
-                ) {
-                    menuItem.screen(onNavigate = onNavigate)
-                }
-            }
-        }
-    }
+//    val navController = rememberNavController()
+//    val backStackEntry by navController.currentBackStackEntryAsState()
+//    val currentDestination = backStackEntry?.destination
+//    Scaffold(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        bottomBar = {
+//            NavigationBar(
+//                containerColor = Color.Transparent,
+//            ) {
+//                menus
+//                    .sortedBy { it.priority }
+//                    .forEach { menuItem ->
+//                        val selected =
+//                            currentDestination?.hierarchy?.any { menuItem.route == it.route } == true
+//                        NavigationBarItem(
+//                            selected = selected,
+//                            onClick = {
+//                                navController.navigate(menuItem.route)
+//                            },
+//                            label = {
+//                                Text(
+//                                    text = menuItem.name,
+//                                    fontWeight = FontWeight.SemiBold,
+//                                )
+//                            },
+//                            icon = {
+//                                Icon(
+//                                    imageVector = menuItem.icon,
+//                                    contentDescription = "${menuItem.name} Icon",
+//                                )
+//                            },
+//                        )
+//                    }
+//            }
+//        },
+//    ) { contentPadding ->
+//        NavHost(
+//            navController,
+//            enterTransition = { EnterTransition.None },
+//            exitTransition = { ExitTransition.None },
+//            startDestination = startDestination ?: menus
+//                .sortedBy { it.priority }
+//                .first()
+//                .route,
+//            modifier = Modifier.padding(contentPadding),
+//        ) {
+//            menus.forEach { menuItem ->
+//                composable(
+//                    route = menuItem.route,
+//                    enterTransition = {
+//                        slideInHorizontally(
+//                            animationSpec = spring(
+//                                stiffness = Spring.StiffnessLow,
+//                                dampingRatio = Spring.DampingRatioMediumBouncy,
+//                            ),
+//                        )
+//                    },
+//                ) {
+//                    menuItem.screen(onNavigate = onNavigate)
+//                }
+//            }
+//        }
+//    }
 }

@@ -2,6 +2,8 @@ package com.famy.us.feature.note
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Notes
+import com.famy.us.core.utils.navigation.Destination
+import com.famy.us.core.utils.resources.IconResource
 import com.famy.us.feature.home.MenusLoader
 import com.famy.us.feature.home.model.MenuItem
 import com.famy.us.feature.note.notescreen.NoteMenuScreenContainer
@@ -11,11 +13,14 @@ import com.famy.us.feature.note.notescreen.NoteMenuScreenContainer
  */
 internal class NoteMenuLoader : MenusLoader {
 
+    val tempDest = object : Destination("") {}
+
     override fun loadMenu(): MenuItem = MenuItem(
         name = "Note",
-        route = "note",
+        destination = tempDest,
         priority = 1,
-        icon = Icons.Rounded.Notes,
+        icon = IconResource.fromImageVector(Icons.Rounded.Notes),
+        onSelectIcon = IconResource.fromImageVector(Icons.Rounded.Notes),
         screen = { NoteMenuScreenContainer(onNavigate = it) },
     )
 }

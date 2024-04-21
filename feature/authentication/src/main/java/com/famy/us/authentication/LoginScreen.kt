@@ -107,6 +107,7 @@ fun LoginScreen(
                     onForgotPasswordClick = {
                         onNavigateAt(AuthenticationNavigation.ForgotPassword)
                     },
+                    onClickLogin = { onNavigateAt(AuthenticationNavigation.HomeScreen) },
                 )
                 LoginThirdAppsContainer()
             }
@@ -168,6 +169,7 @@ private fun LoginThirdAppsContainer() {
 @Composable
 private fun InputsContainer(
     onForgotPasswordClick: () -> Unit,
+    onClickLogin: () -> Unit,
 ) {
     var userName by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
@@ -199,7 +201,7 @@ private fun InputsContainer(
     DefaultButton(
         modifier = Modifier
             .fillMaxWidth(),
-        onClick = { /*TODO*/ },
+        onClick = onClickLogin,
     ) {
         Text(
             text = "Entrar",
