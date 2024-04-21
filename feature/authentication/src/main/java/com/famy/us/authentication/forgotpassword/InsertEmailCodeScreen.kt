@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.authentication.navigation.AuthenticationNavigation
+import com.famy.us.core.extensions.logD
 import com.famy.us.core.extensions.logE
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.ButtonMedium
@@ -107,18 +108,16 @@ private fun CodeInput(
             CodeInputItem(
                 value = input,
                 onValueChange = {
-                    if (it != '-') {
-                        val newList = codeString.mapIndexed { i, inputItem ->
-                            if (index == i) {
-                                it
-                            } else {
-                                inputItem
-                            }
+                    val newList = codeString.mapIndexed { i, inputItem ->
+                        if (index == i) {
+                            it
+                        } else {
+                            inputItem
                         }
-                        codeString = newList
-                        focusManager.moveFocus(FocusDirection.Next)
-                        onValueChange(codeString.toString())
                     }
+                    codeString = newList
+                    focusManager.moveFocus(FocusDirection.Next)
+                    onValueChange(codeString.toString())
                 },
             )
         }
@@ -144,6 +143,7 @@ private fun CodeInputItem(
     ) {
         BasicTextField(
             value = "$value",
+            maxLines = 1,
             onValueChange = {
                 if (it.isEmpty()) {
                     onValueChange('-')
@@ -163,7 +163,7 @@ private fun CodeInputItem(
                 color = tertiary_900,
                 textAlign = TextAlign.Center,
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
     }
 }
