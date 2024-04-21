@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.authentication.navigation.AuthenticationNavigation
-import com.famy.us.core.extensions.logD
 import com.famy.us.core.extensions.logE
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.ButtonMedium

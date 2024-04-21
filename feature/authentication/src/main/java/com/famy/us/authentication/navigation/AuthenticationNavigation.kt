@@ -45,4 +45,9 @@ object AuthenticationNavigation {
     object InsertNewPassword : Destination("insert_new_password")
 
     object ReadQrCode : Destination("read_qr_code")
+
+    /**
+     * Destination to the home after login been done.
+     */
+    object HomeScreen : Destination("home")
 }
