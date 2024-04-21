@@ -20,7 +20,7 @@ internal fun DoubleCheckContainer() {
         Image(
             modifier = Modifier
                 .zIndex(1f),
-            painter = painterResource(id = R.drawable.ic_double_check_circle),
+            painter = painterResource(id = com.famy.us.core.ui.R.drawable.ic_double_check_circle),
             contentDescription = null,
         )
     }
