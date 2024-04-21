@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.extensions.logE
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.ButtonMedium
@@ -41,11 +42,13 @@ import com.famy.us.core.ui.tertiary_100
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_900
+import com.famy.us.core.utils.navigation.Destination
 
 @Composable
 fun InsertEmailCodeScreen(
     email: String,
     popBackStack: () -> Unit,
+    onNavigateAt: (Destination) -> Unit,
 ) {
     BackHandler {
         popBackStack()
@@ -71,7 +74,9 @@ fun InsertEmailCodeScreen(
             DefaultButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onNavigateAt(AuthenticationNavigation.InsertNewPassword)
+                },
             ) {
                 Text(
                     text = "Avançar",
@@ -207,5 +212,5 @@ private fun extractEmailProvider(email: String): String {
 )
 @Composable
 internal fun InsertEmailCodePreview() {
-    InsertEmailCodeScreen("pabloprota@gmail.com", {})
+    InsertEmailCodeScreen("pabloprota@gmail.com", {}, {})
 }

@@ -39,5 +39,10 @@ object AuthenticationNavigation {
         email: String = "{email}",
     ) : Destination("insert_email_to_recover", email)
 
+    /**
+     * Destination to insert a new password after forgot the previous one.
+     */
+    object InsertNewPassword : Destination("insert_new_password")
+
     object ReadQrCode : Destination("read_qr_code")
 }
