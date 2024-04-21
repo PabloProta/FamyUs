@@ -39,6 +39,7 @@ import com.famy.us.feature.registration.CreatingAccountRouterScreen
 import com.famy.us.feature.registration.EnterFamilyScreen
 import com.famy.us.authentication.QrCodeScreen
 import com.famy.us.authentication.forgotpassword.ForgotPasswordScreen
+import com.famy.us.authentication.forgotpassword.InsertEmailCodeScreen
 import com.famy.us.feature.registration.RegisterPersonalInfoScreen
 import com.famy.us.feature.registration.navigation.RegistrationNavigation
 import com.famy.us.invite.InviteScreenContainer
@@ -114,6 +115,26 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     destination = AuthenticationNavigation.ForgotPassword,
                 ) {
                     ForgotPasswordScreen(
+                        popBackStack = {
+                            navController.popBackStack()
+                        },
+                        onNavigateAt = { dest ->
+                            navController.navigate(dest)
+                        }
+                    )
+                }
+
+                composable(
+                    destination = AuthenticationNavigation.InsertEmailToRecover(),
+                    arguments = listOf(
+                        navArgument("email") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) { backstackEntry ->
+                    val email = backstackEntry.arguments?.getString("email") ?: ""
+                    InsertEmailCodeScreen(
+                        email = email,
                         popBackStack = {
                             navController.popBackStack()
                         },

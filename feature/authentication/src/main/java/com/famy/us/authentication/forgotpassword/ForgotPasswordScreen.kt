@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H5
@@ -31,9 +32,11 @@ import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.components.DefaultTextField
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_50
+import com.famy.us.core.utils.navigation.Destination
 
 @Composable
 fun ForgotPasswordScreen(
+    onNavigateAt: (Destination) -> Unit,
     popBackStack: () -> Unit,
 ) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
@@ -63,7 +66,9 @@ fun ForgotPasswordScreen(
             DefaultButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onNavigateAt(AuthenticationNavigation.InsertEmailToRecover(email.text))
+                },
             ) {
                 Text(
                     text = "Avançar",
@@ -119,5 +124,5 @@ private fun TextsContainer() {
 )
 @Composable
 internal fun ForgotPasswordPreview() {
-    ForgotPasswordScreen({})
+    ForgotPasswordScreen({}, {})
 }

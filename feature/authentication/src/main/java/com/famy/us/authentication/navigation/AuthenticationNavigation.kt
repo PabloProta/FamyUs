@@ -32,5 +32,12 @@ object AuthenticationNavigation {
      */
     object ForgotPassword : Destination("forgot_password")
 
+    /**
+     * Destination to insert the email to receive a code to recover the forgotten password.
+     */
+    class InsertEmailToRecover(
+        email: String = "{email}",
+    ) : Destination("insert_email_to_recover", email)
+
     object ReadQrCode : Destination("read_qr_code")
 }
