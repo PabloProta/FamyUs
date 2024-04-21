@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
 import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H5
@@ -32,13 +33,16 @@ import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.components.DefaultTextField
 import com.famy.us.core.ui.tertiary_300
 import com.famy.us.core.ui.tertiary_50
+import com.famy.us.core.utils.navigation.Destination
 
 @Composable
 fun InsertNewPasswordScreen(
     popBackStack: () -> Unit,
+    onNavigateAt: (Destination) -> Unit,
 ) {
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPassword by remember { mutableStateOf(TextFieldValue("")) }
+    var showBottom by remember { mutableStateOf(false) }
     ContainerWithTopBar(
         onClickBack = popBackStack,
     ) {
@@ -68,7 +72,9 @@ fun InsertNewPasswordScreen(
             DefaultButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    showBottom = true
+                },
             ) {
                 Text(
                     text = "Avançar",
@@ -77,6 +83,16 @@ fun InsertNewPasswordScreen(
                 )
             }
             Spacer(modifier = Modifier.size(48.dp))
+        }
+        if (showBottom) {
+            UpdatedPasswordBottomSheet(
+                onClickToLogin = {
+                    onNavigateAt(AuthenticationNavigation.Login)
+                },
+                onDismiss = {
+                    showBottom = false
+                },
+            )
         }
     }
 }
@@ -158,5 +174,5 @@ private fun TextsContainer() {
 )
 @Composable
 internal fun InsertNewPasswordPreview() {
-    InsertNewPasswordScreen({})
+    InsertNewPasswordScreen({}, {})
 }

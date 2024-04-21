@@ -151,6 +151,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     InsertNewPasswordScreen(
                         popBackStack = {
                             navController.popBackStack()
+                        },
+                        onNavigateAt = { dest ->
+                            navController.navigate(dest)
                         }
                     )
                 }
