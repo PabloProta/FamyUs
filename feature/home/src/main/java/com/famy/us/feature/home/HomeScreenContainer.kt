@@ -10,13 +10,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.famy.us.authentication.AuthenticationContainer
-import com.famy.us.core.utils.navigation.Navigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun HomeScreenContainer(
     viewModel: HomeViewModel = koinViewModel(),
-    onNavigate: (Navigator) -> Unit,
 ) {
     val isMemberRegistered by remember {
         viewModel.hasUserRegistered
@@ -31,9 +29,7 @@ internal fun HomeScreenContainer(
                 NoInternet()
             } else {
                 if (isMemberRegistered) {
-                    HomeMenuScreenContainer {
-
-                    }
+                    HomeMenuScreenContainer {}
                 } else {
                     // if member is Registered
                 }
