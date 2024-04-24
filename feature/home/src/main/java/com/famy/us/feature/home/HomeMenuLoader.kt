@@ -18,6 +18,6 @@ internal class HomeMenuLoader : MenusLoader {
         priority = 0,
         icon = IconResource.fromDrawableResource(R.drawable.ic_box_outlined),
         onSelectIcon = IconResource.fromDrawableResource(R.drawable.ic_box_filled),
-        screen = { HomeScreenContainer(onNavigate = it) },
+        screen = { HomeScreenContainer() },
     )
 }

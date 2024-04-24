@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.core.ui.primary_700
 import com.famy.us.core.ui.tertiary_main
-import com.famy.us.feature.home.topbar.AdminTopBar
+import com.famy.us.feature.home.home.AdminHomeContainerScreen
 import com.famy.us.feature.home.topbar.ManagedTopBar
 
 @Composable
@@ -22,7 +22,7 @@ fun HomeMenuScreenContainer(
     content: @Composable () -> Unit,
 ) {
     HomeMenuScreen(
-        isAdmin = false,
+        isAdmin = true,
         familyName = "Prota",
         memberName = "Kaue",
         role = "Admin",
@@ -46,7 +46,7 @@ private fun HomeMenuScreen(
                 .fillMaxSize(),
         ) {
             if (isAdmin) {
-                AdminTopBar(
+                AdminHomeContainerScreen(
                     familyName = familyName,
                     memberName = memberName,
                     role = role,
