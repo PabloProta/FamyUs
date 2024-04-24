@@ -39,7 +39,7 @@ import com.famy.us.core.utils.navigation.composable
 import com.famy.us.core.utils.navigation.doAction
 import com.famy.us.core.utils.navigation.navigate
 import com.famy.us.core.utils.navigation.navigation
-import com.famy.us.feature.home.HomeMenuScreen
+import com.famy.us.feature.home.HomeMenuScreenContainer
 import com.famy.us.feature.home.HomeNavigationBar
 import com.famy.us.feature.home.MenusLoader
 import com.famy.us.feature.home.navigation.HomeNavigation
@@ -239,11 +239,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     destination = HomeNavigation.HomeScreen
                 ) {
                     Box {
-                        HomeMenuScreen(
-                            onNavigate = {
+                        HomeMenuScreenContainer {
 
-                            }
-                        )
+                        }
                         Column(
                             modifier = Modifier
                                 .fillMaxSize(),

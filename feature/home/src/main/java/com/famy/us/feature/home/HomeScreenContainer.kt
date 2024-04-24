@@ -31,7 +31,9 @@ internal fun HomeScreenContainer(
                 NoInternet()
             } else {
                 if (isMemberRegistered) {
-                    HomeMenuScreen(onNavigate)
+                    HomeMenuScreenContainer {
+
+                    }
                 } else {
                     // if member is Registered
                 }
