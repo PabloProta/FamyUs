@@ -1,7 +1,9 @@
 package com.famy.us.feature.home.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,6 +20,8 @@ internal fun AdminHomeScreen(
             .padding(horizontal = 24.dp),
     ) {
         AdminAddMemberSection(list = memberList)
+        Spacer(modifier = Modifier.size(36.dp))
+        TaskStatusContainer()
     }
 }
 
@@ -44,5 +48,5 @@ internal fun AdminHomePreview() {
             score = 0,
         ),
     )
-    AdminAddMemberSection(list = memberList)
+    AdminHomeScreen(memberList = memberList)
 }

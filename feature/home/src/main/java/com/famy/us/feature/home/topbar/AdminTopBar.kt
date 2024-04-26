@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -42,29 +44,31 @@ fun AdminTopBar(
         shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
         color = tertiary_main.copy(alpha = 0.16f),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .safeDrawingPadding()
-                .padding(
-                    vertical = 9.dp,
-                    horizontal = 24.dp,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ImagePlaceHolder()
-            Spacer(modifier = Modifier.size(12.dp))
-            Box(
-                modifier = Modifier.weight(3f),
+        Column {
+            Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = 9.dp,
+                        horizontal = 24.dp,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                TextsInputs(
-                    memberName = memberName,
-                    familyName = familyName,
-                    role = role,
-                )
+                ImagePlaceHolder()
+                Spacer(modifier = Modifier.size(12.dp))
+                Box(
+                    modifier = Modifier.weight(3f),
+                ) {
+                    TextsInputs(
+                        memberName = memberName,
+                        familyName = familyName,
+                        role = role,
+                    )
+                }
+                Spacer(modifier = Modifier.size(8.dp))
+                NotificationContainer()
             }
-            Spacer(modifier = Modifier.size(8.dp))
-            NotificationContainer()
         }
     }
 }
