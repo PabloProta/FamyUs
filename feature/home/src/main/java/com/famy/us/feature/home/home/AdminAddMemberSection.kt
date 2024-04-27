@@ -36,10 +36,11 @@ import com.famy.us.home.R
 
 @Composable
 fun AdminAddMemberSection(
+    modifier: Modifier = Modifier,
     list: List<NonAdminMember>,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
     ) {
         Text(

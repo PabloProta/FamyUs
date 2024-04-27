@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.ui.BodySmallRegular
+import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H4
 import com.famy.us.core.ui.R
 import com.famy.us.core.ui.components.DefaultButton
@@ -123,7 +125,11 @@ internal fun ButtonsContainer(
                 onNavigateTo(AuthenticationNavigation.Login)
             },
         ) {
-            Text(text = "Login")
+            Text(
+                text = "Login",
+                style = ButtonMedium,
+                color = Color.White
+            )
         }
         Spacer(modifier = Modifier.size(8.dp))
         DefaultButton(
@@ -133,7 +139,11 @@ internal fun ButtonsContainer(
                 onNavigateTo(AuthenticationNavigation.ReadQrCode)
             },
         ) {
-            Text(text = "Entrar com QR Code")
+            Text(
+                text = "Entrar com QR Code",
+                style = ButtonMedium,
+                color = Color.White,
+            )
         }
     }
 }
