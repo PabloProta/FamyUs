@@ -205,6 +205,7 @@ private fun InputsContainer(
     ) {
         Text(
             text = "Entrar",
+            color = Color.White,
             style = ButtonMedium,
         )
     }

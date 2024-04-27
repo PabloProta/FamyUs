@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H4
 import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.utils.navigation.Destination
@@ -65,6 +66,8 @@ internal fun OpeningScreen(onNavigateTo: (Destination) -> Unit) {
                         modifier = Modifier
                             .padding(8.dp),
                         text = "Começando",
+                        style = ButtonMedium,
+                        color = Color.White,
                     )
                 }
             }

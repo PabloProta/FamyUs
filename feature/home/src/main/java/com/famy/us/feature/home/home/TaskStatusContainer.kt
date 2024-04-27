@@ -2,6 +2,7 @@ package com.famy.us.feature.home.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,10 +28,14 @@ import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.utils.resources.IconResource
 import com.famy.us.home.R
 
+@Suppress("LongMethod")
 @Composable
-internal fun TaskStatusContainer() {
+internal fun TaskStatusContainer(
+    modifier: Modifier = Modifier,
+    onClickStatus: (FilterBadges) -> Unit,
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
     ) {
         Text(
@@ -49,6 +55,9 @@ internal fun TaskStatusContainer() {
                     iconResource = IconResource.fromDrawableResource(R.drawable.ic_task_total),
                     quantity = 0,
                     description = "Total de tarefas",
+                    onClick = {
+                        onClickStatus(FilterBadges.TOTAL)
+                    },
                 )
             }
             item {
@@ -58,6 +67,9 @@ internal fun TaskStatusContainer() {
                     ),
                     quantity = 0,
                     description = "Em progresso",
+                    onClick = {
+                        onClickStatus(FilterBadges.IN_PROGRESS)
+                    },
                 )
             }
             item {
@@ -65,6 +77,9 @@ internal fun TaskStatusContainer() {
                     iconResource = IconResource.fromDrawableResource(R.drawable.ic_task_completed),
                     quantity = 0,
                     description = "Completas",
+                    onClick = {
+                        onClickStatus(FilterBadges.COMPLETED)
+                    },
                 )
             }
             item {
@@ -72,6 +87,9 @@ internal fun TaskStatusContainer() {
                     iconResource = IconResource.fromDrawableResource(R.drawable.ic_task_late),
                     quantity = 0,
                     description = "Atrasadas",
+                    onClick = {
+                        onClickStatus(FilterBadges.LATE)
+                    },
                 )
             }
         }
@@ -84,6 +102,7 @@ private fun StatusItem(
     iconResource: IconResource,
     quantity: Int,
     description: String,
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -95,6 +114,10 @@ private fun StatusItem(
                 color = Color.White.copy(alpha = 0.04f),
                 shape = RoundedCornerShape(12.dp),
             )
+            .clip(RoundedCornerShape(12.dp))
+            .clickable {
+                onClick()
+            }
             .padding(10.dp),
         horizontalAlignment = Alignment.Start,
     ) {
@@ -117,5 +140,5 @@ private fun StatusItem(
 @Preview
 @Composable
 internal fun TaskStatusPreview() {
-    TaskStatusContainer()
+    TaskStatusContainer(onClickStatus = {})
 }
