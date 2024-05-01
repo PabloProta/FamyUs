@@ -128,7 +128,7 @@ internal fun ButtonsContainer(
             Text(
                 text = "Login",
                 style = ButtonMedium,
-                color = Color.White
+                color = Color.White,
             )
         }
         Spacer(modifier = Modifier.size(8.dp))

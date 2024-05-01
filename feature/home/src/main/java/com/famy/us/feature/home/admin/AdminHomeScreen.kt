@@ -1,4 +1,4 @@
-package com.famy.us.feature.home.home
+package com.famy.us.feature.home.admin
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.model.NonAdminMember
+import com.famy.us.feature.home.home.FilterBadges
+import com.famy.us.feature.home.home.FilterBadgesLoader
+import com.famy.us.feature.home.home.TaskFilterBadges
+import com.famy.us.feature.home.home.TaskStatusContainer
 
 @Composable
 internal fun AdminHomeScreen(
