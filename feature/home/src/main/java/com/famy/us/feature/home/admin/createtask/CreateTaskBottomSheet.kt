@@ -1,6 +1,7 @@
 package com.famy.us.feature.home.admin.createtask
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,7 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,12 +35,17 @@ import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H6
 import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.components.DefaultTextField
+import com.famy.us.core.ui.components.TimePickerDialog
+import com.famy.us.core.ui.primary_100
+import com.famy.us.core.ui.primary_200
+import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_600
 import com.famy.us.core.ui.tertiary_900
 import com.famy.us.core.utils.resources.IconResource
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.model.NonAdminMember
 import com.famy.us.home.R
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,18 +55,42 @@ fun CreateTaskBottomContainer(
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    ModalBottomSheet(
-        modifier = Modifier
-            .wrapContentSize(),
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = Color.White,
-        contentColor = Color.White,
-    ) {
-        CreateTaskBottomSheet(
-            first = first,
-            members = members,
-        )
+    var showTimerPicker by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var currentDate: Calendar? by remember { mutableStateOf(null) }
+    Box {
+        ModalBottomSheet(
+            modifier = Modifier
+                .wrapContentSize(),
+            onDismissRequest = onDismiss,
+            sheetState = sheetState,
+            containerColor = Color.White,
+            contentColor = Color.White,
+        ) {
+            CreateTaskBottomSheet(
+                first = first,
+                members = members,
+                onClickDateInput = {
+                    showTimerPicker = true
+                },
+            )
+        }
+        if (showTimerPicker) {
+            TimePickerInput(
+                calendar = currentDate,
+                onCancel = {
+                    showTimerPicker = false
+                },
+                onConfirm = {
+                    currentDate = it
+                    showTimerPicker = false
+                    showDatePicker = true
+                },
+            )
+        }
+        if (showDatePicker) {
+            // Do something...
+        }
     }
 }
 
@@ -65,9 +98,11 @@ fun CreateTaskBottomContainer(
 private fun CreateTaskBottomSheet(
     first: NonAdminMember,
     members: List<NonAdminMember>,
+    onClickDateInput: () -> Unit,
 ) {
     var taskName by remember { mutableStateOf("") }
     var taskDescription by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .padding(24.dp),
@@ -104,7 +139,7 @@ private fun CreateTaskBottomSheet(
         )
         Spacer(modifier = Modifier.size(8.dp))
         DatePickerInput(
-            onClick = {},
+            onClick = onClickDateInput,
         )
         Spacer(modifier = Modifier.size(8.dp))
         ScorePickerInput(
@@ -194,6 +229,43 @@ private fun DatePickerInput(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimePickerInput(
+    calendar: Calendar?,
+    onCancel: () -> Unit,
+    onConfirm: (Calendar) -> Unit,
+) {
+    var currentDate = calendar
+    if (currentDate == null) {
+        currentDate = Calendar.getInstance()
+    }
+    val timerState = rememberTimePickerState(
+        initialHour = currentDate?.get(Calendar.HOUR_OF_DAY) ?: 0,
+        initialMinute = currentDate?.get(Calendar.MINUTE) ?: 0,
+    )
+    TimePickerDialog(
+        onCancel = onCancel,
+        onConfirm = {
+            currentDate?.set(Calendar.HOUR_OF_DAY, timerState.hour)
+            currentDate?.set(Calendar.MINUTE, timerState.minute)
+            currentDate?.isLenient = false
+            currentDate?.also(onConfirm)
+        },
+        containerColor = tertiary_50,
+    ) {
+        TimePicker(
+            state = timerState,
+            colors = TimePickerDefaults.colors(
+                containerColor = tertiary_50,
+                selectorColor = tertiary_900,
+                periodSelectorSelectedContainerColor = primary_200,
+                timeSelectorSelectedContainerColor = primary_100,
+            ),
+        )
+    }
+}
+
 @Composable
 private fun ScorePickerInput(
     onClick: () -> Unit,
@@ -268,5 +340,6 @@ internal fun CreateTaskBottomPreview() {
     CreateTaskBottomSheet(
         first = memberList.first(),
         members = memberList,
+        {},
     )
 }
