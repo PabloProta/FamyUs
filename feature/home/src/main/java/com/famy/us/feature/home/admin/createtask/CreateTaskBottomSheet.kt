@@ -17,10 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,15 +32,13 @@ import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.H6
 import com.famy.us.core.ui.components.DefaultButton
 import com.famy.us.core.ui.components.DefaultTextField
-import com.famy.us.core.ui.components.TimePickerDialog
-import com.famy.us.core.ui.primary_100
-import com.famy.us.core.ui.primary_200
-import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_600
 import com.famy.us.core.ui.tertiary_900
 import com.famy.us.core.utils.resources.IconResource
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.model.NonAdminMember
+import com.famy.us.feature.home.admin.createtask.pickers.DateDialogInput
+import com.famy.us.feature.home.admin.createtask.pickers.TimePickerInput
 import com.famy.us.home.R
 import java.util.Calendar
 
@@ -73,6 +68,7 @@ fun CreateTaskBottomContainer(
                 onClickDateInput = {
                     showTimerPicker = true
                 },
+                currentDate = currentDate,
             )
         }
         if (showTimerPicker) {
@@ -88,8 +84,17 @@ fun CreateTaskBottomContainer(
                 },
             )
         }
-        if (showDatePicker) {
-            // Do something...
+        if (showDatePicker && currentDate != null) {
+            DateDialogInput(
+                calendar = currentDate!!,
+                onDismiss = {
+                    showDatePicker = false
+                },
+                onConfirm = {
+                    currentDate = it
+                    showDatePicker = false
+                },
+            )
         }
     }
 }
@@ -97,6 +102,7 @@ fun CreateTaskBottomContainer(
 @Composable
 private fun CreateTaskBottomSheet(
     first: NonAdminMember,
+    currentDate: Calendar? = null,
     members: List<NonAdminMember>,
     onClickDateInput: () -> Unit,
 ) {
@@ -126,9 +132,7 @@ private fun CreateTaskBottomSheet(
         Spacer(modifier = Modifier.size(16.dp))
         NameInput(
             value = taskName,
-            onValueChange = {
-                taskName = it
-            },
+            onValueChange = { taskName = it },
         )
         Spacer(modifier = Modifier.size(8.dp))
         DescriptionInput(
@@ -139,6 +143,7 @@ private fun CreateTaskBottomSheet(
         )
         Spacer(modifier = Modifier.size(8.dp))
         DatePickerInput(
+            dateProvider = { currentDate },
             onClick = onClickDateInput,
         )
         Spacer(modifier = Modifier.size(8.dp))
@@ -156,113 +161,6 @@ private fun CreateTaskBottomSheet(
             )
         }
         Spacer(modifier = Modifier.size(24.dp))
-    }
-}
-
-@Composable
-private fun NameInput(
-    value: String,
-    onValueChange: (String) -> Unit,
-) {
-    DefaultTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        onValueChange = onValueChange,
-        leadingIcon = {
-            Icon(
-                painter = IconResource.fromDrawableResource(R.drawable.ic_task).asPainterResource(),
-                contentDescription = null,
-            )
-        },
-        label = "Nome da Tarefa",
-    )
-}
-
-@Composable
-private fun DescriptionInput(
-    value: String,
-    onValueChange: (String) -> Unit,
-) {
-    DefaultTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        onValueChange = onValueChange,
-        leadingIcon = {
-            Icon(
-                painter = IconResource.fromDrawableResource(R.drawable.ic_description)
-                    .asPainterResource(),
-                contentDescription = null,
-            )
-        },
-        label = "Descrição da Tarefa",
-    )
-}
-
-@Composable
-private fun DatePickerInput(
-    onClick: () -> Unit,
-) {
-    DefaultTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        value = "",
-        readOnly = true,
-        onValueChange = {},
-        leadingIcon = {
-            Icon(
-                painter = IconResource.fromDrawableResource(R.drawable.ic_clock)
-                    .asPainterResource(),
-                contentDescription = null,
-            )
-        },
-        trailingIcon = {
-            IconButton(onClick = onClick) {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = tertiary_600,
-                )
-            }
-        },
-        label = "Horário",
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimePickerInput(
-    calendar: Calendar?,
-    onCancel: () -> Unit,
-    onConfirm: (Calendar) -> Unit,
-) {
-    var currentDate = calendar
-    if (currentDate == null) {
-        currentDate = Calendar.getInstance()
-    }
-    val timerState = rememberTimePickerState(
-        initialHour = currentDate?.get(Calendar.HOUR_OF_DAY) ?: 0,
-        initialMinute = currentDate?.get(Calendar.MINUTE) ?: 0,
-    )
-    TimePickerDialog(
-        onCancel = onCancel,
-        onConfirm = {
-            currentDate?.set(Calendar.HOUR_OF_DAY, timerState.hour)
-            currentDate?.set(Calendar.MINUTE, timerState.minute)
-            currentDate?.isLenient = false
-            currentDate?.also(onConfirm)
-        },
-        containerColor = tertiary_50,
-    ) {
-        TimePicker(
-            state = timerState,
-            colors = TimePickerDefaults.colors(
-                containerColor = tertiary_50,
-                selectorColor = tertiary_900,
-                periodSelectorSelectedContainerColor = primary_200,
-                timeSelectorSelectedContainerColor = primary_100,
-            ),
-        )
     }
 }
 
@@ -340,6 +238,6 @@ internal fun CreateTaskBottomPreview() {
     CreateTaskBottomSheet(
         first = memberList.first(),
         members = memberList,
-        {},
+        onClickDateInput = {},
     )
 }
