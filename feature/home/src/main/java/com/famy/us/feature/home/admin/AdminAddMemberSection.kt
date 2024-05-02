@@ -1,4 +1,4 @@
-package com.famy.us.feature.home.home
+package com.famy.us.feature.home.admin
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable

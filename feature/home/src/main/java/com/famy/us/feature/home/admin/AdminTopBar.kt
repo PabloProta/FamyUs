@@ -1,4 +1,4 @@
-package com.famy.us.feature.home.topbar
+package com.famy.us.feature.home.admin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

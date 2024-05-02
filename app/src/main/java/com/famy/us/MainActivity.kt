@@ -11,19 +11,14 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideIn
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -40,7 +35,6 @@ import com.famy.us.core.utils.navigation.doAction
 import com.famy.us.core.utils.navigation.navigate
 import com.famy.us.core.utils.navigation.navigation
 import com.famy.us.feature.home.HomeMenuScreenContainer
-import com.famy.us.feature.home.HomeNavigationBar
 import com.famy.us.feature.home.MenusLoader
 import com.famy.us.feature.home.navigation.HomeNavigation
 import com.famy.us.feature.note.createNote.CreateNoteScreenProvider
@@ -239,26 +233,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     destination = HomeNavigation.HomeScreen
                 ) {
                     Box {
-                        HomeMenuScreenContainer {
-
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                        ) {
-                            Spacer(modifier = Modifier.weight(1f))
-                            HomeNavigationBar(
-                                modifier = Modifier
-                                    .safeDrawingPadding()
-                                    .padding(horizontal = 24.dp)
-                                    .padding(bottom = 24.dp),
-                                isAdmin = true,
-                                menus = menus,
-                                onNavigateAt = {
-
-                                },
-                            )
-                        }
+                        HomeMenuScreenContainer(
+                            menus = menus,
+                        )
                     }
                 }
             }

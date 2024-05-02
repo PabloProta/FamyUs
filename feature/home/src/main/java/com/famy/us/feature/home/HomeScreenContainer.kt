@@ -29,7 +29,9 @@ internal fun HomeScreenContainer(
                 NoInternet()
             } else {
                 if (isMemberRegistered) {
-                    HomeMenuScreenContainer {}
+                    HomeMenuScreenContainer(
+                        menus = emptyList(),
+                    )
                 } else {
                     // if member is Registered
                 }

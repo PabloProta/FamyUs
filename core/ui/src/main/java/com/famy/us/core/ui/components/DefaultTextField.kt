@@ -31,6 +31,8 @@ import com.famy.us.core.ui.tertiary_600
 @Composable
 fun DefaultTextField(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
     isSecretInput: Boolean = false,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
@@ -51,6 +53,60 @@ fun DefaultTextField(
                 color = tertiary_300,
                 shape = RoundedCornerShape(12.dp),
             ),
+        readOnly = readOnly,
+        enabled = enabled,
+        value = value,
+        onValueChange = onValueChange,
+        textStyle = BodySmallRegular.copy(color = contentColor),
+        singleLine = true,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        placeholder = {
+            Text(
+                text = label,
+                style = BodySmallRegular,
+                color = contentColor,
+            )
+        },
+        visualTransformation = getVisualTransformation(isSecretInput),
+        keyboardOptions = keyboardOptions,
+        shape = RoundedCornerShape(12.dp),
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            focusedContainerColor = tertiary_100,
+            unfocusedContainerColor = tertiary_100,
+        ),
+    )
+}
+
+@Composable
+fun DefaultTextField(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    isSecretInput: Boolean = false,
+    leadingIcon: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    label: String = "",
+    contentColor: Color = tertiary_600,
+    keyboardOptions: KeyboardOptions = if (isSecretInput) {
+        KeyboardOptions(keyboardType = KeyboardType.Password)
+    } else {
+        KeyboardOptions.Default
+    },
+    value: String,
+    onValueChange: (String) -> Unit,
+) {
+    TextField(
+        modifier = modifier
+            .border(
+                width = 1.dp,
+                color = tertiary_300,
+                shape = RoundedCornerShape(12.dp),
+            ),
+        readOnly = readOnly,
+        enabled = enabled,
         value = value,
         onValueChange = onValueChange,
         textStyle = BodySmallRegular.copy(color = contentColor),
@@ -88,6 +144,7 @@ fun DefaultTextFieldPreview() {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     DefaultTextField(
         value = text,
+        readOnly = true,
         label = "Usuário",
         leadingIcon = {
             Icon(Icons.Outlined.Mail, contentDescription = null)

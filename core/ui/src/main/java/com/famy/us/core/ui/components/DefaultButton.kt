@@ -95,7 +95,7 @@ fun OutlinedGrayButtonPreview() {
             modifier = Modifier,
             text = "Cadastre-se",
             color = Color.White,
-            style = ButtonLarge
+            style = ButtonLarge,
         )
     }
 }

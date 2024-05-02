@@ -80,7 +80,7 @@ fun InsertFamilyNameScreen(
             isFinishing = {
                 isFinished
             },
-            onClickBack = popBackStack
+            onClickBack = popBackStack,
 
         )
     }
