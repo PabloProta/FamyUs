@@ -1,4 +1,4 @@
-package com.famy.us.feature.home.admin
+package com.famy.us.feature.home.admin.createtask
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.core.ui.BodySmallMedium
+import com.famy.us.core.ui.tertiary_100
 import com.famy.us.core.ui.tertiary_50
 import com.famy.us.core.ui.tertiary_600
 import com.famy.us.core.ui.tertiary_900
@@ -49,7 +51,6 @@ fun MemberTaskSelector(
     Box(
         modifier = Modifier
             .fillMaxWidth(),
-        contentAlignment = Alignment.CenterStart,
     ) {
         MemberSelectedValue(
             member = memberSelected,
@@ -59,17 +60,59 @@ fun MemberTaskSelector(
             },
         )
         DropdownMenu(
+            modifier = Modifier
+                .background(color = tertiary_50),
             expanded = isExpanded,
             onDismissRequest = {
                 isExpanded = false
             },
         ) {
-            members.forEach { member ->
-                DropdownMenuItem(text = {
-                    Text(text = member.name)
-                }, onClick = { memberSelected = member })
-            }
+            members
+                .filter { it != memberSelected }
+                .forEach { member ->
+                    DropdownMenuItem(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = {
+                            MemberMenuItem(member = member)
+                        },
+                        onClick = {
+                            memberSelected = member
+                            isExpanded = false
+                        },
+                    )
+                    if (members.last() != member) {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp),
+                            color = tertiary_100,
+                        )
+                    }
+                }
         }
+    }
+}
+
+@Composable
+private fun MemberMenuItem(
+    member: NonAdminMember,
+) {
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .padding(vertical = 8.dp, horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ImagePlaceHolder()
+        Spacer(modifier = Modifier.size(12.dp))
+        Text(
+            modifier = Modifier
+                .weight(1f),
+            text = member.name,
+            style = BodySmallMedium,
+            color = tertiary_900,
+        )
+        Spacer(modifier = Modifier.size(12.dp))
     }
 }
 
