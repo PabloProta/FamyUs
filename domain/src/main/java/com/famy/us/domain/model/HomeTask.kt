@@ -18,7 +18,7 @@ data class HomeTask(
     val description: String,
     val position: Int,
     val point: Int,
-    val isAssigned: Boolean,
+    val assigned: NonAdminMember? = null,
     val start: Date? = null,
     val finish: Date? = null,
 ) {
@@ -32,7 +32,7 @@ data class HomeTask(
             description = "",
             position = -1,
             point = 0,
-            isAssigned = false,
+            assigned = null,
             start = null,
             finish = null,
         )

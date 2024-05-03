@@ -18,6 +18,27 @@ import com.famy.us.domain.model.NonAdminMember
 import com.famy.us.feature.home.admin.createtask.CreateTaskBottomContainer
 import com.famy.us.feature.home.model.MenuItem
 
+private val MemberList = listOf(
+    NonAdminMember(
+        id = 0,
+        name = "Kelly",
+        tasks = emptyList<HomeTask>(),
+        score = 0,
+    ),
+    NonAdminMember(
+        id = 1,
+        name = "Joel",
+        tasks = emptyList<HomeTask>(),
+        score = 0,
+    ),
+    NonAdminMember(
+        id = 2,
+        name = "Kaue",
+        tasks = emptyList<HomeTask>(),
+        score = 0,
+    ),
+)
+
 @Composable
 internal fun AdminHomeContainerScreen(
     familyName: String,
@@ -26,36 +47,22 @@ internal fun AdminHomeContainerScreen(
     role: String,
 ) {
     var showAddTaskBottomSheet by remember { mutableStateOf(false) }
-    val memberList = listOf(
-        NonAdminMember(
-            id = 0,
-            name = "Kelly",
-            tasks = emptyList<HomeTask>(),
-            score = 0,
-        ),
-        NonAdminMember(
-            id = 1,
-            name = "Joel",
-            tasks = emptyList<HomeTask>(),
-            score = 0,
-        ),
-        NonAdminMember(
-            id = 2,
-            name = "Kaue",
-            tasks = emptyList<HomeTask>(),
-            score = 0,
-        ),
-    )
+
+    var taskList by remember { mutableStateOf(emptyList<HomeTask>()) }
     Box(
         modifier = Modifier
             .fillMaxSize(),
     ) {
         if (showAddTaskBottomSheet) {
             CreateTaskBottomContainer(
-                first = memberList.first(),
-                members = memberList,
+                first = MemberList.first(),
+                members = MemberList,
                 onDismiss = {
                     showAddTaskBottomSheet = false
+                },
+                onCreateTask = { newTask ->
+                    showAddTaskBottomSheet = false
+                    taskList = taskList + newTask
                 },
             )
         }
@@ -79,7 +86,10 @@ internal fun AdminHomeContainerScreen(
                 role = role,
             )
             Spacer(modifier = Modifier.size(12.dp))
-            AdminHomeScreen(memberList = memberList)
+            AdminHomeScreen(
+                memberList = MemberList,
+                taskList = taskList,
+            )
         }
     }
 }

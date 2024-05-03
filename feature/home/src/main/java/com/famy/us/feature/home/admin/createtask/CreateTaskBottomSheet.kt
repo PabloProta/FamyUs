@@ -41,42 +41,57 @@ import com.famy.us.feature.home.admin.createtask.pickers.DateDialogInput
 import com.famy.us.feature.home.admin.createtask.pickers.TimePickerInput
 import com.famy.us.home.R
 import java.util.Calendar
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTaskBottomContainer(
     first: NonAdminMember,
     members: List<NonAdminMember>,
+    onCreateTask: (HomeTask) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showTimerPicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var currentDate: Calendar? by remember { mutableStateOf(null) }
+    var memberSelected by remember { mutableStateOf(first) }
     Box {
         ModalBottomSheet(
-            modifier = Modifier
-                .wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             onDismissRequest = onDismiss,
             sheetState = sheetState,
             containerColor = Color.White,
             contentColor = Color.White,
         ) {
             CreateTaskBottomSheet(
-                first = first,
+                first = memberSelected,
                 members = members,
-                onClickDateInput = {
-                    showTimerPicker = true
+                onClickDateInput = { showTimerPicker = true },
+                onClickCreate = { taskName, taskDescription ->
+                    val newTask = HomeTask(
+                        id = 0,
+                        name = taskName,
+                        description = taskDescription,
+                        position = 0,
+                        point = 100,
+                        finish = if (currentDate?.timeInMillis != null) {
+                            Date(currentDate?.timeInMillis!!)
+                        } else {
+                            null
+                        },
+                        assigned = memberSelected,
+                    )
+                    onCreateTask(newTask)
                 },
                 currentDate = currentDate,
+                onSelectMember = { memberSelected = it },
             )
         }
         if (showTimerPicker) {
             TimePickerInput(
                 calendar = currentDate,
-                onCancel = {
-                    showTimerPicker = false
-                },
+                onCancel = { showTimerPicker = false },
                 onConfirm = {
                     currentDate = it
                     showTimerPicker = false
@@ -87,9 +102,7 @@ fun CreateTaskBottomContainer(
         if (showDatePicker && currentDate != null) {
             DateDialogInput(
                 calendar = currentDate!!,
-                onDismiss = {
-                    showDatePicker = false
-                },
+                onDismiss = { showDatePicker = false },
                 onConfirm = {
                     currentDate = it
                     showDatePicker = false
@@ -104,6 +117,8 @@ private fun CreateTaskBottomSheet(
     first: NonAdminMember,
     currentDate: Calendar? = null,
     members: List<NonAdminMember>,
+    onClickCreate: (taskName: String, taskDescription: String) -> Unit,
+    onSelectMember: (NonAdminMember) -> Unit,
     onClickDateInput: () -> Unit,
 ) {
     var taskName by remember { mutableStateOf("") }
@@ -128,6 +143,7 @@ private fun CreateTaskBottomSheet(
         MemberTaskSelector(
             first = first,
             members = members,
+            onSelectMember = onSelectMember,
         )
         Spacer(modifier = Modifier.size(16.dp))
         NameInput(
@@ -137,9 +153,7 @@ private fun CreateTaskBottomSheet(
         Spacer(modifier = Modifier.size(8.dp))
         DescriptionInput(
             value = taskDescription,
-            onValueChange = {
-                taskDescription = it
-            },
+            onValueChange = { taskDescription = it },
         )
         Spacer(modifier = Modifier.size(8.dp))
         DatePickerInput(
@@ -157,7 +171,7 @@ private fun CreateTaskBottomSheet(
                     .fillMaxHeight(),
             )
             CreateTaskButton(
-                onClickToCreate = {},
+                onClickToCreate = { onClickCreate(taskName, taskDescription) },
             )
         }
         Spacer(modifier = Modifier.size(24.dp))
@@ -239,5 +253,7 @@ internal fun CreateTaskBottomPreview() {
         first = memberList.first(),
         members = memberList,
         onClickDateInput = {},
+        onClickCreate = { _, _ -> },
+        onSelectMember = {},
     )
 }

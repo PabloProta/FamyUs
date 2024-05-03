@@ -21,7 +21,7 @@ internal class HomeTaskMapper {
             description,
             position,
             point,
-            isAssigned,
+            null,
             start,
             finish,
         )
@@ -51,7 +51,7 @@ internal class HomeTaskMapper {
             description,
             position,
             point,
-            isAssigned,
+            false,
             start,
             finish,
         )

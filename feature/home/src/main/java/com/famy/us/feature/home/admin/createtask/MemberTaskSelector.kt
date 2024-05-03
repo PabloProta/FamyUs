@@ -45,15 +45,15 @@ import com.famy.us.domain.model.NonAdminMember
 fun MemberTaskSelector(
     first: NonAdminMember,
     members: List<NonAdminMember>,
+    onSelectMember: (NonAdminMember) -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-    var memberSelected by remember { mutableStateOf(first) }
     Box(
         modifier = Modifier
             .fillMaxWidth(),
     ) {
         MemberSelectedValue(
-            member = memberSelected,
+            member = first,
             isExpanded = isExpanded,
             onClick = {
                 isExpanded = true
@@ -68,7 +68,7 @@ fun MemberTaskSelector(
             },
         ) {
             members
-                .filter { it != memberSelected }
+                .filter { it != first }
                 .forEach { member ->
                     DropdownMenuItem(
                         modifier = Modifier
@@ -77,7 +77,7 @@ fun MemberTaskSelector(
                             MemberMenuItem(member = member)
                         },
                         onClick = {
-                            memberSelected = member
+                            onSelectMember(member)
                             isExpanded = false
                         },
                     )
@@ -206,5 +206,6 @@ internal fun MemberTaskSelectorPreview() {
     MemberTaskSelector(
         first = memberList.first(),
         members = memberList,
+        onSelectMember = {},
     )
 }

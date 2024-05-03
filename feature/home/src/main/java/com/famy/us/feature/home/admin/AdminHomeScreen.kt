@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,10 +20,13 @@ import com.famy.us.feature.home.home.FilterBadges
 import com.famy.us.feature.home.home.FilterBadgesLoader
 import com.famy.us.feature.home.home.TaskFilterBadges
 import com.famy.us.feature.home.home.TaskStatusContainer
+import java.time.Instant
+import java.util.Date
 
 @Composable
 internal fun AdminHomeScreen(
     memberList: List<NonAdminMember>,
+    taskList: List<HomeTask>,
 ) {
     var badgesList by remember { mutableStateOf(FilterBadgesLoader.load()) }
 
@@ -60,6 +65,23 @@ internal fun AdminHomeScreen(
                 updateBadge(badge)
             },
         )
+        TaskList(list = taskList)
+    }
+}
+
+@Composable
+private fun TaskList(
+    list: List<HomeTask>,
+) {
+    if (list.isEmpty()) return
+    LazyColumn(
+        modifier = Modifier
+            .padding(horizontal = 24.dp, vertical = 24.dp),
+    ) {
+        items(list) { task ->
+            AdminTaskContainer(task = task)
+            Spacer(modifier = Modifier.size(8.dp))
+        }
     }
 }
 
@@ -86,5 +108,31 @@ internal fun AdminHomePreview() {
             score = 0,
         ),
     )
-    AdminHomeScreen(memberList = memberList)
+    val member = memberList.first()
+    val tasks = listOf(
+        HomeTask(
+            id = 0,
+            name = "lavar louça",
+            description = "Você precisa lavar a louça pq se sabe que fede se vc ficar sem fala kCkdask",
+            position = 0,
+            assigned = member,
+            point = 0,
+            start = null,
+            finish = Date.from(Instant.now()),
+        ),
+        HomeTask(
+            id = 1,
+            name = "ir no mercado",
+            description = "Precisa comprar umas coisas no mercado",
+            position = 0,
+            assigned = member,
+            point = 0,
+            start = null,
+            finish = Date.from(Instant.now()),
+        ),
+    )
+    AdminHomeScreen(
+        memberList = memberList,
+        taskList = tasks,
+    )
 }
