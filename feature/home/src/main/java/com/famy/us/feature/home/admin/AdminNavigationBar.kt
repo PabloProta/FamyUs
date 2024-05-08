@@ -47,7 +47,7 @@ fun AdminNavigationBar(
     var currentItemClicked: MenuItem? by remember { mutableStateOf(null) }
 
     LazyRow(
-        modifier = modifier
+        modifier = Modifier
             .safeDrawingPadding()
             .padding(horizontal = 24.dp)
             .padding(bottom = 24.dp)
@@ -55,7 +55,7 @@ fun AdminNavigationBar(
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(64.dp),
-            ),
+            ).then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
         userScrollEnabled = false,

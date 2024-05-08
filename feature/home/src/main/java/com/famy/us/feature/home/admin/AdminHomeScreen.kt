@@ -1,11 +1,17 @@
 package com.famy.us.feature.home.admin
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.core.ui.ButtonMedium
+import com.famy.us.core.ui.primary_main
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.model.NonAdminMember
 import com.famy.us.feature.home.home.FilterBadges
@@ -27,10 +35,9 @@ import java.util.Date
 @Composable
 internal fun AdminHomeScreen(
     modifier: Modifier = Modifier,
-    hasSpaceToTask: () -> Boolean,
     memberList: List<NonAdminMember>,
-    taskList: List<HomeTask>,
-    onGetTaskCardHeight: (Int) -> Unit,
+    taskList: () -> List<HomeTask>,
+    onGetTaskCardHeight: (Float) -> Unit,
 ) {
     var badgesList by remember { mutableStateOf(FilterBadgesLoader.load()) }
 
@@ -72,18 +79,20 @@ internal fun AdminHomeScreen(
             },
         )
         TaskList(
-            hasSpaceToTask = hasSpaceToTask,
-            list = taskList,
+            list = taskList(),
             onGetTaskCardHeight = onGetTaskCardHeight,
+            onClickToSeeTasks = {
+                // Navigate to task menu
+            },
         )
     }
 }
 
 @Composable
 private fun TaskList(
-    hasSpaceToTask: () -> Boolean,
     list: List<HomeTask>,
-    onGetTaskCardHeight: (Int) -> Unit,
+    onClickToSeeTasks: () -> Unit,
+    onGetTaskCardHeight: (Float) -> Unit,
 ) {
     if (list.isEmpty()) return
     LazyColumn(
@@ -91,25 +100,44 @@ private fun TaskList(
             .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
         itemsIndexed(list) { index, task ->
-            if (list.size - 1 == index) {
-                if (hasSpaceToTask()) {
-                    AdminTaskContainer(task = task)
-                }
+            if (index == 0) {
+                AdminTaskContainer(
+                    modifier = Modifier
+                        .onSizeChanged {
+                            onGetTaskCardHeight(it.height.toFloat())
+                        },
+                    task = task,
+                )
             } else {
-                if (index == 0) {
-                    AdminTaskContainer(
-                        modifier = Modifier
-                            .onSizeChanged {
-                                onGetTaskCardHeight(it.height)
-                            },
-                        task = task,
-                    )
-                } else {
-                    AdminTaskContainer(task = task)
-                }
+                AdminTaskContainer(task = task)
             }
             Spacer(modifier = Modifier.size(8.dp))
         }
+
+        item {
+            SeeAllTaskButton(onClickToSeeTasks = onClickToSeeTasks)
+        }
+    }
+}
+
+@Composable
+private fun SeeAllTaskButton(
+    onClickToSeeTasks: () -> Unit,
+) {
+    OutlinedButton(
+        modifier = Modifier
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = primary_main,
+        ),
+        border = BorderStroke(width = 1.dp, color = primary_main),
+        onClick = onClickToSeeTasks,
+    ) {
+        Text(
+            text = "Ver todas as tarefas",
+            style = ButtonMedium,
+        )
     }
 }
 
@@ -161,8 +189,7 @@ internal fun AdminHomePreview() {
     )
     AdminHomeScreen(
         memberList = memberList,
-        taskList = tasks,
+        taskList = { tasks },
         onGetTaskCardHeight = {},
-        hasSpaceToTask = { true },
     )
 }
