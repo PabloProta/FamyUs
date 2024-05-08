@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -86,7 +85,7 @@ fun DefaultButton(
 
 @Preview
 @Composable
-fun OutlinedGrayButtonPreview() {
+fun DefaultButton() {
     DefaultButton(
         modifier = Modifier,
         onClick = {},
