@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.famy.us.domain.model.HomeTask
@@ -25,8 +26,11 @@ import java.util.Date
 
 @Composable
 internal fun AdminHomeScreen(
+    modifier: Modifier = Modifier,
+    hasSpaceToTask: () -> Boolean,
     memberList: List<NonAdminMember>,
     taskList: List<HomeTask>,
+    onGetTaskCardHeight: (Int) -> Unit,
 ) {
     var badgesList by remember { mutableStateOf(FilterBadgesLoader.load()) }
 
@@ -43,7 +47,9 @@ internal fun AdminHomeScreen(
             }
         }
     }
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         AdminAddMemberSection(
             modifier = Modifier
                 .padding(horizontal = 24.dp),
@@ -65,21 +71,43 @@ internal fun AdminHomeScreen(
                 updateBadge(badge)
             },
         )
-        TaskList(list = taskList)
+        TaskList(
+            hasSpaceToTask = hasSpaceToTask,
+            list = taskList,
+            onGetTaskCardHeight = onGetTaskCardHeight,
+        )
     }
 }
 
 @Composable
 private fun TaskList(
+    hasSpaceToTask: () -> Boolean,
     list: List<HomeTask>,
+    onGetTaskCardHeight: (Int) -> Unit,
 ) {
     if (list.isEmpty()) return
     LazyColumn(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
-        items(list) { task ->
-            AdminTaskContainer(task = task)
+        itemsIndexed(list) { index, task ->
+            if (list.size - 1 == index) {
+                if (hasSpaceToTask()) {
+                    AdminTaskContainer(task = task)
+                }
+            } else {
+                if (index == 0) {
+                    AdminTaskContainer(
+                        modifier = Modifier
+                            .onSizeChanged {
+                                onGetTaskCardHeight(it.height)
+                            },
+                        task = task,
+                    )
+                } else {
+                    AdminTaskContainer(task = task)
+                }
+            }
             Spacer(modifier = Modifier.size(8.dp))
         }
     }
@@ -134,5 +162,7 @@ internal fun AdminHomePreview() {
     AdminHomeScreen(
         memberList = memberList,
         taskList = tasks,
+        onGetTaskCardHeight = {},
+        hasSpaceToTask = { true },
     )
 }

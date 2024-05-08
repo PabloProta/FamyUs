@@ -41,9 +41,11 @@ private val DividerColor = Color(0XFF221C36)
 
 @Composable
 fun AdminTaskContainer(
+    modifier: Modifier = Modifier,
     task: HomeTask,
 ) {
     Surface(
+        modifier = modifier,
         shape = RoundedCornerShape(12.dp),
         color = CardColor,
     ) {
