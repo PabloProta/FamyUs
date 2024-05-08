@@ -344,7 +344,7 @@ private fun TaskContentPreview() {
                 description = "Essa é uma breve descrição sobre a minha tarefinha",
                 position = 0,
                 point = 40,
-                isAssigned = false,
+                assigned = null,
             ),
         ),
         performAction = {},
