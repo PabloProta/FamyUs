@@ -3,7 +3,9 @@ package com.famy.us.feature.home.admin
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,9 +20,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.famy.us.core.extensions.logD
 import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.primary_main
 import com.famy.us.domain.model.HomeTask
@@ -36,11 +41,10 @@ import java.util.Date
 internal fun AdminHomeScreen(
     modifier: Modifier = Modifier,
     memberList: List<NonAdminMember>,
+    navBarTopPosition: Float = 0f,
     taskList: () -> List<HomeTask>,
-    onGetTaskCardHeight: (Float) -> Unit,
 ) {
     var badgesList by remember { mutableStateOf(FilterBadgesLoader.load()) }
-
     fun updateBadge(badge: FilterBadges) {
         badgesList = badgesList.map {
             if (it.isSelected && it.badge != badge) {
@@ -62,7 +66,11 @@ internal fun AdminHomeScreen(
                 .padding(horizontal = 24.dp),
             list = memberList,
         )
-        Spacer(modifier = Modifier.size(12.dp))
+        Spacer(
+            modifier = Modifier
+                .heightIn(max = 12.dp, min = 4.dp)
+                .fillMaxHeight()
+        )
         TaskStatusContainer(
             modifier = Modifier
                 .padding(vertical = 24.dp, horizontal = 24.dp),
@@ -79,8 +87,8 @@ internal fun AdminHomeScreen(
             },
         )
         TaskList(
+            navBarTopPosition = navBarTopPosition,
             list = taskList(),
-            onGetTaskCardHeight = onGetTaskCardHeight,
             onClickToSeeTasks = {
                 // Navigate to task menu
             },
@@ -90,28 +98,43 @@ internal fun AdminHomeScreen(
 
 @Composable
 private fun TaskList(
+    navBarTopPosition: Float,
     list: List<HomeTask>,
     onClickToSeeTasks: () -> Unit,
-    onGetTaskCardHeight: (Float) -> Unit,
 ) {
+    var conflictAt by remember { mutableStateOf(-1) }
     if (list.isEmpty()) return
     LazyColumn(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
-        itemsIndexed(list) { index, task ->
-            if (index == 0) {
-                AdminTaskContainer(
-                    modifier = Modifier
-                        .onSizeChanged {
-                            onGetTaskCardHeight(it.height.toFloat())
-                        },
-                    task = task,
-                )
-            } else {
-                AdminTaskContainer(task = task)
+        itemsIndexed(if (conflictAt < 0) list else list.take(conflictAt)) { index, task ->
+            Column(
+                modifier = Modifier
+                    .onGloballyPositioned {
+                        val root = it.boundsInRoot()
+                        val cardBottom = root.bottom
+                        if (cardBottom > navBarTopPosition) {
+                            conflictAt = list.size - 1
+                        }
+                        logD { "isConflicting: $conflictAt" }
+                    }
+            ) {
+                if (index == 0) {
+                    AdminTaskContainer(
+                        modifier = Modifier
+                            .alpha(if (conflictAt != -1) 0f else 1f),
+                        task = task,
+                    )
+                } else {
+                    AdminTaskContainer(
+                        modifier = Modifier
+                            .alpha(if (conflictAt != -1) 0f else 1f),
+                        task = task
+                    )
+                }
+                Spacer(modifier = Modifier.size(8.dp))
             }
-            Spacer(modifier = Modifier.size(8.dp))
         }
 
         item {
@@ -190,6 +213,5 @@ internal fun AdminHomePreview() {
     AdminHomeScreen(
         memberList = memberList,
         taskList = { tasks },
-        onGetTaskCardHeight = {},
     )
 }

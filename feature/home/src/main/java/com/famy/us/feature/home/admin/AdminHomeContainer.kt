@@ -7,17 +7,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.famy.us.core.extensions.logD
 import com.famy.us.domain.model.HomeTask
 import com.famy.us.domain.model.NonAdminMember
 import com.famy.us.feature.home.admin.createtask.CreateTaskBottomContainer
@@ -57,7 +57,7 @@ internal fun AdminHomeContainerScreen(
     var homeContentBottom by remember { mutableStateOf(0f) }
     var taskList by remember { mutableStateOf(emptyList<HomeTask>()) }
     var conflictAt by remember { mutableStateOf(-1) }
-    var taskCardHeight by remember { mutableStateOf(0f) }
+    var taskCardHeight by remember { mutableStateOf(0) }
 
     Box(
         modifier = Modifier
@@ -74,6 +74,15 @@ internal fun AdminHomeContainerScreen(
                 },
             )
         }
+        AdminTaskContainer(
+            modifier = Modifier
+                .onSizeChanged {
+                    if (taskCardHeight == 0)
+                        taskCardHeight = it.height
+                }
+                .alpha(0f),
+            task = HomeTask.Empty
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -91,17 +100,10 @@ internal fun AdminHomeContainerScreen(
                         val rect = it.boundsInWindow()
                         homeContentBottom = rect.bottom
                     },
+                navBarTopPosition = navigationBarTop,
                 memberList = MemberList,
                 taskList = {
-                    if (conflictAt > 0) {
-                        taskList.take(conflictAt)
-                    } else {
-                        taskList
-                    }
-                },
-                onGetTaskCardHeight = {
-                    logD { "card height: $it" }
-                    taskCardHeight = it
+                    taskList
                 },
             )
         }
@@ -122,15 +124,6 @@ internal fun AdminHomeContainerScreen(
                 },
                 onNavigateAt = {},
             )
-        }
-    }
-
-    SideEffect {
-        val isConflicting = homeContentBottom + taskCardHeight >= navigationBarTop
-        if (homeContentBottom > 0 && navigationBarTop > 0 && taskCardHeight > 0) {
-            if (isConflicting && conflictAt < 0) {
-                conflictAt = taskList.size
-            }
         }
     }
 }
