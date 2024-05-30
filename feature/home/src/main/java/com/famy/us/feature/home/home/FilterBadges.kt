@@ -1,6 +1,5 @@
 package com.famy.us.feature.home.home
 
-
 /**
  * Filter Badges Names.
  */

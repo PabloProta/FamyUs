@@ -15,5 +15,5 @@ object HomeNavigation {
     /**
      * Home screen navigation.
      */
-    object HomeScreen: Destination("home_screen")
+    object HomeScreen : Destination("home_screen")
 }

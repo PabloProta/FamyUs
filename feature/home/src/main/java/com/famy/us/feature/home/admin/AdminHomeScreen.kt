@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.famy.us.core.extensions.logD
 import com.famy.us.core.ui.ButtonMedium
 import com.famy.us.core.ui.primary_main
 import com.famy.us.domain.model.HomeTask
@@ -69,13 +68,13 @@ internal fun AdminHomeScreen(
         Spacer(
             modifier = Modifier
                 .heightIn(max = 12.dp, min = 4.dp)
-                .fillMaxHeight()
+                .fillMaxHeight(),
         )
         TaskStatusContainer(
             modifier = Modifier
                 .padding(vertical = 24.dp, horizontal = 24.dp),
-            onClickStatus = {
-                updateBadge(it)
+            onClickStatus = { badge ->
+                updateBadge(badge)
             },
         )
         TaskFilterBadges(
@@ -117,8 +116,7 @@ private fun TaskList(
                         if (cardBottom > navBarTopPosition) {
                             conflictAt = list.size - 1
                         }
-                        logD { "isConflicting: $conflictAt" }
-                    }
+                    },
             ) {
                 if (index == 0) {
                     AdminTaskContainer(
@@ -130,7 +128,7 @@ private fun TaskList(
                     AdminTaskContainer(
                         modifier = Modifier
                             .alpha(if (conflictAt != -1) 0f else 1f),
-                        task = task
+                        task = task,
                     )
                 }
                 Spacer(modifier = Modifier.size(8.dp))

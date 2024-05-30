@@ -1,7 +1,6 @@
 package com.famy.us.feature.home.model
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.famy.us.core.utils.navigation.Destination
 import com.famy.us.core.utils.navigation.Navigator
 import com.famy.us.core.utils.resources.IconResource
@@ -23,6 +22,6 @@ data class MenuItem(
     val isClicked: Boolean = false,
     val priority: Int,
     val icon: IconResource,
-    val onSelectIcon : IconResource,
+    val onSelectIcon: IconResource,
     val screen: @Composable (onNavigate: (Navigator) -> Unit) -> Unit,
 )

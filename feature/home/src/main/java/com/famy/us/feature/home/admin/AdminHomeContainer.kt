@@ -56,7 +56,6 @@ internal fun AdminHomeContainerScreen(
     var navigationBarTop by remember { mutableStateOf(0f) }
     var homeContentBottom by remember { mutableStateOf(0f) }
     var taskList by remember { mutableStateOf(emptyList<HomeTask>()) }
-    var conflictAt by remember { mutableStateOf(-1) }
     var taskCardHeight by remember { mutableStateOf(0) }
 
     Box(
@@ -77,11 +76,12 @@ internal fun AdminHomeContainerScreen(
         AdminTaskContainer(
             modifier = Modifier
                 .onSizeChanged {
-                    if (taskCardHeight == 0)
+                    if (taskCardHeight == 0) {
                         taskCardHeight = it.height
+                    }
                 }
                 .alpha(0f),
-            task = HomeTask.Empty
+            task = HomeTask.Empty,
         )
         Column(
             modifier = Modifier
