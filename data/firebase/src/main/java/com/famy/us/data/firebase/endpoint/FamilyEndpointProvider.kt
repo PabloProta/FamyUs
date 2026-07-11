@@ -2,9 +2,9 @@ package com.famy.us.data.firebase.endpoint
 
 import com.famy.us.data.firebase.FamyUsDatabase
 import com.famy.us.data.firebase.model.FirebaseMemberReference
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
 
 internal abstract class FamilyEndpointProvider {
 
@@ -26,7 +26,7 @@ internal abstract class FamilyEndpointProvider {
      * @param onGetMember callback for when the member reference is caught.
      * @param onGetFail callback for when this method fail on get member reference.
      */
-    final fun getFamilyMemberReference(
+    fun getFamilyMemberReference(
         onGetMember: (FirebaseMemberReference) -> Unit,
         onGetFail: () -> Unit = {},
     ) {
@@ -47,7 +47,7 @@ internal abstract class FamilyEndpointProvider {
             }
     }
 
-    final fun getMembersReference(
+    fun getMembersReference(
         onGetFamily: () -> Unit,
         onGetFail: () -> Unit,
     ) {

@@ -7,9 +7,9 @@ import com.famy.us.authentication.state.AuthenticationState
 import com.famy.us.domain.model.AuthenticationMethods
 import com.famy.us.domain.usecase.AuthenticateMemberUseCase
 import com.famy.us.domain.usecase.IsUserLoggedUseCase
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
 
 /**
  * ViewModel used to the authentication screen.

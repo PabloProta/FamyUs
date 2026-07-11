@@ -1,9 +1,9 @@
 package com.famy.us.data.firebase.endpoint
 
 import com.famy.us.data.firebase.FamyUsDatabase
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
 
 internal class FirebaseEndpointProvider : FamilyEndpointProvider() {
 

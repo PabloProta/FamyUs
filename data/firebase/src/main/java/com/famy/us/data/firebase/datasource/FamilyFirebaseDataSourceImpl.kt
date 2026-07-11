@@ -10,10 +10,10 @@ import com.famy.us.data.firebase.model.FirebaseMember
 import com.famy.us.data.firebase.model.FirebaseMemberReference
 import com.famy.us.repository.datasource.FamilyFirebaseDataSource
 import com.famy.us.repository.model.RepositoryFamilyMember
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

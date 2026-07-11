@@ -4,10 +4,10 @@ import com.famy.us.data.firebase.FamyUsDatabase
 import com.famy.us.data.firebase.model.FirebaseMemberReference
 import com.famy.us.repository.datasource.firebase.HomeTaskFirebaseDataSource
 import com.famy.us.repository.model.RepositoryTask
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -1,5 +1,6 @@
 package com.famy.us.core.extensions
 
+import android.util.Log
 import java.util.regex.Pattern
 
 /**
@@ -10,7 +11,8 @@ object Logger {
     /**
      * Flag to be used for debug logs.
      */
-    val DEBUG = BuildConfig.DEBUG
+    val DEBUG: Boolean
+        get() = Log.isLoggable(getTag(), Log.DEBUG)
 
     /**
      * Tag Prefix to be used across the application.

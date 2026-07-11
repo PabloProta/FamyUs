@@ -5,10 +5,10 @@ import com.famy.us.core.utils.navigation.Destination
 /**
  * Object representing all destination possibles by the Authentication Flow.
  */
-object OnBoardingNavigation {
+sealed interface OnBoardingNavigation {
 
     /**
      * Destination for authentication flow.
      */
-    object Authentication : Destination("authentication")
+    data object Authentication : Destination("authentication")
 }

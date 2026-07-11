@@ -1,8 +1,8 @@
 package com.famy.us.data.firebase
 
+import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.database
 
 /**
  * Class that provides the hierarchy instances of the famy us database at the firebase realtime

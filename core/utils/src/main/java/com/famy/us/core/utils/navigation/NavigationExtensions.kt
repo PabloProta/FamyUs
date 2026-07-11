@@ -18,12 +18,13 @@ import androidx.navigation.navigation
  * Method to set a composable for the nav host based on [Destination].
  *
  * @param destination the [Destination] of this composable.
- * @param enterTransition the animation for when app is enter on the composable.
+ * @param enterTransition the animation for when app is entered on the composable.
  * @param exitTransition the animation for when app is exiting from the composable.
  * @param arguments the arguments fot this composable.
  * @param deepLinks deeps links for this composable.
  * @param content the content that will be on this composable.
  */
+@Deprecated("Use the default method from the navigation library")
 fun NavGraphBuilder.composable(
     destination: Destination,
     enterTransition: EnterTransition = EnterTransition.None,
@@ -63,11 +64,11 @@ fun NavGraphBuilder.navigation(
  * Method to make an action with the navcontroller based on a [Navigator]
  * action.
  *
- * @param navigator the object that will tell what navcontroller should does.
+ * @param navigator the object that will tell what navcontroller should do.
  */
 fun NavController.doAction(navigator: Navigator) {
     when (navigator) {
-        is Navigator.NavigateTo -> navigate(navigator.destination)
+        is Navigator.NavigateTo -> navigate(navigator.destination.fullRoute)
         Navigator.PopBackStack -> popBackStack()
     }
 }
@@ -82,7 +83,7 @@ fun NavController.navigate(destination: Destination) {
 }
 
 /**
- * Method to call the navigate with a destination object.
+ * Method to call to navigate with a destination object.
  *
  * @param destination the destination that app should navigate.
  * @param builder the nav options.
