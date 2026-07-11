@@ -1,5 +1,5 @@
 apply from: "/${rootDir}/config/conventions/android-common.gradle"
-apply plugin: 'kotlin-kapt'
+apply plugin: "com.google.devtools.ksp"
 
 android {
     namespace 'com.famy.us.data.database'
@@ -11,5 +11,5 @@ dependencies {
     implementation libs.room.runtime
     implementation libs.room.coroutines
     implementation libs.gson
-    kapt libs.room.compiler
+    ksp libs.room.compiler
 }
