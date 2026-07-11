@@ -9,7 +9,7 @@ import android.util.Log
  * @param desc The message to be logged
  */
 inline fun logD(tag: String = Logger.getTag(), desc: () -> String) {
-    if (Logger.DEBUG) {
+    if (Logger.isDebug) {
         Log.d(tag, desc())
     }
 }
@@ -21,7 +21,7 @@ inline fun logD(tag: String = Logger.getTag(), desc: () -> String) {
  * @param desc The message to be logged
  */
 inline fun logV(tag: String = Logger.getTag(), desc: () -> String) {
-    if (Logger.DEBUG) {
+    if (Logger.isDebug) {
         Log.v(tag, desc())
     }
 }
@@ -54,7 +54,7 @@ fun logE(tag: String = Logger.getTag(), tr: Throwable) {
  * @param tr The [Throwable] to be logged
  */
 inline fun logW(tag: String = Logger.getTag(), tr: Throwable? = null, desc: () -> String) {
-    if (Logger.DEBUG) {
+    if (Logger.isDebug) {
         tr?.let { Log.w(tag, desc(), tr) } ?: Log.w(tag, desc())
     }
 }

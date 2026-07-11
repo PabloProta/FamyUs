@@ -30,6 +30,7 @@ import com.famy.us.authentication.forgotpassword.ForgotPasswordScreen
 import com.famy.us.authentication.forgotpassword.InsertEmailCodeScreen
 import com.famy.us.authentication.forgotpassword.InsertNewPasswordScreen
 import com.famy.us.authentication.navigation.AuthenticationNavigation
+import com.famy.us.core.extensions.Logger
 import com.famy.us.core.utils.navigation.composable
 import com.famy.us.core.utils.navigation.doAction
 import com.famy.us.core.utils.navigation.navigation
@@ -56,6 +57,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Logger.init(this)
         actionBar?.hide()
         enableEdgeToEdge()
         setContent {

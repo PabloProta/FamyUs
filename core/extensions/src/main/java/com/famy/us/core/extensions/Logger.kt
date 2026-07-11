@@ -1,6 +1,7 @@
 package com.famy.us.core.extensions
 
-import android.util.Log
+import android.content.Context
+import android.content.pm.ApplicationInfo
 import java.util.regex.Pattern
 
 /**
@@ -11,8 +12,16 @@ object Logger {
     /**
      * Flag to be used for debug logs.
      */
-    val DEBUG: Boolean
-        get() = Log.isLoggable(getTag(), Log.DEBUG)
+    var isDebug: Boolean = false
+        private set
+
+    /**
+     * Call this exactly once in your Application class onCreate()
+     */
+    fun init(context: Context) {
+        val flags = context.applicationContext.applicationInfo.flags
+        isDebug = (flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+    }
 
     /**
      * Tag Prefix to be used across the application.
@@ -39,7 +48,7 @@ object Logger {
      *
      * @return The Tag to be used for logging.
      */
-    fun getTag(): String = if (DEBUG) {
+    fun getTag(): String = if (isDebug) {
         var tag = Thread.currentThread().stackTrace[CLASS_STACK_INDEX].className
         val matcher = ANONYMOUS_CLASS_PATTERN.matcher(tag)
 
