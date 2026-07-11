@@ -38,6 +38,8 @@ internal class TaskContentState<Event : TaskContentScreenIntent, State : TaskCon
             TaskContentScreenIntent.DoneTask -> {
                 setMachineState(DoneTaskState())
             }
+
+            else -> {}
         }
     }
 }

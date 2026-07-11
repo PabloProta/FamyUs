@@ -35,6 +35,10 @@ internal class ShowTaskContentState<Event : NoteScreenIntent, State : NoteScreen
             NoteScreenIntent.DismissTaskContent -> {
                 setMachineState(LoadingState())
             }
+
+            else -> {
+
+            }
         }
     }
 }

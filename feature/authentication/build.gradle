@@ -1,15 +1,11 @@
 apply from: "/${rootDir}/config/conventions/android-common.gradle"
-apply plugin: "com.google.gms.google-services"
+//apply plugin: "com.google.gms.google-services"
 
 android {
     namespace 'com.famy.us.authentication'
 
     buildFeatures {
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.4"
     }
 }
 

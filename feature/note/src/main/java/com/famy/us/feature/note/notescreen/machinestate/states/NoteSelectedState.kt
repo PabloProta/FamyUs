@@ -82,6 +82,10 @@ internal class NoteSelectedState<Event : NoteScreenIntent, State : NoteScreenSta
             NoteScreenIntent.ReorderList -> {
                 setMachineState(ReorderingListState(null, currentState.showingTaskList))
             }
+
+            else -> {
+
+            }
         }
     }
 }

@@ -40,6 +40,9 @@ internal class ItemStateList<Event : NoteScreenIntent, State : NoteScreenState>(
             is NoteScreenIntent.NoteSelected -> {
                 setMachineState(NoteSelectedState(listOf(gesture.noteIndex)))
             }
+            else -> {
+
+            }
         }
     }
 }

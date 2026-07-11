@@ -32,7 +32,6 @@ import com.famy.us.authentication.forgotpassword.InsertNewPasswordScreen
 import com.famy.us.authentication.navigation.AuthenticationNavigation
 import com.famy.us.core.utils.navigation.composable
 import com.famy.us.core.utils.navigation.doAction
-import com.famy.us.core.utils.navigation.navigate
 import com.famy.us.core.utils.navigation.navigation
 import com.famy.us.feature.home.HomeMenuScreenContainer
 import com.famy.us.feature.home.MenusLoader
@@ -83,7 +82,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             ) { _ ->
                 OpeningScreenContainer(
                     onNavigateTo = { dest ->
-                        navController.navigate(dest)
+                        navController.navigate(dest.fullRoute)
                     },
                 )
             }
@@ -97,7 +96,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 ) {
                     PreLoginScreen(
                         onNavigateTo = { dest ->
-                            navController.navigate(dest)
+                            navController.navigate(dest.fullRoute)
                         },
                     )
                 }
@@ -110,7 +109,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             navController.popBackStack()
                         },
                         onNavigateAt = { dest ->
-                            navController.navigate(dest)
+                            navController.navigate(dest.fullRoute)
                         }
                     )
                 }
@@ -123,7 +122,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             navController.popBackStack()
                         },
                         onNavigateAt = { dest ->
-                            navController.navigate(dest)
+                            navController.navigate(dest.fullRoute)
                         }
                     )
                 }
@@ -143,7 +142,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             navController.popBackStack()
                         },
                         onNavigateAt = { dest ->
-                            navController.navigate(dest)
+                            navController.navigate(dest.fullRoute)
                         }
                     )
                 }
@@ -156,7 +155,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             navController.popBackStack()
                         },
                         onNavigateAt = { dest ->
-                            navController.navigate(dest) {
+                            navController.navigate(dest.fullRoute) {
                                 popUpTo(AuthenticationNavigation.PreLogin.fullRoute)
                             }
                         }
@@ -183,7 +182,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 ) {
                     CreatingAccountRouterScreen(
                         onNavigateTo = {
-                            navController.navigate(it)
+                            navController.navigate(it.fullRoute)
                         },
                         popBackStack = {
                             navController.popBackStack()
@@ -206,7 +205,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 ) {
                     RegisterPersonalInfoScreen(
                         onNavigateAt = { dest ->
-                            navController.navigate(dest)
+                            navController.navigate(dest.fullRoute)
                         },
                         popBackStack = {
                             navController.popBackStack()

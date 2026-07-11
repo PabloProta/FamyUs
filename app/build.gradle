@@ -1,18 +1,21 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    id("com.android.application")
+    alias(libs.plugins.compose.compiler)
 }
+
 apply from: "$rootDir/config/quality/quality.gradle"
+
+kotlin {
+    jvmToolchain(21)
+}
 
 android {
     namespace 'com.famy.us'
-    compileSdk Versions.COMPILE_SDK
+    compileSdk = Versions.COMPILE_SDK
 
     defaultConfig {
-        applicationId "com.famy.us"
-        minSdk Versions.MIN_SDK
-        targetSdk Versions.COMPILE_SDK
+        minSdk = Versions.MIN_SDK
+        targetSdk = Versions.COMPILE_SDK
         versionCode Versions.versionsCode
         versionName Versions.version
 
@@ -23,10 +26,6 @@ android {
         compose true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.4"
-    }
-
     buildTypes {
         release {
             minifyEnabled true
@@ -35,12 +34,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
 }
 
 dependencies {
@@ -59,11 +59,10 @@ dependencies {
     implementation project(":core:ui")
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui.kit
+    implementation platform(libs.firebase.bom)
     api libs.koin.core
     implementation libs.koin.android
     implementation libs.lifecycle.runtime
     implementation libs.lifecycle.processes
-    kapt libs.lifecycle.compiler
-    implementation libs.firebase.realtime.database
     implementation libs.activity.ktx
 }

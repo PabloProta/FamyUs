@@ -85,6 +85,10 @@ internal class ReorderingListState<Event : NoteScreenIntent, State : NoteScreenS
                     }
                 }
             }
+
+            else -> {
+
+            }
         }
     }
 }

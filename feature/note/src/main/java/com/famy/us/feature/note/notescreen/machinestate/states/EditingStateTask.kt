@@ -43,6 +43,10 @@ internal class EditingStateTask<Event : NoteScreenIntent, State : NoteScreenStat
             NoteScreenIntent.DismissTaskContent -> {
                 setMachineState(ItemStateList(currentState.showingTaskList))
             }
+
+            else -> {
+
+            }
         }
     }
 }

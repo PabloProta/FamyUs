@@ -1,24 +1,30 @@
 [versions]
 ## Compose versions
-compose-bom = "2024.04.00"
-compose_nav = "2.7.0"
+compose-bom = "2026.06.00"
+compose_nav = "2.9.8"
 constraintlayout = "1.0.1"
 
+kotlin = "2.4.0"
+agp = "9.2.1"
+
 ## Koin
-koin = "3.4.0"
-koin_compose = "3.4.3"
+koin = "4.2.2"
+koin_compose = "4.2.2"
 
 ## Room
-room = "2.5.2"
+room = "2.8.4"
+
+## KSP
+ksp = "2.3.9"
 
 ## Gson
 gson = "2.10.1"
 
 ## Firebase
-firebase-bom = "32.2.2"
+firebase-bom = "34.16.0"
 
 ## Google play Services
-google-play-services = "20.6.0"
+google-play-services = "21.6.0"
 
 ## LifeCycle
 lifecycle = "2.6.1"
@@ -28,9 +34,12 @@ activity = "1.8.2"
 
 ## lottie
 lottie = "6.4.0"
+runtime = "1.11.3"
+compiler = "1.5.15"
 
 [libraries]
 ## Compose
+compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-toolingpreview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -63,11 +72,11 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 ## Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
-firebase-realtime-database = { module = "com.google.firebase:firebase-database-ktx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-realtime-database = { module = "com.google.firebase:firebase-database" }
 
-## Google play Service
+# Google play Service
 google-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "google-play-services" }
 
 ## Lifecycle
@@ -76,6 +85,7 @@ lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version
 lifecycle-processes = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 
 ## Barcode
+runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 zxing = { module = "com.google.zxing:core", version = "3.5.2" }
 
 ## Activity
@@ -83,6 +93,14 @@ activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activ
 
 ## Lotie
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
+
+[plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref  = "agp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 compose-ui-kit = ["compose-ui", "compose-toolingpreview", "compose-icons", "compose-navigation",

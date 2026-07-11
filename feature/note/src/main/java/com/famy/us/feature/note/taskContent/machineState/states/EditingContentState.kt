@@ -39,6 +39,8 @@ internal class EditingContentState<Event : TaskContentScreenIntent, State : Task
                     setMachineState(newMachineState)
                 }
             }
+
+            else -> {}
         }
     }
 }
